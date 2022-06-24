@@ -1,0 +1,91 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type District {
+  code: Int
+  codename: String
+  division_type: String
+  name: String
+  province_code: Int
+}
+
+enum GenderEnum {
+  FEMALE
+  LGBT
+  MALE
+}
+
+type IJwtPayload {
+  _id: String
+}
+
+type JwtPayload {
+  accessToken: String
+  payload: IJwtPayload
+  refreshToken: String
+  userInfo: User
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  register(input: RegisterInput!): Boolean!
+  signIn(input: LoginInput!): JwtPayload!
+}
+
+type Province {
+  code: Int
+  codename: String
+  name: String
+  phone_code: Int
+}
+
+type Query {
+  getDistrict(province_code: Float!): [District!]!
+  getProvince: [Province!]!
+  getWards(district_code: Float!): [Wards!]!
+}
+
+input RegisterInput {
+  confirmpassword: String!
+  email: String!
+  password: String!
+  phonenumber: String!
+  username: String!
+}
+
+enum RoleEnum {
+  ADMIN
+  USER
+}
+
+type User {
+  _id: ID
+  address: String
+  createAt: DateTime
+  email: String
+  gender: GenderEnum
+  keyword: String
+  phonenumber: String
+  role: RoleEnum
+  slug: String
+  updateAt: DateTime
+  username: String
+}
+
+type Wards {
+  code: Int
+  codename: String
+  district_code: Int
+  division_type: String
+  name: String
+}

@@ -1,0 +1,14 @@
+{
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.suggestSelection": "first",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "prettier.singleQuote": false,
+    "prettier.tabWidth": 2,
+    "cSpell.ignoreWords": ["autopopulate", "virtuals"]
+  }
+  
