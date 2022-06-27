@@ -15,7 +15,6 @@ import { ProductModule } from './modules/product/product.module';
   imports: [
     graphqlConfig,
     moongoseConfig,
-    cacheConfig,
     AuthModule,
     UserModule,
     CartModule,
