@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   // app.useGlobalFilters(new GraphQLExceptionFilter());
-  await app.listen(process.env.SV_PORT, () =>
+  await app.listen(process.env.SV_PORT || process.env.PORT, () =>
     console.log('🏃 App running on port: ' + process.env.SV_PORT),
   );
 }
