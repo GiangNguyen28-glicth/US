@@ -4,7 +4,12 @@ import { MailService } from '../modules/mail/mail.service';
 import { FilterGetOneUser } from '../modules/user/dto/user.input';
 import { UserDocument } from '../modules/user/schema/user.schema';
 import { UserService } from '../modules/user/user.service';
-import { LoginInput, RegisterInput } from './dto/auth.input';
+import { randomCode } from '../utils/string.utils';
+import {
+  LoginInput,
+  RegisterInput,
+  ResetPasswordInput,
+} from './dto/auth.input';
 import { JwtPayload } from './entities/auth.entities';
 
 @Injectable()
@@ -26,10 +31,10 @@ export class AuthService {
     const user = await this.userService.signUp(input);
     const token = await this.emailService.generateToken(user.email);
     const urlConfirm = `${process.env.FRONT_END_URL_CONFIRM_MAIL}?token=${token}`;
-    // return (await this.emailService.sendVerifyMail(user, urlConfirm))
-    //   ? true
-    //   : false;
-    return true;
+    return (await this.emailService.sendVerifyMail(user, urlConfirm))
+      ? true
+      : false;
+    // return true;
   }
   async signIn(loginInput: LoginInput): Promise<JwtPayload> {
     const user = await this.userService.login(loginInput);
@@ -71,5 +76,20 @@ export class AuthService {
       ),
     ]);
     return [at, rt];
+  }
+  async forgotPassword(email: string): Promise<boolean> {
+    const user = await this.userService.getOne({ email });
+    if (!user) {
+      throw new HttpException('Email không tồn tại', HttpStatus.NOT_FOUND);
+    }
+    const randomString = randomCode(20);
+    await Promise.all([
+      await this.userService.generateResetCode(user, randomString),
+      await this.emailService.sendResetPasswordMail(randomString, user),
+    ]);
+    return true;
+  }
+  async resetPassword(input: ResetPasswordInput): Promise<boolean> {
+    return this.userService.verifyResetpassword(input);
   }
 }

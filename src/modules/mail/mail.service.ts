@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { User } from '../user/entities/user.entities';
 import { verifyEmailTemplate } from './templates/mail.verify';
+import { resetPasswordMailTemplate } from './templates/mail.resetpassword';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { ConfirmMailInput } from './dto/mail.input';
@@ -45,7 +46,7 @@ export class MailService {
   async decodeConfirmationToken(token: string) {
     try {
       const payload = await this.jwtservice.verify(token, {
-        secret: process.env.JWT_VERIFICATION_TOKEN_SECRET,
+        secret: process.env.JWT_VERIFICATION_EMAIL_TOKEN_SECRET,
       });
       if (typeof payload === 'object' && 'email' in payload) {
         return payload.email;
@@ -74,5 +75,16 @@ export class MailService {
     }
     await this.userService.markEmailAsConfirmed(email);
     return true;
+  }
+  async sendResetPasswordMail(
+    randomCode: string,
+    user: User,
+  ): Promise<SMTPTransport.SentMessageInfo> {
+    return await this.transporter().sendMail({
+      from: process.env.EMAIL_USERNAME,
+      to: user.email,
+      subject: 'Reset password',
+      html: resetPasswordMailTemplate(user.username, randomCode),
+    });
   }
 }

@@ -11,13 +11,4 @@ export class AtGuard extends AuthGuard('jwt') {
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;
   }
-  handleRequest(err: any, user: any, info: any) {
-    if (err || !user) {
-      if (!info) {
-        throw new UnauthorizedException(err);
-      }
-      throw new UnauthorizedException(info);
-    }
-    return user;
-  }
 }

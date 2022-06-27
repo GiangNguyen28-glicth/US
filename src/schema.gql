@@ -2,6 +2,41 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Category {
+  _id: ID!
+  code: CategoryEnum!
+  name: String
+}
+
+enum CategoryEnum {
+  GAME
+  SPORT
+}
+
+input CategoryGetOneInput {
+  _id: ObjectID!
+}
+
+input CategoryInput {
+  code: CategoryEnum!
+  name: String
+}
+
+input ConfirmMailInput {
+  email: String!
+  token: String!
+}
+
+input CreateProductInput {
+  categoryId: ObjectID!
+  discount: Int
+  name: String
+  price: Int!
+  quantity: Int!
+  title: String
+  url: String
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -38,9 +73,19 @@ input LoginInput {
 }
 
 type Mutation {
+  createCategory(input: CategoryInput!): Boolean!
+  createProduct(input: CreateProductInput!): Boolean!
+  forgotPassword(email: String!): Boolean!
+  login(input: LoginInput!): JwtPayload!
   register(input: RegisterInput!): Boolean!
-  signIn(input: LoginInput!): JwtPayload!
+  resetPassword(input: ResetPasswordInput!): Boolean!
+  updateUser(input: UpdateUserInput!): User!
 }
+
+"""
+A field whose value conforms with the standard mongodb object ID as described here: https://docs.mongodb.com/manual/reference/method/ObjectId/#ObjectId. Example: 5e5677d71bdc2ae76344968c
+"""
+scalar ObjectID
 
 type Province {
   code: Int
@@ -50,6 +95,8 @@ type Province {
 }
 
 type Query {
+  confirmMail(input: ConfirmMailInput!): Boolean!
+  getCategoryById(input: CategoryGetOneInput!): Category!
   getDistrict(province_code: Float!): [District!]!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
@@ -59,13 +106,25 @@ input RegisterInput {
   confirmpassword: String!
   email: String!
   password: String!
-  phonenumber: String!
-  username: String!
+  phonenumber: String
+  username: String
+}
+
+input ResetPasswordInput {
+  code: String!
+  confirmpassword: String!
+  password: String!
+  userId: ObjectID!
 }
 
 enum RoleEnum {
   ADMIN
   USER
+}
+
+input UpdateUserInput {
+  phonenumber: String
+  username: String
 }
 
 type User {

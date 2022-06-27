@@ -1,3 +1,4 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { transformTextSearch } from './string.utils';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -50,4 +51,16 @@ export function isEmptyObject(obj: Object): boolean {
     return false;
   }
   return true;
+}
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function setInputForOldDocument(input: Object, oldDoc: Object): void {
+  if (!oldDoc) {
+    throw new HttpException('Không tìm thấy Document', HttpStatus.NOT_FOUND);
+  }
+
+  for (const key in input) {
+    if (!isUndefinedOrNull(input[key])) {
+      oldDoc[key] = input[key];
+    }
+  }
 }

@@ -26,7 +26,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
       }
       return user;
     } catch (error) {
-      throw new HttpException('Expried Token', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Token hết hạn', HttpStatus.UNAUTHORIZED);
     }
   }
 }

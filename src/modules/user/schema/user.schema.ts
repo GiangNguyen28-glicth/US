@@ -53,6 +53,10 @@ export const UserSchema = new Schema<User>({
     type: String,
     trim: true,
   },
+  resetPasswordCode: {
+    type: String,
+    trim: true,
+  },
   createAt: {
     type: Date,
     default: Date.now(),

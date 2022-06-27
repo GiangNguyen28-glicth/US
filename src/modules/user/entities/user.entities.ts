@@ -12,7 +12,7 @@ export class User {
   @HideField()
   password?: string;
   @Field({ nullable: true })
-  phonenumber: string;
+  phonenumber?: string;
   @Field(() => GenderEnum, { nullable: true })
   gender?: GenderEnum;
   @Field({ nullable: true })
@@ -29,6 +29,8 @@ export class User {
   isExprise?: Date;
   @HideField()
   currentHashedRefreshToken?: string;
+  @HideField()
+  resetPasswordCode: string;
   @Field({ nullable: true })
   keyword: string;
   @Field({ nullable: true })

@@ -1,4 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { BaseUser } from '../../../auth/dto/auth.input';
 import { GenderEnum, RoleEnum } from '../../../constants/enum';
 
 @InputType()
@@ -30,3 +31,5 @@ export class CreateUserInput {
   @Field({ nullable: true })
   verifyEmail?: boolean;
 }
+@InputType()
+export class UpdateUserInput extends BaseUser {}

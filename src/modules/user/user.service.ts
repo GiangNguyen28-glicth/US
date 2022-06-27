@@ -1,9 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { LoginInput, RegisterInput } from '../../auth/dto/auth.input';
-import { getFieldsInFilter } from '../../utils/feature.utils';
-import { FilterGetOneUser } from './dto/user.input';
+import {
+  LoginInput,
+  RegisterInput,
+  ResetPasswordInput,
+} from '../../auth/dto/auth.input';
+import {
+  getFieldsInFilter,
+  setInputForOldDocument,
+} from '../../utils/feature.utils';
+import { FilterGetOneUser, UpdateUserInput } from './dto/user.input';
 import { User } from './entities/user.entities';
 import { UserDocument } from './schema/user.schema';
 import * as bcrypt from 'bcrypt';
@@ -38,6 +45,7 @@ export class UserService {
       { email: email },
       {
         isEmailConfirmed: true,
+        isExprise: null,
       },
     );
   }
@@ -63,5 +71,47 @@ export class UserService {
       return true;
     }
     return false;
+  }
+  async generateResetCode(user: User, randomString: string): Promise<void> {
+    const userUpdate = new this.userModel(user);
+    userUpdate.resetPasswordCode = await bcrypt.hash(randomString, 12);
+    await userUpdate.save();
+  }
+  async verifyResetpassword(input: ResetPasswordInput): Promise<boolean> {
+    const { code, userId, password, confirmpassword } = input;
+    const user = await this.userModel.findOne({ _id: userId });
+    if (!user) {
+      throw new HttpException('User không tồn tại', HttpStatus.NOT_FOUND);
+    }
+    if (!user.isEmailConfirmed) {
+      throw new HttpException(
+        'Email chưa được xác thực',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (!(await bcrypt.compare(code, user.resetPasswordCode))) {
+      throw new HttpException('Code không chính xác', HttpStatus.BAD_REQUEST);
+    }
+    if (password != confirmpassword) {
+      throw new HttpException('Mật khâu không khớp', HttpStatus.BAD_REQUEST);
+    }
+    user.resetPasswordCode = null;
+    const salt = await bcrypt.genSalt();
+    const hashPassword = await bcrypt.hash(password, salt);
+    user.password = hashPassword;
+    await user.save();
+    return true;
+  }
+
+  async updateUser(input: UpdateUserInput, _id: string): Promise<User> {
+    const user: UserDocument = await this.userModel.findOne({ _id });
+    if (!user) {
+      throw new HttpException('User không tồn tại', HttpStatus.BAD_REQUEST);
+    }
+    setInputForOldDocument(input, user);
+    const userFolder = new this.userModel(user);
+    userFolder.updateAt = new Date();
+    await userFolder.save();
+    return userFolder;
   }
 }
