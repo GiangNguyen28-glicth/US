@@ -1,4 +1,4 @@
-import { Schema, Document } from 'mongoose';
+import { Schema, Document, ObjectId } from 'mongoose';
 import { CategoryEnum } from '../../../constants/enum';
 import { Category } from '../entites/category.entities';
 
@@ -11,6 +11,13 @@ export const CategorySchema = new Schema<Category>({
   name: {
     type: String,
     trim: true,
+  },
+  level: {
+    type: Number,
+  },
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: Category.name,
   },
   slug: {
     type: String,

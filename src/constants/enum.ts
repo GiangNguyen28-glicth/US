@@ -24,7 +24,7 @@ registerEnumType(RandomCodeEnum, {
   name: 'RandomCodeEnum',
 });
 export enum CategoryEnum {
-  GAME = 'GAME',
+  HOME = 'HOME',
   SPORT = 'SPORT',
 }
 registerEnumType(CategoryEnum, {

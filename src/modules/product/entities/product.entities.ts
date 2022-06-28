@@ -22,7 +22,7 @@ export class Product {
   imgUrl: [];
   @Field(() => ObjectIDResolver)
   categoryId: string;
-  @Field(() => Int)
+  @Field()
   displayPrice: string;
   @Field({ nullable: true })
   createAt: Date;

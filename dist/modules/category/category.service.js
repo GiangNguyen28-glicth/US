@@ -26,7 +26,12 @@ let CategoryService = class CategoryService {
         if (category) {
             throw new common_1.HttpException('Category đã tồn tại', common_1.HttpStatus.BAD_REQUEST);
         }
-        await this.categoryModel.create(input);
+        const categoryDoc = await this.categoryModel.create(input);
+        if (input.parentId) {
+            const parent = await this.getOneCategory({ _id: input.parentId });
+            categoryDoc.parent = parent;
+        }
+        await categoryDoc.save();
         return true;
     }
     async getOneCategory(input) {
@@ -34,6 +39,12 @@ let CategoryService = class CategoryService {
         const category = await this.categoryModel.findById(_id);
         if (!category) {
             throw new common_1.HttpException('Không tìm thấy Category', common_1.HttpStatus.NOT_FOUND);
+        }
+        if (category.parent) {
+            const parent = await this.categoryModel.findOne({
+                _id: category.parent._id,
+            });
+            category.parent = parent;
         }
         return category;
     }

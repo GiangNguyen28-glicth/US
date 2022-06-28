@@ -30,7 +30,7 @@ var RandomCodeEnum;
 });
 var CategoryEnum;
 (function (CategoryEnum) {
-    CategoryEnum["GAME"] = "GAME";
+    CategoryEnum["HOME"] = "HOME";
     CategoryEnum["SPORT"] = "SPORT";
 })(CategoryEnum = exports.CategoryEnum || (exports.CategoryEnum = {}));
 (0, graphql_1.registerEnumType)(CategoryEnum, {

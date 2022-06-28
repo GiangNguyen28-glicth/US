@@ -52,7 +52,7 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "categoryId", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int),
+    (0, graphql_1.Field)(),
     __metadata("design:type", String)
 ], Product.prototype, "displayPrice", void 0);
 __decorate([

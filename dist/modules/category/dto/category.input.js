@@ -23,6 +23,14 @@ __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
 ], CategoryInput.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], CategoryInput.prototype, "level", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver, { nullable: true }),
+    __metadata("design:type", String)
+], CategoryInput.prototype, "parentId", void 0);
 CategoryInput = __decorate([
     (0, graphql_1.InputType)()
 ], CategoryInput);

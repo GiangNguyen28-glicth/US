@@ -63,7 +63,12 @@ function setInputForOldDocument(input, oldDoc) {
 }
 exports.setInputForOldDocument = setInputForOldDocument;
 function toformatPrice(price) {
-    return price.toString();
+    const priceN = parseInt(price.toString());
+    const priceVND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(priceN);
+    return priceVND;
 }
 exports.toformatPrice = toformatPrice;
 //# sourceMappingURL=feature.utils.js.map

@@ -13,6 +13,6 @@ export declare enum RandomCodeEnum {
     NUMBER = "NUMBER"
 }
 export declare enum CategoryEnum {
-    GAME = "GAME",
+    HOME = "HOME",
     SPORT = "SPORT"
 }

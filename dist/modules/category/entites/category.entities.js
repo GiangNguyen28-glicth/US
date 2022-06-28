@@ -8,11 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var Category_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Category = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const enum_1 = require("../../../constants/enum");
-let Category = class Category {
+let Category = Category_1 = class Category {
 };
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.ID),
@@ -27,6 +28,14 @@ __decorate([
     __metadata("design:type", String)
 ], Category.prototype, "name", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => Category_1, { nullable: true }),
+    __metadata("design:type", Category)
+], Category.prototype, "parent", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", Number)
+], Category.prototype, "level", void 0);
+__decorate([
     (0, graphql_1.HideField)(),
     __metadata("design:type", String)
 ], Category.prototype, "slug", void 0);
@@ -34,7 +43,7 @@ __decorate([
     (0, graphql_1.HideField)(),
     __metadata("design:type", String)
 ], Category.prototype, "keyword", void 0);
-Category = __decorate([
+Category = Category_1 = __decorate([
     (0, graphql_1.ObjectType)()
 ], Category);
 exports.Category = Category;

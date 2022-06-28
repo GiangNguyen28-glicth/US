@@ -9,6 +9,10 @@ export class Category {
   code: CategoryEnum;
   @Field({ nullable: true })
   name: string;
+  @Field(() => Category, { nullable: true })
+  parent: Category;
+  @Field()
+  level: number;
   @HideField()
   slug: string;
   @HideField()

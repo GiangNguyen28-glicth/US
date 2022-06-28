@@ -5,11 +5,13 @@
 type Category {
   _id: ID!
   code: CategoryEnum!
+  level: Float!
   name: String
+  parent: Category
 }
 
 enum CategoryEnum {
-  GAME
+  HOME
   SPORT
 }
 
@@ -19,7 +21,9 @@ input CategoryGetOneInput {
 
 input CategoryInput {
   code: CategoryEnum!
+  level: Int
   name: String
+  parentId: ObjectID
 }
 
 input ConfirmMailInput {
@@ -92,7 +96,7 @@ type Product {
   categoryId: ObjectID!
   createAt: DateTime
   discount: Int
-  displayPrice: Int!
+  displayPrice: String!
   imgUrl: [String!]!
   name: String
   price: Float!

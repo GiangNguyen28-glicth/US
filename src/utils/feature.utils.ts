@@ -66,5 +66,10 @@ export function setInputForOldDocument(input: Object, oldDoc: Object): void {
   }
 }
 export function toformatPrice(price: Schema.Types.Decimal128): string {
-  return price.toString();
+  const priceN = parseInt(price.toString());
+  const priceVND = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(priceN);
+  return priceVND;
 }
