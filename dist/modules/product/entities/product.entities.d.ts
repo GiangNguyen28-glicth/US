@@ -9,6 +9,7 @@ export declare class Product {
     quantity: number;
     imgUrl: [];
     categoryId: string;
+    displayPrice: string;
     createAt: Date;
     updateAt: Date;
     slug: string;

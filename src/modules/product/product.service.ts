@@ -13,4 +13,7 @@ export class ProductService {
   async createProduct(input: CreateProductInput): Promise<boolean> {
     return this.productModel.create(input) ? true : false;
   }
+  async getAllProducts(): Promise<Product[]> {
+    return this.productModel.find();
+  }
 }

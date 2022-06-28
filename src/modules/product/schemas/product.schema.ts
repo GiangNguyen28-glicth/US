@@ -1,5 +1,4 @@
 import { Document, Schema, Types } from 'mongoose';
-import { Category } from '../../category/entites/category.entities';
 import { Product } from '../entities/product.entities';
 
 export type ProductDocument = Product & Document;
@@ -12,11 +11,15 @@ export const ProductSchema = new Schema<Product>({
     type: Schema.Types.Decimal128,
     min: [0, 'min is 0'],
     get: function (val: Types.Decimal128): number {
+      console.log(val);
       if (val) {
         return +val.toString();
       }
       return 0;
     },
+  },
+  displayPrice: {
+    type: String,
   },
   rating: {
     type: Number,

@@ -1,11 +1,12 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { Schema } from 'mongoose';
 import { transformTextSearch } from './string.utils';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function getFieldsInFilter(filter: Object): Object {
   const fields = {};
   for (const key in filter) {
-    if (!isUndefinedOrNull) {
+    if (!isUndefinedOrNull(key)) {
       if (Array.isArray(filter[key])) {
         fields[key] = { $in: filter[key] };
       } else {
@@ -63,4 +64,7 @@ export function setInputForOldDocument(input: Object, oldDoc: Object): void {
       oldDoc[key] = input[key];
     }
   }
+}
+export function toformatPrice(price: Schema.Types.Decimal128): string {
+  return price.toString();
 }

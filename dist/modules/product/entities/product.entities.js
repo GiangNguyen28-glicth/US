@@ -24,7 +24,7 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int),
+    (0, graphql_1.Field)(() => graphql_1.Float),
     __metadata("design:type", mongoose_1.Schema.Types.Decimal128)
 ], Product.prototype, "price", void 0);
 __decorate([
@@ -51,6 +51,10 @@ __decorate([
     (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver),
     __metadata("design:type", String)
 ], Product.prototype, "categoryId", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    __metadata("design:type", String)
+], Product.prototype, "displayPrice", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", Date)

@@ -87,6 +87,21 @@ A field whose value conforms with the standard mongodb object ID as described he
 """
 scalar ObjectID
 
+type Product {
+  _id: ID!
+  categoryId: ObjectID!
+  createAt: DateTime
+  discount: Int
+  displayPrice: Int!
+  imgUrl: [String!]!
+  name: String
+  price: Float!
+  quantity: Int
+  rating: Int
+  title: String
+  updateAt: DateTime
+}
+
 type Province {
   code: Int
   codename: String
@@ -96,10 +111,12 @@ type Province {
 
 type Query {
   confirmMail(input: ConfirmMailInput!): Boolean!
+  getAllProducts: [Product!]!
   getCategoryById(input: CategoryGetOneInput!): Category!
   getDistrict(province_code: Float!): [District!]!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
+  refreshToken: JwtPayload!
 }
 
 input RegisterInput {

@@ -13,7 +13,6 @@ export class RtGuard extends AuthGuard('jwt-refresh') {
     return ctx.getContext().req;
   }
   handleRequest(err: any, user: any, info: any) {
-    console.log('Running in handleRequest AtGuard');
     if (err || !user) {
       if (!info) {
         throw new UnauthorizedException(err);

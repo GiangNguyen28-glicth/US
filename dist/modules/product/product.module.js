@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const constants_1 = require("../../constants/constants");
 const enum_1 = require("../../constants/enum");
+const feature_utils_1 = require("../../utils/feature.utils");
 const string_utils_1 = require("../../utils/string.utils");
 const product_entities_1 = require("./entities/product.entities");
 const product_resolver_1 = require("./product.resolver");
@@ -29,6 +30,7 @@ ProductModule = __decorate([
                             if (!this.name) {
                                 this.name = 'BaseSource ' + (0, string_utils_1.randomCode)(12, enum_1.RandomCodeEnum.UPPER);
                             }
+                            this.displayPrice = (0, feature_utils_1.toformatPrice)(this.price);
                             this.slug = (0, string_utils_1.toSlug)(this.name, constants_1.Constants.LOCALE_COUNTRY_CODE_VN);
                             this.keyword = (0, string_utils_1.toKeyword)(this.slug);
                             return next();

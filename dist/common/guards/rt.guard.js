@@ -16,7 +16,6 @@ let RtGuard = class RtGuard extends (0, passport_1.AuthGuard)('jwt-refresh') {
         return ctx.getContext().req;
     }
     handleRequest(err, user, info) {
-        console.log('Running in handleRequest AtGuard');
         if (err || !user) {
             if (!info) {
                 throw new common_1.UnauthorizedException(err);

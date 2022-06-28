@@ -22,8 +22,16 @@ let RtStrategy = class RtStrategy extends (0, passport_1.PassportStrategy)(passp
         });
     }
     validate(req, payload) {
-        const refreshToken = req.get('authorization').replace('Bearer', '').trim();
-        return Object.assign(Object.assign({}, payload), { refreshToken });
+        try {
+            const refreshToken = req
+                .get('authorization')
+                .replace('Bearer', '')
+                .trim();
+            return Object.assign(Object.assign({}, payload), { refreshToken });
+        }
+        catch (error) {
+            throw new common_1.HttpException('Token Token', common_1.HttpStatus.UNAUTHORIZED);
+        }
     }
 };
 RtStrategy = __decorate([

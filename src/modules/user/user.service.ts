@@ -52,18 +52,19 @@ export class UserService {
   async login(loginInput: LoginInput): Promise<UserDocument> {
     const { email, password } = loginInput;
     const user = await this.userModel.findOne({ email });
+    if (!user || !(await this.isCorrectPassword(password, user))) {
+      throw new HttpException(
+        'Tài khoản hoặc mật khẩu không chính xác',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     if (!user.isEmailConfirmed) {
       throw new HttpException(
         'Vui lòng xác thực tài khoản Email',
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (!(await this.isCorrectPassword(password, user))) {
-      throw new HttpException(
-        'Tài khoản hoặc mật khẩu không chính xác',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
+
     return user;
   }
   async isCorrectPassword(password: string, user: User): Promise<boolean> {

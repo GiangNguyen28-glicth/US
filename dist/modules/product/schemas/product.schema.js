@@ -11,11 +11,15 @@ exports.ProductSchema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.Decimal128,
         min: [0, 'min is 0'],
         get: function (val) {
+            console.log(val);
             if (val) {
                 return +val.toString();
             }
             return 0;
         },
+    },
+    displayPrice: {
+        type: String,
     },
     rating: {
         type: Number,

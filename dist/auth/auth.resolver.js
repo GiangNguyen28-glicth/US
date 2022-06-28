@@ -13,13 +13,25 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthResolver = void 0;
+const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
+const getuser_decorator_1 = require("../common/decorators/getuser.decorator");
+const rt_guard_1 = require("../common/guards/rt.guard");
+const user_entities_1 = require("../modules/user/entities/user.entities");
+const user_service_1 = require("../modules/user/user.service");
 const auth_service_1 = require("./auth.service");
 const auth_input_1 = require("./dto/auth.input");
 const auth_entities_1 = require("./entities/auth.entities");
 let AuthResolver = class AuthResolver {
-    constructor(authService) {
+    constructor(authService, userService) {
         this.authService = authService;
+        this.userService = userService;
+    }
+    async refreshToken(user) {
+        const userDoc = await this.userService.getOne({
+            _id: user._id,
+        });
+        return this.authService.setJwt(userDoc);
     }
     async login(input) {
         return await this.authService.signIn(input);
@@ -34,6 +46,14 @@ let AuthResolver = class AuthResolver {
         return this.authService.resetPassword(input);
     }
 };
+__decorate([
+    (0, graphql_1.Query)(() => auth_entities_1.JwtPayload),
+    (0, common_1.UseGuards)(rt_guard_1.RtGuard),
+    __param(0, (0, getuser_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entities_1.User]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "refreshToken", null);
 __decorate([
     (0, graphql_1.Mutation)(() => auth_entities_1.JwtPayload),
     __param(0, (0, graphql_1.Args)('input')),
@@ -64,7 +84,8 @@ __decorate([
 ], AuthResolver.prototype, "resetPassword", null);
 AuthResolver = __decorate([
     (0, graphql_1.Resolver)('Auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        user_service_1.UserService])
 ], AuthResolver);
 exports.AuthResolver = AuthResolver;
 //# sourceMappingURL=auth.resolver.js.map

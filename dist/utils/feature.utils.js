@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setInputForOldDocument = exports.isEmptyObject = exports.getQueryGetAll = exports.toKeyword = exports.isUndefinedOrNull = exports.getFieldsInFilter = void 0;
+exports.toformatPrice = exports.setInputForOldDocument = exports.isEmptyObject = exports.getQueryGetAll = exports.toKeyword = exports.isUndefinedOrNull = exports.getFieldsInFilter = void 0;
 const common_1 = require("@nestjs/common");
 const string_utils_1 = require("./string.utils");
 function getFieldsInFilter(filter) {
     const fields = {};
     for (const key in filter) {
-        if (!isUndefinedOrNull) {
+        if (!isUndefinedOrNull(key)) {
             if (Array.isArray(filter[key])) {
                 fields[key] = { $in: filter[key] };
             }
@@ -62,4 +62,8 @@ function setInputForOldDocument(input, oldDoc) {
     }
 }
 exports.setInputForOldDocument = setInputForOldDocument;
+function toformatPrice(price) {
+    return price.toString();
+}
+exports.toformatPrice = toformatPrice;
 //# sourceMappingURL=feature.utils.js.map

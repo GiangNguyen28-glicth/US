@@ -24,6 +24,9 @@ let ProductService = class ProductService {
     async createProduct(input) {
         return this.productModel.create(input) ? true : false;
     }
+    async getAllProducts() {
+        return this.productModel.find();
+    }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),

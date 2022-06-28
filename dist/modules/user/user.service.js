@@ -55,11 +55,11 @@ let UserService = class UserService {
     async login(loginInput) {
         const { email, password } = loginInput;
         const user = await this.userModel.findOne({ email });
+        if (!user || !(await this.isCorrectPassword(password, user))) {
+            throw new common_1.HttpException('Tài khoản hoặc mật khẩu không chính xác', common_1.HttpStatus.UNAUTHORIZED);
+        }
         if (!user.isEmailConfirmed) {
             throw new common_1.HttpException('Vui lòng xác thực tài khoản Email', common_1.HttpStatus.BAD_REQUEST);
-        }
-        if (!(await this.isCorrectPassword(password, user))) {
-            throw new common_1.HttpException('Tài khoản hoặc mật khẩu không chính xác', common_1.HttpStatus.UNAUTHORIZED);
         }
         return user;
     }

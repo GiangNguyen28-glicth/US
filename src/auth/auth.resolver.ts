@@ -1,4 +1,10 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GetUser } from '../common/decorators/getuser.decorator';
+import { RtGuard } from '../common/guards/rt.guard';
+import { User } from '../modules/user/entities/user.entities';
+import { UserDocument } from '../modules/user/schema/user.schema';
+import { UserService } from '../modules/user/user.service';
 import { AuthService } from './auth.service';
 import {
   LoginInput,
@@ -9,7 +15,18 @@ import { JwtPayload } from './entities/auth.entities';
 
 @Resolver('Auth')
 export class AuthResolver {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
+  @Query(() => JwtPayload)
+  @UseGuards(RtGuard)
+  async refreshToken(@GetUser() user: User): Promise<JwtPayload> {
+    const userDoc: UserDocument = await this.userService.getOne({
+      _id: user._id,
+    });
+    return this.authService.setJwt(userDoc);
+  }
   @Mutation(() => JwtPayload)
   async login(@Args('input') input: LoginInput): Promise<JwtPayload> {
     return await this.authService.signIn(input);
