@@ -18,6 +18,9 @@ const category_module_1 = require("./modules/category/category.module");
 const mail_module_1 = require("./modules/mail/mail.module");
 const order_module_1 = require("./modules/order/order.module");
 const product_module_1 = require("./modules/product/product.module");
+const throttler_config_1 = require("./configs/throttler.config");
+const core_1 = require("@nestjs/core");
+const throttler_guard_1 = require("./common/guards/throttler.guard");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -25,6 +28,7 @@ AppModule = __decorate([
         imports: [
             graphql_config_1.graphqlConfig,
             moongose_config_1.moongoseConfig,
+            throttler_config_1.throttlerConfig,
             auth_module_1.AuthModule,
             user_module_1.UserModule,
             cart_module_1.CartModule,
@@ -33,6 +37,12 @@ AppModule = __decorate([
             mail_module_1.MailModule,
             order_module_1.OrderModule,
             product_module_1.ProductModule,
+        ],
+        providers: [
+            {
+                provide: core_1.APP_GUARD,
+                useClass: throttler_guard_1.GqlThrottlerGuard,
+            },
         ],
     })
 ], AppModule);

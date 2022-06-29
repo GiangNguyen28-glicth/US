@@ -11,4 +11,5 @@ export declare class ProductService {
     getAllProducts(): Promise<Product[]>;
     searchProduct(input: SearchProductInput): Promise<Product[]>;
     getProductByCategory(categoryId: string): Promise<Product[]>;
+    getProductById(productId: string): Promise<Product>;
 }

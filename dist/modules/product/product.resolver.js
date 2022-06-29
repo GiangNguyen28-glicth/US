@@ -30,6 +30,9 @@ let ProductResolver = class ProductResolver {
     async getProductByCategory(categoryId) {
         return this.productService.getProductByCategory(categoryId);
     }
+    async getProductById(productId) {
+        return this.productService.getProductById(productId);
+    }
     async createProduct(input) {
         return this.productService.createProduct(input);
     }
@@ -54,6 +57,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "getProductByCategory", null);
+__decorate([
+    (0, graphql_1.Query)(() => product_entities_1.Product),
+    __param(0, (0, graphql_1.Args)('productId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "getProductById", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),

@@ -129,6 +129,7 @@ type Query {
   getChildOfCategory(categoryId: String!): Category!
   getDistrict(province_code: Float!): [District!]!
   getProductByCategory(categoryId: String!): [Product!]!
+  getProductById(productId: String!): Product!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!

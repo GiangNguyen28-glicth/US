@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Constants } from '../../constants/constants';
 import { getFieldsInFilter, getQueryGetAll } from '../../utils/feature.utils';
 import { CategoryService } from '../category/category.service';
-import { CategoryGetByParentAndLevel } from '../category/dto/category.input';
 import { CreateProductInput, SearchProductInput } from './dto/product.input';
 import { Product } from './entities/product.entities';
 import { ProductDocument } from './schemas/product.schema';
@@ -36,7 +34,6 @@ export class ProductService {
     const listIdDescendants: string[] =
       await this.categoryService.getChildIdCategory(category._id.toString());
     let listProducts: Product[] = [];
-    console.log(listIdDescendants);
     for (let i = 0; i < listIdDescendants.length; i++) {
       const products = await this.productModel.find({
         category: listIdDescendants[i],
@@ -44,5 +41,13 @@ export class ProductService {
       listProducts = listProducts.concat(products);
     }
     return listProducts;
+  }
+
+  async getProductById(productId: string): Promise<Product> {
+    const product = await this.productModel.findOne({ _id: productId });
+    if (!product) {
+      throw new HttpException('Không tìm thấy Product', HttpStatus.NOT_FOUND);
+    }
+    return product;
   }
 }

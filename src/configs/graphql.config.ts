@@ -11,7 +11,7 @@ export const graphqlConfig = GraphQLModule.forRoot<ApolloDriverConfig>({
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   sortSchema: true,
   buildSchemaOptions: { dateScalarMode: 'isoDate' },
-  context: ({ req, res }) => ({ headers: req.headers, req: req, res: res }),
+  context: ({ req, res }) => ({ req: req, res: res }),
   debug: false,
   resolvers: {
     ObjectID: ObjectIDResolver,

@@ -44,7 +44,6 @@ let ProductService = class ProductService {
         });
         const listIdDescendants = await this.categoryService.getChildIdCategory(category._id.toString());
         let listProducts = [];
-        console.log(listIdDescendants);
         for (let i = 0; i < listIdDescendants.length; i++) {
             const products = await this.productModel.find({
                 category: listIdDescendants[i],
@@ -52,6 +51,13 @@ let ProductService = class ProductService {
             listProducts = listProducts.concat(products);
         }
         return listProducts;
+    }
+    async getProductById(productId) {
+        const product = await this.productModel.findOne({ _id: productId });
+        if (!product) {
+            throw new common_1.HttpException('Không tìm thấy Product', common_1.HttpStatus.NOT_FOUND);
+        }
+        return product;
     }
 };
 ProductService = __decorate([

@@ -10,11 +10,15 @@ import { CategoryModule } from './modules/category/category.module';
 import { MailModule } from './modules/mail/mail.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
+import { throttlerConfig } from './configs/throttler.config';
+import { APP_GUARD } from '@nestjs/core';
+import { GqlThrottlerGuard } from './common/guards/throttler.guard';
 
 @Module({
   imports: [
     graphqlConfig,
     moongoseConfig,
+    throttlerConfig,
     AuthModule,
     UserModule,
     CartModule,
@@ -23,6 +27,12 @@ import { ProductModule } from './modules/product/product.module';
     MailModule,
     OrderModule,
     ProductModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: GqlThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
