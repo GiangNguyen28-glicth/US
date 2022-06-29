@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { response } from 'express';
 import { District } from './entities/district.entities';
 import { Province } from './entities/province.entities';
 import { Wards } from './entities/wards.entites';

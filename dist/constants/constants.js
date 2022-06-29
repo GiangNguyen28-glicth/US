@@ -10,4 +10,6 @@ Constants.CATEGORY_LEVEL_1 = 1;
 Constants.CATEGORY_LEVEL_2 = 2;
 Constants.CATEGORY_LEVEL_3 = 3;
 Constants.CATEGORY_MAX_LEVEL = 3;
+Constants.KEY_PRODUCT_BY_CATEGORY = 'keyproductbycategory';
+Constants.CLOUDINARY = 'Cloudinary';
 //# sourceMappingURL=constants.js.map

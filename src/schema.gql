@@ -86,11 +86,14 @@ input LoginInput {
 type Mutation {
   createCategory(input: CategoryInput!): Boolean!
   createProduct(input: CreateProductInput!): Boolean!
+  createReview(input: ReviewInput!): Boolean!
   forgotPassword(email: String!): Boolean!
   login(input: LoginInput!): JwtPayload!
   register(input: RegisterInput!): Boolean!
   resetPassword(input: ResetPasswordInput!): Boolean!
+  updateReview(input: ReviewInput!): Boolean!
   updateUser(input: UpdateUserInput!): User!
+  uploadFile(file: Upload!): String!
 }
 
 """
@@ -121,7 +124,9 @@ type Province {
 }
 
 type Query {
+  checkExistsReview(productId: String!): Boolean!
   confirmMail(input: ConfirmMailInput!): Boolean!
+  countReview(productId: String!): Float!
   getAllProducts: [Product!]!
   getCategoryById(input: CategoryGetOneInput!): Category!
   getCategoryByParentIdAndLevel(input: CategoryGetByParentAndLevel!): [Category!]!
@@ -133,6 +138,7 @@ type Query {
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
+  resetCache: String!
   searchProduct(input: SearchProductInput!): [Product!]!
 }
 
@@ -151,6 +157,11 @@ input ResetPasswordInput {
   userId: ObjectID!
 }
 
+input ReviewInput {
+  productId: ObjectID!
+  rating: Int!
+}
+
 enum RoleEnum {
   ADMIN
   USER
@@ -166,6 +177,9 @@ input UpdateUserInput {
   phonenumber: String
   username: String
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 type User {
   _id: ID

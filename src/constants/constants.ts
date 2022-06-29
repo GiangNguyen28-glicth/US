@@ -5,4 +5,6 @@ export class Constants {
   public static CATEGORY_LEVEL_2 = 2;
   public static CATEGORY_LEVEL_3 = 3;
   public static CATEGORY_MAX_LEVEL = 3;
+  public static KEY_PRODUCT_BY_CATEGORY = 'keyproductbycategory';
+  public static CLOUDINARY = 'Cloudinary';
 }

@@ -111,4 +111,12 @@ export class UserService {
     }
     return user;
   }
+
+  async checkUserExists(userId: string): Promise<boolean> {
+    const user = await this.userModel.findOne({ _id: userId });
+    if (!user) {
+      return false;
+    }
+    return true;
+  }
 }

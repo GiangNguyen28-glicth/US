@@ -31,6 +31,12 @@ export class ProductResolver {
     return this.productService.getProductById(productId);
   }
 
+  @Query(() => String)
+  async resetCache(): Promise<string> {
+    this.productService.resetCache();
+    return 'Success';
+  }
+
   @Mutation(() => Boolean)
   async createProduct(
     @Args('input') input: CreateProductInput,

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CACHE_MANAGER, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Constants } from '../../constants/constants';
 import { RandomCodeEnum } from '../../constants/enum';
@@ -16,6 +16,7 @@ import { ProductSchema } from './schemas/product.schema';
       {
         name: Product.name,
         useFactory: () => {
+          ProductSchema.index({ name: 1 });
           ProductSchema.pre('save', function (next) {
             if (!this.name) {
               this.name = 'BaseSource ' + randomCode(12, RandomCodeEnum.UPPER);
@@ -32,5 +33,6 @@ import { ProductSchema } from './schemas/product.schema';
     CategoryModule,
   ],
   providers: [ProductResolver, ProductService],
+  exports: [ProductService],
 })
 export class ProductModule {}

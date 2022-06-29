@@ -11,17 +11,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const constants_1 = require("../../constants/constants");
 const feature_utils_1 = require("../../utils/feature.utils");
+const redis_utils_1 = require("../../utils/redis.utils");
 const category_service_1 = require("../category/category.service");
 const product_entities_1 = require("./entities/product.entities");
+const cache_manager_1 = require("cache-manager");
 let ProductService = class ProductService {
-    constructor(productModel, categoryService) {
+    constructor(productModel, cacheService, categoryService) {
         this.productModel = productModel;
+        this.cacheService = cacheService;
         this.categoryService = categoryService;
     }
     async createProduct(input) {
@@ -39,6 +44,9 @@ let ProductService = class ProductService {
         return product;
     }
     async getProductByCategory(categoryId) {
+        if (await (0, redis_utils_1.checkCacheStore)(this.cacheService, constants_1.Constants.KEY_PRODUCT_BY_CATEGORY)) {
+            return this.cacheService.get(constants_1.Constants.KEY_PRODUCT_BY_CATEGORY);
+        }
         const category = await this.categoryService.getOneCategory({
             _id: categoryId,
         });
@@ -50,6 +58,8 @@ let ProductService = class ProductService {
             });
             listProducts = listProducts.concat(products);
         }
+        console.log(listProducts);
+        this.cacheService.set(constants_1.Constants.KEY_PRODUCT_BY_CATEGORY, listProducts);
         return listProducts;
     }
     async getProductById(productId) {
@@ -59,12 +69,22 @@ let ProductService = class ProductService {
         }
         return product;
     }
+    async checkProductExists(productId) {
+        const product = await this.productModel.findOne({ _id: productId });
+        if (!product) {
+            return false;
+        }
+        return true;
+    }
+    async resetCache() {
+        await this.cacheService.reset();
+    }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(product_entities_1.Product.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model,
-        category_service_1.CategoryService])
+    __param(1, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
+    __metadata("design:paramtypes", [mongoose_2.Model, typeof (_a = typeof cache_manager_1.Cache !== "undefined" && cache_manager_1.Cache) === "function" ? _a : Object, category_service_1.CategoryService])
 ], ProductService);
 exports.ProductService = ProductService;
 //# sourceMappingURL=product.service.js.map

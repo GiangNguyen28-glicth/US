@@ -13,12 +13,15 @@ import { ProductModule } from './modules/product/product.module';
 import { throttlerConfig } from './configs/throttler.config';
 import { APP_GUARD } from '@nestjs/core';
 import { GqlThrottlerGuard } from './common/guards/throttler.guard';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { ReviewModule } from './modules/review/review.module';
 
 @Module({
   imports: [
     graphqlConfig,
     moongoseConfig,
     throttlerConfig,
+    cacheConfig,
     AuthModule,
     UserModule,
     CartModule,
@@ -27,6 +30,8 @@ import { GqlThrottlerGuard } from './common/guards/throttler.guard';
     MailModule,
     OrderModule,
     ProductModule,
+    CloudinaryModule,
+    ReviewModule,
   ],
   providers: [
     {

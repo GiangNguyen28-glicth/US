@@ -14,4 +14,5 @@ export declare class UserService {
     generateResetCode(user: User, randomString: string): Promise<void>;
     verifyResetpassword(input: ResetPasswordInput): Promise<boolean>;
     updateUser(input: UpdateUserInput, _id: string): Promise<User>;
+    checkUserExists(userId: string): Promise<boolean>;
 }

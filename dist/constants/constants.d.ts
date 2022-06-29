@@ -5,4 +5,6 @@ export declare class Constants {
     static CATEGORY_LEVEL_2: number;
     static CATEGORY_LEVEL_3: number;
     static CATEGORY_MAX_LEVEL: number;
+    static KEY_PRODUCT_BY_CATEGORY: string;
+    static CLOUDINARY: string;
 }

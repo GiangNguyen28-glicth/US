@@ -27,6 +27,7 @@ ProductModule = __decorate([
                 {
                     name: product_entities_1.Product.name,
                     useFactory: () => {
+                        product_schema_1.ProductSchema.index({ name: 1 });
                         product_schema_1.ProductSchema.pre('save', function (next) {
                             if (!this.name) {
                                 this.name = 'BaseSource ' + (0, string_utils_1.randomCode)(12, enum_1.RandomCodeEnum.UPPER);
@@ -43,6 +44,7 @@ ProductModule = __decorate([
             category_module_1.CategoryModule,
         ],
         providers: [product_resolver_1.ProductResolver, product_service_1.ProductService],
+        exports: [product_service_1.ProductService],
     })
 ], ProductModule);
 exports.ProductModule = ProductModule;

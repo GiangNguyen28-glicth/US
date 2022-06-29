@@ -6,4 +6,5 @@ export const cacheConfig = CacheModule.register<RedisClientOptions>({
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   ttl: +process.env.CACHE_TTL,
   max: parseInt(process.env.REDIS_MAX_SIZE),
+  isGlobal: true,
 });
