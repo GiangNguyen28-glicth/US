@@ -21,6 +21,15 @@ let CategoryResolver = class CategoryResolver {
     constructor(categoryService) {
         this.categoryService = categoryService;
     }
+    async getChildOfCategory(categoryId) {
+        return this.categoryService.getChildOfCategory(categoryId);
+    }
+    async getChildIdCategory(categoryId) {
+        return this.categoryService.getChildIdCategory(categoryId);
+    }
+    async getCategoryByParentIdAndLevel(input) {
+        return this.categoryService.getCategoryByParentIdAndLevel(input);
+    }
     async getCategoryById(input) {
         return this.categoryService.getOneCategory(input);
     }
@@ -28,6 +37,27 @@ let CategoryResolver = class CategoryResolver {
         return this.categoryService.createCategory(input);
     }
 };
+__decorate([
+    (0, graphql_1.Query)(() => category_entities_1.Category),
+    __param(0, (0, graphql_1.Args)('categoryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CategoryResolver.prototype, "getChildOfCategory", null);
+__decorate([
+    (0, graphql_1.Query)(() => [String]),
+    __param(0, (0, graphql_1.Args)('categoryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CategoryResolver.prototype, "getChildIdCategory", null);
+__decorate([
+    (0, graphql_1.Query)(() => [category_entities_1.Category]),
+    __param(0, (0, graphql_1.Args)('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [category_input_1.CategoryGetByParentAndLevel]),
+    __metadata("design:returntype", Promise)
+], CategoryResolver.prototype, "getCategoryByParentIdAndLevel", null);
 __decorate([
     (0, graphql_1.Query)(() => category_entities_1.Category),
     __param(0, (0, graphql_1.Args)('input')),

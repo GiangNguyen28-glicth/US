@@ -1,4 +1,5 @@
 import { Document, Schema, Types } from 'mongoose';
+import { Category } from '../../category/entites/category.entities';
 import { Product } from '../entities/product.entities';
 
 export type ProductDocument = Product & Document;
@@ -37,9 +38,10 @@ export const ProductSchema = new Schema<Product>({
     type: Number,
   },
   imgUrl: [],
-  categoryId: {
-    type: String,
-    ref: 'Category',
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: Category.name,
+    autopopulate: true,
   },
   createAt: {
     type: Date,

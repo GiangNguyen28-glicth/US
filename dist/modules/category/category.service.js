@@ -48,6 +48,34 @@ let CategoryService = class CategoryService {
         }
         return category;
     }
+    async getChildOfCategory(categoryId) {
+        const categories = await this.categoryModel
+            .findOne({ _id: categoryId })
+            .populate({
+            path: 'child',
+            populate: {
+                path: 'child',
+            },
+        })
+            .exec();
+        return categories;
+    }
+    async getChildIdCategory(categoryId) {
+        const categories = await this.getChildOfCategory(categoryId);
+        let listIdDescendants = [];
+        categories.child.forEach(element => {
+            listIdDescendants = listIdDescendants.concat(element._id.toString());
+            if (element.child.length > 0) {
+                element.child.forEach(nextChild => {
+                    listIdDescendants = listIdDescendants.concat(nextChild._id.toString());
+                });
+            }
+        });
+        return listIdDescendants;
+    }
+    async getCategoryByParentIdAndLevel(input) {
+        return this.categoryModel.find(input);
+    }
 };
 CategoryService = __decorate([
     (0, common_1.Injectable)(),

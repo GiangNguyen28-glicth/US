@@ -1,6 +1,6 @@
 import { Field, Float, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
-import { ObjectIDResolver } from 'graphql-scalars';
 import { Schema } from 'mongoose';
+import { Category } from '../../category/entites/category.entities';
 
 @ObjectType()
 export class Product {
@@ -20,8 +20,8 @@ export class Product {
   quantity: number;
   @Field(() => [String])
   imgUrl: [];
-  @Field(() => ObjectIDResolver)
-  categoryId: string;
+  @Field(() => Category)
+  category: Category;
   @Field()
   displayPrice: string;
   @Field({ nullable: true })

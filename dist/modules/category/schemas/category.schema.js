@@ -14,11 +14,13 @@ exports.CategorySchema = new mongoose_1.Schema({
         trim: true,
     },
     level: {
+        max: [3, 'Dept tối đa có thể là 3'],
         type: Number,
     },
     parent: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: category_entities_1.Category.name,
+        autopopulate: true,
     },
     slug: {
         type: String,
@@ -28,5 +30,13 @@ exports.CategorySchema = new mongoose_1.Schema({
         type: String,
         trim: true,
     },
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+});
+exports.CategorySchema.virtual('child', {
+    ref: category_entities_1.Category.name,
+    foreignField: 'parent',
+    localField: '_id',
 });
 //# sourceMappingURL=category.schema.js.map

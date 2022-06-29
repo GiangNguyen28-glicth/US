@@ -43,6 +43,10 @@ __decorate([
     (0, graphql_1.HideField)(),
     __metadata("design:type", String)
 ], Category.prototype, "keyword", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [Category_1], { nullable: true }),
+    __metadata("design:type", Array)
+], Category.prototype, "child", void 0);
 Category = Category_1 = __decorate([
     (0, graphql_1.ObjectType)()
 ], Category);

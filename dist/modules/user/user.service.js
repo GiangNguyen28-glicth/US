@@ -97,15 +97,11 @@ let UserService = class UserService {
         return true;
     }
     async updateUser(input, _id) {
-        const user = await this.userModel.findOne({ _id });
+        const user = await this.userModel.findOneAndUpdate({ _id }, input, { new: true });
         if (!user) {
             throw new common_1.HttpException('User không tồn tại', common_1.HttpStatus.BAD_REQUEST);
         }
-        (0, feature_utils_1.setInputForOldDocument)(input, user);
-        const userFolder = new this.userModel(user);
-        userFolder.updateAt = new Date();
-        await userFolder.save();
-        return userFolder;
+        return user;
     }
 };
 UserService = __decorate([

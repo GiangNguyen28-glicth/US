@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategoryGetOneInput = exports.CategoryInput = void 0;
+exports.CategoryGetByParentAndLevel = exports.CategoryGetOneInput = exports.CategoryInput = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const enum_1 = require("../../../constants/enum");
 const graphql_scalars_1 = require("graphql-scalars");
@@ -45,4 +45,22 @@ CategoryGetOneInput = __decorate([
     (0, graphql_1.InputType)()
 ], CategoryGetOneInput);
 exports.CategoryGetOneInput = CategoryGetOneInput;
+let CategoryGetByParentAndLevel = class CategoryGetByParentAndLevel {
+};
+__decorate([
+    (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver, { nullable: true }),
+    __metadata("design:type", String)
+], CategoryGetByParentAndLevel.prototype, "parent", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], CategoryGetByParentAndLevel.prototype, "level", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver, { nullable: true }),
+    __metadata("design:type", String)
+], CategoryGetByParentAndLevel.prototype, "categoryId", void 0);
+CategoryGetByParentAndLevel = __decorate([
+    (0, graphql_1.InputType)()
+], CategoryGetByParentAndLevel);
+exports.CategoryGetByParentAndLevel = CategoryGetByParentAndLevel;
 //# sourceMappingURL=category.input.js.map

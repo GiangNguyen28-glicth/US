@@ -13,6 +13,7 @@ const constants_1 = require("../../constants/constants");
 const enum_1 = require("../../constants/enum");
 const feature_utils_1 = require("../../utils/feature.utils");
 const string_utils_1 = require("../../utils/string.utils");
+const category_module_1 = require("../category/category.module");
 const product_entities_1 = require("./entities/product.entities");
 const product_resolver_1 = require("./product.resolver");
 const product_service_1 = require("./product.service");
@@ -39,6 +40,7 @@ ProductModule = __decorate([
                     },
                 },
             ]),
+            category_module_1.CategoryModule,
         ],
         providers: [product_resolver_1.ProductResolver, product_service_1.ProductService],
     })

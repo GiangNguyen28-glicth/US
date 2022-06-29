@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const graphql_scalars_1 = require("graphql-scalars");
 const mongoose_1 = require("mongoose");
+const category_entities_1 = require("../../category/entites/category.entities");
 let Product = class Product {
 };
 __decorate([
@@ -48,9 +48,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Product.prototype, "imgUrl", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver),
-    __metadata("design:type", String)
-], Product.prototype, "categoryId", void 0);
+    (0, graphql_1.Field)(() => category_entities_1.Category),
+    __metadata("design:type", category_entities_1.Category)
+], Product.prototype, "category", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", String)

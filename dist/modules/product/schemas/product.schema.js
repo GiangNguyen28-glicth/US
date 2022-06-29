@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductSchema = void 0;
 const mongoose_1 = require("mongoose");
+const category_entities_1 = require("../../category/entites/category.entities");
 exports.ProductSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -37,9 +38,10 @@ exports.ProductSchema = new mongoose_1.Schema({
         type: Number,
     },
     imgUrl: [],
-    categoryId: {
-        type: String,
-        ref: 'Category',
+    category: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: category_entities_1.Category.name,
+        autopopulate: true,
     },
     createAt: {
         type: Date,

@@ -4,6 +4,11 @@ export declare class CreateProductInput {
     title: string;
     discount?: number;
     quantity: number;
-    url?: string;
-    categoryId: string;
+    imgUrl?: [];
+    category: string;
+}
+export declare class SearchProductInput {
+    category?: string;
+    name?: string;
+    price: number;
 }

@@ -17,4 +17,6 @@ export class Category {
   slug: string;
   @HideField()
   keyword: string;
+  @Field(() => [Category], { nullable: true })
+  child: Category[];
 }

@@ -1,9 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { setInputForOldDocument } from '../../utils/feature.utils';
-import { CategoryGetOneInput, CategoryInput } from './dto/category.input';
+import { Constants } from '../../constants/constants';
+import {
+  CategoryGetByParentAndLevel,
+  CategoryGetOneInput,
+  CategoryInput,
+} from './dto/category.input';
 import { Category } from './entites/category.entities';
+import { CategoryDocument } from './schemas/category.schema';
 
 @Injectable()
 export class CategoryService {
@@ -36,5 +41,37 @@ export class CategoryService {
       category.parent = parent;
     }
     return category;
+  }
+  async getChildOfCategory(categoryId: string): Promise<Category> {
+    const categories: CategoryDocument = await this.categoryModel
+      .findOne({ _id: categoryId })
+      .populate({
+        path: 'child',
+        populate: {
+          path: 'child',
+        },
+      })
+      .exec();
+    return categories;
+  }
+  async getChildIdCategory(categoryId: string): Promise<string[]> {
+    const categories = await this.getChildOfCategory(categoryId);
+    let listIdDescendants: string[] = [];
+    categories.child.forEach(element => {
+      listIdDescendants = listIdDescendants.concat(element._id.toString());
+      if (element.child.length > 0) {
+        element.child.forEach(nextChild => {
+          listIdDescendants = listIdDescendants.concat(
+            nextChild._id.toString(),
+          );
+        });
+      }
+    });
+    return listIdDescendants;
+  }
+  async getCategoryByParentIdAndLevel(
+    input: CategoryGetByParentAndLevel,
+  ): Promise<Category[]> {
+    return this.categoryModel.find(input);
   }
 }

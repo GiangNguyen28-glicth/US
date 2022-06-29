@@ -28,7 +28,7 @@ function toKeyword(text) {
     return text.replace(/-/g, ' ');
 }
 exports.toKeyword = toKeyword;
-function getQueryGetAll(prop, searchInput) {
+function getQueryGetAll(prop, searchInput, fields) {
     const query = {
         $and: [
             {
@@ -41,6 +41,9 @@ function getQueryGetAll(prop, searchInput) {
     };
     Object.defineProperty(query.$and[0], prop, Object.getOwnPropertyDescriptor(query.$and[0], 'property'));
     delete query.$and[0]['property'];
+    if (!isEmptyObject(fields)) {
+        query.$and.push(fields);
+    }
     return query;
 }
 exports.getQueryGetAll = getQueryGetAll;
@@ -64,10 +67,10 @@ function setInputForOldDocument(input, oldDoc) {
 exports.setInputForOldDocument = setInputForOldDocument;
 function toformatPrice(price) {
     const priceN = parseInt(price.toString());
-    const priceVND = new Intl.NumberFormat('vi-VN', {
+    const priceVND = priceN.toLocaleString('it-IT', {
         style: 'currency',
         currency: 'VND',
-    }).format(priceN);
+    });
     return priceVND;
 }
 exports.toformatPrice = toformatPrice;

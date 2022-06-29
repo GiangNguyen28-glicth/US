@@ -6,10 +6,7 @@ import {
   RegisterInput,
   ResetPasswordInput,
 } from '../../auth/dto/auth.input';
-import {
-  getFieldsInFilter,
-  setInputForOldDocument,
-} from '../../utils/feature.utils';
+import { getFieldsInFilter } from '../../utils/feature.utils';
 import { FilterGetOneUser, UpdateUserInput } from './dto/user.input';
 import { User } from './entities/user.entities';
 import { UserDocument } from './schema/user.schema';
@@ -64,7 +61,6 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
     return user;
   }
   async isCorrectPassword(password: string, user: User): Promise<boolean> {
@@ -105,14 +101,14 @@ export class UserService {
   }
 
   async updateUser(input: UpdateUserInput, _id: string): Promise<User> {
-    const user: UserDocument = await this.userModel.findOne({ _id });
+    const user: UserDocument = await this.userModel.findOneAndUpdate(
+      { _id },
+      input,
+      { new: true },
+    );
     if (!user) {
       throw new HttpException('User không tồn tại', HttpStatus.BAD_REQUEST);
     }
-    setInputForOldDocument(input, user);
-    const userFolder = new this.userModel(user);
-    userFolder.updateAt = new Date();
-    await userFolder.save();
-    return userFolder;
+    return user;
   }
 }

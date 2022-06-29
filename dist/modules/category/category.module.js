@@ -39,6 +39,7 @@ CategoryModule = __decorate([
             ]),
         ],
         providers: [category_resolver_1.CategoryResolver, category_service_1.CategoryService],
+        exports: [category_service_1.CategoryService],
     })
 ], CategoryModule);
 exports.CategoryModule = CategoryModule;

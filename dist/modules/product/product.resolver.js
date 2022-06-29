@@ -21,13 +21,39 @@ let ProductResolver = class ProductResolver {
     constructor(productService) {
         this.productService = productService;
     }
-    async createProduct(input) {
-        return this.productService.createProduct(input);
-    }
     async getAllProducts() {
         return this.productService.getAllProducts();
     }
+    async searchProduct(input) {
+        return this.productService.searchProduct(input);
+    }
+    async getProductByCategory(categoryId) {
+        return this.productService.getProductByCategory(categoryId);
+    }
+    async createProduct(input) {
+        return this.productService.createProduct(input);
+    }
 };
+__decorate([
+    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "getAllProducts", null);
+__decorate([
+    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    __param(0, (0, graphql_1.Args)('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [product_input_1.SearchProductInput]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "searchProduct", null);
+__decorate([
+    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    __param(0, (0, graphql_1.Args)('categoryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "getProductByCategory", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),
@@ -35,12 +61,6 @@ __decorate([
     __metadata("design:paramtypes", [product_input_1.CreateProductInput]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "createProduct", null);
-__decorate([
-    (0, graphql_1.Query)(() => [product_entities_1.Product]),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "getAllProducts", null);
 ProductResolver = __decorate([
     (0, graphql_1.Resolver)(product_entities_1.Product.name),
     __metadata("design:paramtypes", [product_service_1.ProductService])

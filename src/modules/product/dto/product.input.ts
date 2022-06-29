@@ -13,8 +13,17 @@ export class CreateProductInput {
   discount?: number;
   @Field(() => Int)
   quantity: number;
-  @Field({ nullable: true })
-  url?: string;
+  @Field(() => [String], { nullable: true })
+  imgUrl?: [];
   @Field(() => ObjectIDResolver)
-  categoryId: string;
+  category: string;
+}
+@InputType()
+export class SearchProductInput {
+  @Field(() => ObjectIDResolver, { nullable: true })
+  category?: string;
+  @Field({ nullable: true })
+  name?: string;
+  @Field(() => Int, { nullable: true })
+  price: number;
 }

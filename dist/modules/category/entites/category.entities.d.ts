@@ -7,4 +7,5 @@ export declare class Category {
     level: number;
     slug: string;
     keyword: string;
+    child: Category[];
 }

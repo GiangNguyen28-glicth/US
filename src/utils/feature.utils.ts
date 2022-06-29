@@ -23,7 +23,12 @@ export function toKeyword(text: string): string {
   if (!text) return '';
   return text.replace(/-/g, ' ');
 }
-export function getQueryGetAll(prop: string, searchInput: string) {
+export function getQueryGetAll(
+  prop: string,
+  searchInput: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  fields?: Object,
+) {
   const query: any = {
     $and: [
       {
@@ -41,9 +46,9 @@ export function getQueryGetAll(prop: string, searchInput: string) {
   );
 
   delete query.$and[0]['property'];
-  // if (!isEmptyObject(fields)) {
-  //   query.$and.push(fields);
-  // }
+  if (!isEmptyObject(fields)) {
+    query.$and.push(fields);
+  }
   return query;
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -67,9 +72,9 @@ export function setInputForOldDocument(input: Object, oldDoc: Object): void {
 }
 export function toformatPrice(price: Schema.Types.Decimal128): string {
   const priceN = parseInt(price.toString());
-  const priceVND = new Intl.NumberFormat('vi-VN', {
+  const priceVND = priceN.toLocaleString('it-IT', {
     style: 'currency',
     currency: 'VND',
-  }).format(priceN);
+  });
   return priceVND;
 }

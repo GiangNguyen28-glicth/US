@@ -4,6 +4,7 @@
 
 type Category {
   _id: ID!
+  child: [Category!]
   code: CategoryEnum!
   level: Float!
   name: String
@@ -13,6 +14,12 @@ type Category {
 enum CategoryEnum {
   HOME
   SPORT
+}
+
+input CategoryGetByParentAndLevel {
+  categoryId: ObjectID
+  level: Int
+  parent: ObjectID
 }
 
 input CategoryGetOneInput {
@@ -32,13 +39,13 @@ input ConfirmMailInput {
 }
 
 input CreateProductInput {
-  categoryId: ObjectID!
+  category: ObjectID!
   discount: Int
+  imgUrl: [String!]
   name: String
   price: Int!
   quantity: Int!
   title: String
-  url: String
 }
 
 """
@@ -93,7 +100,7 @@ scalar ObjectID
 
 type Product {
   _id: ID!
-  categoryId: ObjectID!
+  category: Category!
   createAt: DateTime
   discount: Int
   displayPrice: String!
@@ -117,10 +124,15 @@ type Query {
   confirmMail(input: ConfirmMailInput!): Boolean!
   getAllProducts: [Product!]!
   getCategoryById(input: CategoryGetOneInput!): Category!
+  getCategoryByParentIdAndLevel(input: CategoryGetByParentAndLevel!): [Category!]!
+  getChildIdCategory(categoryId: String!): [String!]!
+  getChildOfCategory(categoryId: String!): Category!
   getDistrict(province_code: Float!): [District!]!
+  getProductByCategory(categoryId: String!): [Product!]!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
+  searchProduct(input: SearchProductInput!): [Product!]!
 }
 
 input RegisterInput {
@@ -141,6 +153,12 @@ input ResetPasswordInput {
 enum RoleEnum {
   ADMIN
   USER
+}
+
+input SearchProductInput {
+  category: ObjectID
+  name: String
+  price: Int
 }
 
 input UpdateUserInput {

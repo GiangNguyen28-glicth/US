@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { Category } from '../../category/entites/category.entities';
 export declare class Product {
     _id: string;
     name?: string;
@@ -8,7 +9,7 @@ export declare class Product {
     discount: number;
     quantity: number;
     imgUrl: [];
-    categoryId: string;
+    category: Category;
     displayPrice: string;
     createAt: Date;
     updateAt: Date;

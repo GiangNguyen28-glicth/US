@@ -19,3 +19,12 @@ export class CategoryGetOneInput {
   @Field(() => ObjectIDResolver)
   _id: string;
 }
+@InputType()
+export class CategoryGetByParentAndLevel {
+  @Field(() => ObjectIDResolver, { nullable: true })
+  parent?: string;
+  @Field(() => Int, { nullable: true })
+  level?: number;
+  @Field(() => ObjectIDResolver, { nullable: true })
+  categoryId?: string;
+}
