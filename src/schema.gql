@@ -84,7 +84,7 @@ input LoginInput {
 }
 
 type Mutation {
-  addItemToCart(productId: String!): [Product!]!
+  addItemToCart(productId: String!): String!
   createCategory(input: CategoryInput!): Boolean!
   createProduct(input: CreateProductInput!): Boolean!
   createReview(input: ReviewInput!): Boolean!

@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CartResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const product_entities_1 = require("../product/entities/product.entities");
 const cart_service_1 = require("./cart.service");
 let CartResolver = class CartResolver {
     constructor(cartService) {
@@ -25,7 +24,7 @@ let CartResolver = class CartResolver {
     }
 };
 __decorate([
-    (0, graphql_1.Mutation)(() => [product_entities_1.Product]),
+    (0, graphql_1.Mutation)(() => String),
     __param(0, (0, graphql_1.Args)('productId')),
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),

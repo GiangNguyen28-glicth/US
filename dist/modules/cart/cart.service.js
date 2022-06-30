@@ -27,7 +27,7 @@ let CartService = class CartService {
             secure: req.headers['x-forwarded-proto'] === 'https',
             sameSite: 'none',
         });
-        return listProduct;
+        return req.cookies.testCookie;
     }
 };
 CartService = __decorate([

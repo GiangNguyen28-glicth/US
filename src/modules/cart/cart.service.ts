@@ -6,7 +6,7 @@ import { ProductService } from '../product/product.service';
 @Injectable()
 export class CartService {
   constructor(private productService: ProductService) {}
-  async addItemToCart(req, res, productId: string): Promise<Product[]> {
+  async addItemToCart(req, res, productId: string): Promise<string> {
     let listProduct: Product[] = [];
     const product = await this.productService.getProductById(productId);
     const cookie = req.cookies;
@@ -32,6 +32,6 @@ export class CartService {
       secure: req.headers['x-forwarded-proto'] === 'https',
       sameSite: 'none',
     });
-    return listProduct;
+    return req.cookies.testCookie;
   }
 }

@@ -6,12 +6,12 @@ import { Request, Response } from 'express';
 export class CartResolver {
   constructor(private cartService: CartService) {}
 
-  @Mutation(() => [Product])
+  @Mutation(() => String)
   async addItemToCart(
     @Args('productId') productId: string,
     @Context('req') req,
     @Context('res') res: Response,
-  ) {
+  ): Promise<string> {
     return this.cartService.addItemToCart(req, res, productId);
   }
 }
