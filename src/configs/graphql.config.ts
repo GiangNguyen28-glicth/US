@@ -15,6 +15,7 @@ export const graphqlConfig = GraphQLModule.forRoot<ApolloDriverConfig>({
   buildSchemaOptions: { dateScalarMode: 'isoDate' },
   context: ({ req, res }) => ({ req, res }),
   debug: false,
+  playground: true,
   resolvers: {
     Upload: GraphQLUpload,
     ObjectID: ObjectIDResolver,
