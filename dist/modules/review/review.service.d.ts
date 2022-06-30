@@ -11,4 +11,5 @@ export declare class ReviewService {
     countReview(productId: string): Promise<number>;
     updateReview(input: ReviewInput, user: User): Promise<boolean>;
     checkExistsReview(productId: string, userId: string): Promise<boolean>;
+    averageRating(productId: string): Promise<number>;
 }

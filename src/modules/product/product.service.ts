@@ -19,7 +19,7 @@ import { Cache } from 'cache-manager';
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-    @Inject(CACHE_MANAGER) private cacheService: Cache,
+    // @Inject(CACHE_MANAGER) private cacheService: Cache,
     private categoryService: CategoryService,
   ) {}
   async createProduct(input: CreateProductInput): Promise<boolean> {
@@ -37,14 +37,9 @@ export class ProductService {
     return product;
   }
   async getProductByCategory(categoryId: string): Promise<Product[]> {
-    if (
-      await checkCacheStore(
-        this.cacheService,
-        Constants.KEY_PRODUCT_BY_CATEGORY,
-      )
-    ) {
-      return this.cacheService.get(Constants.KEY_PRODUCT_BY_CATEGORY);
-    }
+    // if (await checkCacheStore(this.cacheService, categoryId)) {
+    //   return this.cacheService.get(categoryId);
+    // }
     const category = await this.categoryService.getOneCategory({
       _id: categoryId,
     });
@@ -57,8 +52,7 @@ export class ProductService {
       });
       listProducts = listProducts.concat(products);
     }
-    console.log(listProducts);
-    this.cacheService.set(Constants.KEY_PRODUCT_BY_CATEGORY, listProducts);
+    // this.cacheService.set(categoryId, listProducts);
     return listProducts;
   }
 
@@ -79,6 +73,6 @@ export class ProductService {
   }
 
   async resetCache(): Promise<void> {
-    await this.cacheService.reset();
+    // await this.cacheService.reset();
   }
 }

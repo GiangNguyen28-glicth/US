@@ -24,6 +24,11 @@ export class ReviewResolver {
     return this.reviewService.countReview(productId);
   }
 
+  @Query(() => Number)
+  async averageRating(@Args('productId') productId: string): Promise<number> {
+    return this.reviewService.averageRating(productId);
+  }
+
   @Mutation(() => Boolean)
   @UseGuards(AtGuard)
   async createReview(

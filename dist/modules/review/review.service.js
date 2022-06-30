@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewService = void 0;
 const common_1 = require("@nestjs/common");
@@ -18,6 +21,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const product_service_1 = require("../product/product.service");
 const review_entities_1 = require("./entities/review.entities");
+const mongoose_3 = __importDefault(require("mongoose"));
 let ReviewService = class ReviewService {
     constructor(productReviewModel, productService) {
         this.productReviewModel = productReviewModel;
@@ -56,6 +60,23 @@ let ReviewService = class ReviewService {
             return false;
         }
         return true;
+    }
+    async averageRating(productId) {
+        const totalrating = await this.productReviewModel.aggregate([
+            {
+                $match: {
+                    product: new mongoose_3.default.Types.ObjectId(productId),
+                },
+            },
+            {
+                $group: {
+                    _id: '$product',
+                    sum: { $sum: '$rating' },
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+        return totalrating[0].sum / totalrating[0].count;
     }
 };
 ReviewService = __decorate([

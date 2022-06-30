@@ -84,6 +84,7 @@ input LoginInput {
 }
 
 type Mutation {
+  addItemToCart(productId: String!): [Product!]!
   createCategory(input: CategoryInput!): Boolean!
   createProduct(input: CreateProductInput!): Boolean!
   createReview(input: ReviewInput!): Boolean!
@@ -124,6 +125,7 @@ type Province {
 }
 
 type Query {
+  averageRating(productId: String!): Float!
   checkExistsReview(productId: String!): Boolean!
   confirmMail(input: ConfirmMailInput!): Boolean!
   countReview(productId: String!): Float!

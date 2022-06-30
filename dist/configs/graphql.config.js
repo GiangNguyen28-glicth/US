@@ -18,9 +18,8 @@ exports.graphqlConfig = graphql_1.GraphQLModule.forRoot({
     autoSchemaFile: (0, path_1.join)(process.cwd(), 'src/schema.gql'),
     sortSchema: true,
     buildSchemaOptions: { dateScalarMode: 'isoDate' },
-    context: ({ req, res }) => ({ req: req, res: res }),
+    context: ({ req, res }) => ({ req, res }),
     debug: false,
-    csrfPrevention: true,
     resolvers: {
         Upload: GraphQLUpload_js_1.default,
         ObjectID: graphql_scalars_1.ObjectIDResolver,

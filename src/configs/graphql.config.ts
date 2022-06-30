@@ -13,9 +13,8 @@ export const graphqlConfig = GraphQLModule.forRoot<ApolloDriverConfig>({
   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
   sortSchema: true,
   buildSchemaOptions: { dateScalarMode: 'isoDate' },
-  context: ({ req, res }) => ({ req: req, res: res }),
+  context: ({ req, res }) => ({ req, res }),
   debug: false,
-  csrfPrevention: true,
   resolvers: {
     Upload: GraphQLUpload,
     ObjectID: ObjectIDResolver,

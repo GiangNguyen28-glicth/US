@@ -3,11 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductService } from '../product/product.service';
 import { User } from '../user/entities/user.entities';
-import { UserService } from '../user/user.service';
 import { ReviewInput } from './dto/review.input';
 import { ProductReview } from './entities/review.entities';
 import { ProductReviewDocument } from './schemas/review.schema';
-
+import mongoose from 'mongoose';
 @Injectable()
 export class ReviewService {
   constructor(
@@ -57,5 +56,23 @@ export class ReviewService {
       return false;
     }
     return true;
+  }
+
+  async averageRating(productId: string): Promise<number> {
+    const totalrating = await this.productReviewModel.aggregate([
+      {
+        $match: {
+          product: new mongoose.Types.ObjectId(productId),
+        },
+      },
+      {
+        $group: {
+          _id: '$product',
+          sum: { $sum: '$rating' },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    return totalrating[0].sum / totalrating[0].count;
   }
 }

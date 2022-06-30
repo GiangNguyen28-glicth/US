@@ -6,18 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CartModule = void 0;
-const common_1 = require("@nestjs/common");
-const product_module_1 = require("../product/product.module");
-const cart_resolver_1 = require("./cart.resolver");
-const cart_service_1 = require("./cart.service");
-let CartModule = class CartModule {
+exports.CreateCartInput = void 0;
+const graphql_1 = require("@nestjs/graphql");
+let CreateCartInput = class CreateCartInput {
 };
-CartModule = __decorate([
-    (0, common_1.Module)({
-        imports: [product_module_1.ProductModule],
-        providers: [cart_resolver_1.CartResolver, cart_service_1.CartService],
-    })
-], CartModule);
-exports.CartModule = CartModule;
-//# sourceMappingURL=cart.module.js.map
+CreateCartInput = __decorate([
+    (0, graphql_1.InputType)()
+], CreateCartInput);
+exports.CreateCartInput = CreateCartInput;
+//# sourceMappingURL=cart.input.js.map

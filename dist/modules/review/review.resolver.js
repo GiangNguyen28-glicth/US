@@ -31,6 +31,9 @@ let ReviewResolver = class ReviewResolver {
     async countReview(productId) {
         return this.reviewService.countReview(productId);
     }
+    async averageRating(productId) {
+        return this.reviewService.averageRating(productId);
+    }
     async createReview(reviewInput, user) {
         return this.reviewService.createReview(reviewInput, user);
     }
@@ -54,6 +57,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ReviewResolver.prototype, "countReview", null);
+__decorate([
+    (0, graphql_1.Query)(() => Number),
+    __param(0, (0, graphql_1.Args)('productId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ReviewResolver.prototype, "averageRating", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     (0, common_1.UseGuards)(at_guard_1.AtGuard),
