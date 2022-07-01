@@ -15,25 +15,61 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CartResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const cart_service_1 = require("./cart.service");
+const cart_input_1 = require("./dto/cart.input");
+const cart_entities_1 = require("./entities/cart.entities");
 let CartResolver = class CartResolver {
     constructor(cartService) {
         this.cartService = cartService;
     }
-    async addItemToCart(productId, req, res) {
-        return this.cartService.addItemToCart(req, res, productId);
+    async getListItem(req) {
+        return this.cartService.getListProductInCookie(req);
+    }
+    async addItemToCart(input, req, res) {
+        return this.cartService.addItemToCart(req, res, input);
+    }
+    async deleteItem(productId, req, res) {
+        return this.cartService.deleteItem(req, res, productId);
+    }
+    async updateItem(input, req, res) {
+        return this.cartService.updateItem(input, req, res);
     }
 };
 __decorate([
-    (0, graphql_1.Mutation)(() => String),
+    (0, graphql_1.Query)(() => [cart_entities_1.LineItem]),
+    __param(0, (0, graphql_1.Context)('req')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], CartResolver.prototype, "getListItem", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, graphql_1.Context)('req')),
+    __param(2, (0, graphql_1.Context)('res')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [cart_input_1.CreateCartInput, Object, Object]),
+    __metadata("design:returntype", Promise)
+], CartResolver.prototype, "addItemToCart", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('productId')),
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
-], CartResolver.prototype, "addItemToCart", null);
+], CartResolver.prototype, "deleteItem", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, graphql_1.Context)('req')),
+    __param(2, (0, graphql_1.Context)('res')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [cart_input_1.CreateCartInput, Object, Object]),
+    __metadata("design:returntype", Promise)
+], CartResolver.prototype, "updateItem", null);
 CartResolver = __decorate([
-    (0, graphql_1.Resolver)(),
+    (0, graphql_1.Resolver)(cart_entities_1.Cart.name),
     __metadata("design:paramtypes", [cart_service_1.CartService])
 ], CartResolver);
 exports.CartResolver = CartResolver;

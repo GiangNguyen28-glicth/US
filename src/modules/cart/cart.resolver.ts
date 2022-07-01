@@ -1,17 +1,41 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
-import { Product } from '../product/entities/product.entities';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CartService } from './cart.service';
 import { Request, Response } from 'express';
-@Resolver()
+import { CreateCartInput } from './dto/cart.input';
+import { Cart, LineItem } from './entities/cart.entities';
+@Resolver(Cart.name)
 export class CartResolver {
   constructor(private cartService: CartService) {}
 
-  @Mutation(() => String)
+  @Query(() => [LineItem])
+  async getListItem(@Context('req') req: Request): Promise<any> {
+    return this.cartService.getListProductInCookie(req);
+  }
+
+  @Mutation(() => Boolean)
   async addItemToCart(
-    @Args('productId') productId: string,
-    @Context('req') req,
+    @Args('input') input: CreateCartInput,
+    @Context('req') req: Request,
     @Context('res') res: Response,
-  ): Promise<string> {
-    return this.cartService.addItemToCart(req, res, productId);
+  ): Promise<boolean> {
+    return this.cartService.addItemToCart(req, res, input);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteItem(
+    @Args('productId') productId: string,
+    @Context('req') req: Request,
+    @Context('res') res: Response,
+  ): Promise<boolean> {
+    return this.cartService.deleteItem(req, res, productId);
+  }
+
+  @Mutation(() => Boolean)
+  async updateItem(
+    @Args('input') input: CreateCartInput,
+    @Context('req') req: Request,
+    @Context('res') res: Response,
+  ): Promise<boolean> {
+    return this.cartService.updateItem(input, req, res);
   }
 }

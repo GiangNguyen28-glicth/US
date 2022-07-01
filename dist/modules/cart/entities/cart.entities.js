@@ -9,15 +9,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Cart = void 0;
+exports.Cart = exports.LineItem = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const product_entities_1 = require("../../product/entities/product.entities");
+let LineItem = class LineItem {
+};
+__decorate([
+    (0, graphql_1.Field)(() => product_entities_1.Product),
+    __metadata("design:type", product_entities_1.Product)
+], LineItem.prototype, "product", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], LineItem.prototype, "quantity", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], LineItem.prototype, "totalPrice", void 0);
+LineItem = __decorate([
+    (0, graphql_1.ObjectType)()
+], LineItem);
+exports.LineItem = LineItem;
 let Cart = class Cart {
 };
 __decorate([
-    (0, graphql_1.Field)(() => [product_entities_1.Product]),
+    (0, graphql_1.Field)(() => [LineItem]),
     __metadata("design:type", Array)
-], Cart.prototype, "listProduct", void 0);
+], Cart.prototype, "listItem", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.Int),
     __metadata("design:type", Number)

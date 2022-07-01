@@ -1,7 +1,11 @@
 import { CartService } from './cart.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { CreateCartInput } from './dto/cart.input';
 export declare class CartResolver {
     private cartService;
     constructor(cartService: CartService);
-    addItemToCart(productId: string, req: any, res: Response): Promise<string>;
+    getListItem(req: Request): Promise<any>;
+    addItemToCart(input: CreateCartInput, req: Request, res: Response): Promise<boolean>;
+    deleteItem(productId: string, req: Request, res: Response): Promise<boolean>;
+    updateItem(input: CreateCartInput, req: Request, res: Response): Promise<boolean>;
 }

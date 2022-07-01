@@ -38,6 +38,11 @@ input ConfirmMailInput {
   token: String!
 }
 
+input CreateCartInput {
+  productId: ObjectID!
+  quantity: Int!
+}
+
 input CreateProductInput {
   category: ObjectID!
   discount: Int
@@ -78,20 +83,28 @@ type JwtPayload {
   userInfo: User
 }
 
+type LineItem {
+  product: Product!
+  quantity: Float!
+  totalPrice: Float!
+}
+
 input LoginInput {
   email: String!
   password: String!
 }
 
 type Mutation {
-  addItemToCart(productId: String!): String!
+  addItemToCart(input: CreateCartInput!): Boolean!
   createCategory(input: CategoryInput!): Boolean!
   createProduct(input: CreateProductInput!): Boolean!
   createReview(input: ReviewInput!): Boolean!
+  deleteItem(productId: String!): Boolean!
   forgotPassword(email: String!): Boolean!
   login(input: LoginInput!): JwtPayload!
   register(input: RegisterInput!): Boolean!
   resetPassword(input: ResetPasswordInput!): Boolean!
+  updateItem(input: CreateCartInput!): Boolean!
   updateReview(input: ReviewInput!): Boolean!
   updateUser(input: UpdateUserInput!): User!
   uploadFile(file: Upload!): String!
@@ -135,6 +148,7 @@ type Query {
   getChildIdCategory(categoryId: String!): [String!]!
   getChildOfCategory(categoryId: String!): Category!
   getDistrict(province_code: Float!): [District!]!
+  getListItem: [LineItem!]!
   getProductByCategory(categoryId: String!): [Product!]!
   getProductById(productId: String!): Product!
   getProvince: [Province!]!

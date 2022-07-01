@@ -20,7 +20,6 @@ exports.graphqlConfig = graphql_1.GraphQLModule.forRoot({
     buildSchemaOptions: { dateScalarMode: 'isoDate' },
     context: ({ req, res }) => ({ req, res }),
     debug: false,
-    playground: true,
     resolvers: {
         Upload: GraphQLUpload_js_1.default,
         ObjectID: graphql_scalars_1.ObjectIDResolver,
