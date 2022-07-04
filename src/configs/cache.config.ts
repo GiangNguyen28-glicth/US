@@ -4,6 +4,7 @@ import * as redisStore from 'cache-manager-redis-store';
 export const cacheConfig = CacheModule.register<RedisClientOptions>({
   store: redisStore,
   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  password: process.env.REDIS_PASSWORD,
   ttl: +process.env.CACHE_TTL,
   max: parseInt(process.env.REDIS_MAX_SIZE),
   isGlobal: true,
