@@ -21,6 +21,7 @@ const user_entities_1 = require("../user/entities/user.entities");
 const review_input_1 = require("./dto/review.input");
 const review_entities_1 = require("./entities/review.entities");
 const review_service_1 = require("./review.service");
+const error_utils_1 = require("../../utils/error.utils");
 let ReviewResolver = class ReviewResolver {
     constructor(reviewService) {
         this.reviewService = reviewService;
@@ -32,7 +33,8 @@ let ReviewResolver = class ReviewResolver {
         return this.reviewService.countReview(productId);
     }
     async averageRating(productId) {
-        return this.reviewService.averageRating(productId);
+        const [data, error] = await (0, error_utils_1.handleRequest)(this.reviewService.averageRating(productId));
+        return data;
     }
     async createReview(reviewInput, user) {
         return this.reviewService.createReview(reviewInput, user);

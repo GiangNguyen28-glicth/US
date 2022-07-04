@@ -21,7 +21,7 @@ import { ReviewModule } from './modules/review/review.module';
     graphqlConfig,
     moongoseConfig,
     throttlerConfig,
-    // cacheConfig,
+    cacheConfig,
     AuthModule,
     UserModule,
     CartModule,

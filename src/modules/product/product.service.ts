@@ -19,7 +19,7 @@ import { Cache } from 'cache-manager';
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-    // @Inject(CACHE_MANAGER) private cacheService: Cache,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
     private categoryService: CategoryService,
   ) {}
   async createProduct(input: CreateProductInput): Promise<boolean> {
@@ -73,6 +73,6 @@ export class ProductService {
   }
 
   async resetCache(): Promise<void> {
-    // await this.cacheService.reset();
+    await this.cacheService.reset();
   }
 }

@@ -6,7 +6,7 @@ import { User } from '../user/entities/user.entities';
 import { ReviewInput } from './dto/review.input';
 import { ProductReview } from './entities/review.entities';
 import { ReviewService } from './review.service';
-
+import { handleRequest } from '../../utils/error.utils';
 @Resolver(ProductReview.name)
 export class ReviewResolver {
   constructor(private reviewService: ReviewService) {}
@@ -26,7 +26,10 @@ export class ReviewResolver {
 
   @Query(() => Number)
   async averageRating(@Args('productId') productId: string): Promise<number> {
-    return this.reviewService.averageRating(productId);
+    const [data, error] = await handleRequest(
+      this.reviewService.averageRating(productId),
+    );
+    return data;
   }
 
   @Mutation(() => Boolean)

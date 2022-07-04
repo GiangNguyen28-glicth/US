@@ -1,5 +1,6 @@
 import { CACHE_MANAGER, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { cacheConfig } from '../../configs/cache.config';
 import { Constants } from '../../constants/constants';
 import { RandomCodeEnum } from '../../constants/enum';
 import { toformatPrice } from '../../utils/feature.utils';
