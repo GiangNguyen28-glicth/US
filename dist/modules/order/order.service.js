@@ -17,12 +17,62 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const order_entities_1 = require("./entities/order.entities");
+const cart_service_1 = require("../cart/cart.service");
+const product_service_1 = require("../product/product.service");
+const order_item_service_1 = require("../order-item/order-item.service");
 let OrderService = class OrderService {
-    constructor(oderModel) {
+    constructor(oderModel, cartService, productService, orderItemService) {
         this.oderModel = oderModel;
+        this.cartService = cartService;
+        this.productService = productService;
+        this.orderItemService = orderItemService;
     }
-    async createOrder() {
+    async createOrder(input, req, res, user) {
+        const carts = await this.cartService.getListProductInCookie(req);
+        const { username, phonenumber, address } = input;
+        const totalPrice = this.cartService.totalPrice(req);
+        const totalQuantity = this.cartService.totalQuantity(req);
+        const isValidCart = await this.cartService.isValidCart(carts);
+        if (isValidCart) {
+            const order = await this.oderModel.create({
+                user: user._id,
+                username,
+                phonenumber,
+                address,
+                totalQuantity,
+                totalPrice,
+            });
+            Promise.all([
+                this.updateQuantityProductAfterOrder(carts),
+                ,
+                this.createOrderItemAfterOrder(carts, order._id),
+            ]);
+            this.cartService.deleteCart(res);
+        }
         return true;
+    }
+    async quantityProductAfterOrder(productId, quantityCart) {
+        const product = await this.productService.getProductById(productId);
+        const quantityProductAfterOrder = product.quantity - quantityCart;
+        return quantityProductAfterOrder;
+    }
+    async updateQuantityProductAfterOrder(lineItem) {
+        for (const item of lineItem) {
+            const quantityProductAfterOrder = await this.quantityProductAfterOrder(item.product._id.toString(), item.quantity);
+            await this.productService.updateProduct(item.product._id.toString(), {
+                quantity: quantityProductAfterOrder,
+            });
+        }
+    }
+    async createOrderItemAfterOrder(lineItem, orderId) {
+        for (const item of lineItem) {
+            await this.orderItemService.createOrderItem({
+                productId: item.product._id.toString(),
+                orderId,
+                quantity: item.quantity,
+                totalPrice: item.totalPrice,
+            });
+        }
     }
     async updateOrder() {
         return true;
@@ -35,7 +85,10 @@ let OrderService = class OrderService {
 OrderService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(order_entities_1.Order.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        cart_service_1.CartService,
+        product_service_1.ProductService,
+        order_item_service_1.OrderItemService])
 ], OrderService);
 exports.OrderService = OrderService;
 //# sourceMappingURL=order.service.js.map

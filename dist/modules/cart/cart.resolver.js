@@ -17,6 +17,8 @@ const graphql_1 = require("@nestjs/graphql");
 const cart_service_1 = require("./cart.service");
 const cart_input_1 = require("./dto/cart.input");
 const cart_entities_1 = require("./entities/cart.entities");
+const common_1 = require("@nestjs/common");
+const at_guard_1 = require("../../common/guards/at.guard");
 let CartResolver = class CartResolver {
     constructor(cartService) {
         this.cartService = cartService;
@@ -43,6 +45,7 @@ __decorate([
 ], CartResolver.prototype, "getListItem", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
+    (0, common_1.UseGuards)(at_guard_1.AtGuard),
     __param(0, (0, graphql_1.Args)('input')),
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),

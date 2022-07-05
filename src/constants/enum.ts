@@ -30,3 +30,14 @@ export enum CategoryEnum {
 registerEnumType(CategoryEnum, {
   name: 'CategoryEnum',
 });
+export enum FilterProduct {
+  LATEST = 'LATEST',
+  BESTSELLER = 'BESTSELLER',
+  DECREASE_PRICE = 'DECREASE_PRICE',
+  INCREASE_PRICE = 'INCREASE_PRICE',
+  AZ = 'AZ',
+  ZA = 'ZA',
+}
+registerEnumType(FilterProduct, {
+  name: 'FilterProduct',
+});

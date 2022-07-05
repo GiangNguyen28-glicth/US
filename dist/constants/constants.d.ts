@@ -7,4 +7,6 @@ export declare class Constants {
     static CATEGORY_MAX_LEVEL: number;
     static KEY_PRODUCT_BY_CATEGORY: string;
     static CLOUDINARY: string;
+    static SortOrder: {};
+    static generateSortOrder(): void;
 }

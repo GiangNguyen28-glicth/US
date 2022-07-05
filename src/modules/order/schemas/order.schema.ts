@@ -1,20 +1,23 @@
 import { Document, Schema } from 'mongoose';
+import { User } from '../../user/entities/user.entities';
 import { Order } from '../entities/order.entities';
 
 export type OrderDocument = Order & Document;
 export const OrderSchema = new Schema<Order>(
   {
-    name: {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: User.name,
+    },
+    address: {
       type: String,
       trim: true,
     },
-    slug: {
-      type: String,
-      trim: true,
+    totalQuantity: {
+      type: Number,
     },
-    keyword: {
-      type: String,
-      trim: true,
+    totalPrice: {
+      type: Number,
     },
   },
   {

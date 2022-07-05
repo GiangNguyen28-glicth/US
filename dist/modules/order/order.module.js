@@ -13,6 +13,9 @@ const order_resolver_1 = require("./order.resolver");
 const mongoose_1 = require("@nestjs/mongoose");
 const order_entities_1 = require("./entities/order.entities");
 const order_schema_1 = require("./schemas/order.schema");
+const cart_module_1 = require("../cart/cart.module");
+const product_module_1 = require("../product/product.module");
+const order_item_module_1 = require("../order-item/order-item.module");
 let OrderModule = class OrderModule {
 };
 OrderModule = __decorate([
@@ -29,6 +32,9 @@ OrderModule = __decorate([
                     },
                 },
             ]),
+            cart_module_1.CartModule,
+            product_module_1.ProductModule,
+            order_item_module_1.OrderItemModule,
         ],
         providers: [order_service_1.OrderService, order_resolver_1.OrderResolver],
     })

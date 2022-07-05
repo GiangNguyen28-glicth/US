@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Product } from '../product/entities/product.entities';
 import { ProductService } from '../product/product.service';
@@ -18,6 +18,7 @@ export class CartService {
     const cookie = req.cookies.listProduct;
     if (this.checkCookie(cookie)) {
       listProduct = cookie;
+      await this.isValidQuantityProduct(input.quantity, product, listProduct);
       const productExisting = listProduct.filter(item => {
         if (item.product._id === input.productId) {
           item.quantity = item.quantity + input.quantity;
@@ -44,9 +45,71 @@ export class CartService {
   }
 
   async getListProductInCookie(request: Request): Promise<LineItem[]> {
-    return request.cookies?.listProduct;
+    return request.cookies?.listProduct ? request.cookies.listProduct : [];
   }
 
+  totalQuantity(req: Request): number {
+    const listProduct: LineItem[] = req.cookies.listProduct;
+    let totalQuantity: number = 0;
+    listProduct.forEach(
+      lineItem => (totalQuantity = totalQuantity + lineItem.quantity),
+    );
+    return totalQuantity;
+  }
+
+  totalPrice(req: Request): number {
+    const listProduct: LineItem[] = req.cookies.listProduct;
+    let totalPrice: number = 0;
+    listProduct.forEach(
+      lineItem => (totalPrice = lineItem.totalPrice + totalPrice),
+    );
+    return totalPrice;
+  }
+
+  async isValidQuantityProduct(
+    quantityAddToCart: number,
+    product: Product,
+    lineItem: LineItem[],
+  ): Promise<boolean> {
+    if (quantityAddToCart > product.quantity) {
+      throw new HttpException(
+        'Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const productOfCart = lineItem.filter(
+      item => item.product._id === product._id.toString(),
+    );
+    if (productOfCart.length === 0) {
+      return true;
+    }
+    const quantityCart: number = productOfCart[0].quantity;
+    const totalQuantity = quantityCart + quantityAddToCart;
+    if (totalQuantity > product.quantity) {
+      throw new HttpException(
+        `Không thể thêm sản phẩm này với số lượng ${quantityAddToCart} vì trong giỏ hàng
+       đã có sản phẩm này với số lượng ${quantityCart} . Bạn chỉ có thêm ${
+          product.quantity - quantityCart
+        } nữa`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return true;
+  }
+  async isValidCart(lineItem: LineItem[]): Promise<boolean> {
+    for (const item of lineItem) {
+      const product = await this.productService.getProductById(
+        item.product._id.toString(),
+      );
+      if (product.quantity < item.quantity) {
+        throw new HttpException(
+          `Sản phẩm ${item.product.name} số lượng sản phẩm chỉ còn ${product.quantity} sản phẩm. Vui lòng giảm số lượng sản phẩm này trong giỏ hàng`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+    return true;
+  }
   async deleteItem(
     req: Request,
     res: Response,
@@ -83,6 +146,9 @@ export class CartService {
     }
     res.cookie('listProduct', listProduct, this.optionCookie(req));
     return true;
+  }
+  deleteCart(response: Response): void {
+    response.clearCookie('listProduct');
   }
   totalPriceOfItem(product: Product, quantity: number): number {
     const totalPrice: number = parseInt(product.price.toString()) * quantity;

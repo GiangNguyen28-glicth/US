@@ -9,9 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchProductInput = exports.CreateProductInput = void 0;
+exports.FilterProductInput = exports.UpdateProduct = exports.SearchProductInput = exports.CreateProductInput = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const graphql_scalars_1 = require("graphql-scalars");
+const enum_1 = require("../../../constants/enum");
 let CreateProductInput = class CreateProductInput {
 };
 __decorate([
@@ -64,4 +65,36 @@ SearchProductInput = __decorate([
     (0, graphql_1.InputType)()
 ], SearchProductInput);
 exports.SearchProductInput = SearchProductInput;
+let UpdateProduct = class UpdateProduct {
+};
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UpdateProduct.prototype, "name", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], UpdateProduct.prototype, "price", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], UpdateProduct.prototype, "rating", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], UpdateProduct.prototype, "quantity", void 0);
+UpdateProduct = __decorate([
+    (0, graphql_1.InputType)()
+], UpdateProduct);
+exports.UpdateProduct = UpdateProduct;
+let FilterProductInput = class FilterProductInput {
+};
+__decorate([
+    (0, graphql_1.Field)(() => enum_1.FilterProduct, { nullable: true }),
+    __metadata("design:type", String)
+], FilterProductInput.prototype, "filterby", void 0);
+FilterProductInput = __decorate([
+    (0, graphql_1.InputType)()
+], FilterProductInput);
+exports.FilterProductInput = FilterProductInput;
 //# sourceMappingURL=product.input.js.map

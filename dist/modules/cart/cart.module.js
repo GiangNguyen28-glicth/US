@@ -17,6 +17,7 @@ CartModule = __decorate([
     (0, common_1.Module)({
         imports: [product_module_1.ProductModule],
         providers: [cart_resolver_1.CartResolver, cart_service_1.CartService],
+        exports: [cart_service_1.CartService],
     })
 ], CartModule);
 exports.CartModule = CartModule;

@@ -6,6 +6,7 @@ import { RandomCodeEnum } from '../../constants/enum';
 import { toformatPrice } from '../../utils/feature.utils';
 import { randomCode, toKeyword, toSlug } from '../../utils/string.utils';
 import { CategoryModule } from '../category/category.module';
+import { OrderItemModule } from '../order-item/order-item.module';
 import { Product } from './entities/product.entities';
 import { ProductResolver } from './product.resolver';
 import { ProductService } from './product.service';
@@ -32,6 +33,7 @@ import { ProductSchema } from './schemas/product.schema';
       },
     ]),
     CategoryModule,
+    OrderItemModule,
   ],
   providers: [ProductResolver, ProductService],
   exports: [ProductService],

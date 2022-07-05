@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Order = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const graphql_scalars_1 = require("graphql-scalars");
+const user_entities_1 = require("../../user/entities/user.entities");
 let Order = class Order {
 };
 __decorate([
@@ -19,29 +19,29 @@ __decorate([
     __metadata("design:type", String)
 ], Order.prototype, "_id", void 0);
 __decorate([
-    (0, graphql_1.Field)(),
-    __metadata("design:type", String)
-], Order.prototype, "name", void 0);
+    (0, graphql_1.Field)(() => user_entities_1.User),
+    __metadata("design:type", user_entities_1.User)
+], Order.prototype, "user", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", String)
-], Order.prototype, "type1", void 0);
+], Order.prototype, "username", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", String)
-], Order.prototype, "type2", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver),
-    __metadata("design:type", String)
-], Order.prototype, "id", void 0);
+], Order.prototype, "phonenumber", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", String)
-], Order.prototype, "slug", void 0);
+], Order.prototype, "address", void 0);
 __decorate([
-    (0, graphql_1.Field)(),
-    __metadata("design:type", String)
-], Order.prototype, "keyword", void 0);
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], Order.prototype, "totalQuantity", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => Number),
+    __metadata("design:type", Number)
+], Order.prototype, "totalPrice", void 0);
 __decorate([
     (0, graphql_1.Field)(() => Date),
     __metadata("design:type", Date)

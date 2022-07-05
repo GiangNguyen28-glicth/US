@@ -3,6 +3,8 @@ import { CartService } from './cart.service';
 import { Request, Response } from 'express';
 import { CreateCartInput } from './dto/cart.input';
 import { Cart, LineItem } from './entities/cart.entities';
+import { UseGuards } from '@nestjs/common';
+import { AtGuard } from '../../common/guards/at.guard';
 @Resolver(Cart.name)
 export class CartResolver {
   constructor(private cartService: CartService) {}
@@ -13,6 +15,7 @@ export class CartResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(AtGuard)
   async addItemToCart(
     @Args('input') input: CreateCartInput,
     @Context('req') req: Request,

@@ -17,15 +17,19 @@ exports.ProductService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const constants_1 = require("../../constants/constants");
 const feature_utils_1 = require("../../utils/feature.utils");
 const category_service_1 = require("../category/category.service");
 const product_entities_1 = require("./entities/product.entities");
 const cache_manager_1 = require("cache-manager");
+const enum_1 = require("../../constants/enum");
+const order_item_service_1 = require("../order-item/order-item.service");
 let ProductService = class ProductService {
-    constructor(productModel, cacheService, categoryService) {
+    constructor(productModel, cacheService, categoryService, orderItemService) {
         this.productModel = productModel;
         this.cacheService = cacheService;
         this.categoryService = categoryService;
+        this.orderItemService = orderItemService;
     }
     async createProduct(input) {
         return this.productModel.create(input) ? true : false;
@@ -69,6 +73,32 @@ let ProductService = class ProductService {
         }
         return true;
     }
+    async getQuantityOfProduct(productId) {
+        const product = await this.getProductById(productId);
+        return product.quantity;
+    }
+    async updateProduct(productId, input) {
+        const product = await this.productModel.findOneAndUpdate({ _id: productId }, input);
+        if (!product) {
+            throw new common_1.HttpException('Product ID không đúng', common_1.HttpStatus.NOT_FOUND);
+        }
+        return true;
+    }
+    async sortProduct(input) {
+        let products;
+        if (input.filterby === enum_1.FilterProduct.BESTSELLER) {
+            const listProductId = await this.orderItemService.getListProductIdInOrderItem();
+            products = await this.productModel.find({ _id: { $in: listProductId } });
+        }
+        else {
+            constants_1.Constants.generateSortOrder();
+            const { property, option } = constants_1.Constants.SortOrder[input.filterby];
+            const query = {};
+            query[property] = option;
+            products = await this.productModel.find().sort(query);
+        }
+        return products;
+    }
     async resetCache() {
         await this.cacheService.reset();
     }
@@ -77,7 +107,8 @@ ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(product_entities_1.Product.name)),
     __param(1, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
-    __metadata("design:paramtypes", [mongoose_2.Model, typeof (_a = typeof cache_manager_1.Cache !== "undefined" && cache_manager_1.Cache) === "function" ? _a : Object, category_service_1.CategoryService])
+    __metadata("design:paramtypes", [mongoose_2.Model, typeof (_a = typeof cache_manager_1.Cache !== "undefined" && cache_manager_1.Cache) === "function" ? _a : Object, category_service_1.CategoryService,
+        order_item_service_1.OrderItemService])
 ], ProductService);
 exports.ProductService = ProductService;
 //# sourceMappingURL=product.service.js.map

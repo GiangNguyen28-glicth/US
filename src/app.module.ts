@@ -15,6 +15,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { GqlThrottlerGuard } from './common/guards/throttler.guard';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ReviewModule } from './modules/review/review.module';
+import { OrderItemModule } from './modules/order-item/order-item.module';
 
 @Module({
   imports: [
@@ -32,6 +33,8 @@ import { ReviewModule } from './modules/review/review.module';
     ProductModule,
     CloudinaryModule,
     ReviewModule,
+    OrderModule,
+    OrderItemModule,
   ],
   providers: [
     {

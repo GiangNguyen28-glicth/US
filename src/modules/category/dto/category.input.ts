@@ -1,7 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { CategoryEnum } from '../../../constants/enum';
 import { ObjectIDResolver } from 'graphql-scalars';
-import { Category } from '../entites/category.entities';
 
 @InputType()
 export class CategoryInput {

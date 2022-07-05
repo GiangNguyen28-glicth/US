@@ -1,11 +1,12 @@
+import { User } from '../../user/entities/user.entities';
 export declare class Order {
     _id: string;
-    name: string;
-    type1: string;
-    type2: string;
-    id: string;
-    slug: string;
-    keyword: string;
+    user: User;
+    username: string;
+    phonenumber: string;
+    address: string;
+    totalQuantity: number;
+    totalPrice: number;
     createAt: Date;
     updateAt: Date;
 }

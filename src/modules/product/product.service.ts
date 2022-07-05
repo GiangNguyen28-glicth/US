@@ -6,21 +6,30 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, SortOrder } from 'mongoose';
 import { Constants } from '../../constants/constants';
 import { getFieldsInFilter, getQueryGetAll } from '../../utils/feature.utils';
 import { checkCacheStore } from '../../utils/redis.utils';
 import { CategoryService } from '../category/category.service';
-import { CreateProductInput, SearchProductInput } from './dto/product.input';
+import {
+  CreateProductInput,
+  FilterProductInput,
+  SearchProductInput,
+  UpdateProduct,
+} from './dto/product.input';
 import { Product } from './entities/product.entities';
 import { ProductDocument } from './schemas/product.schema';
 import { Cache } from 'cache-manager';
+import { FilterProduct } from '../../constants/enum';
+import { OrderItemService } from '../order-item/order-item.service';
+import { sortQuery } from '../../constants/type';
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
     private categoryService: CategoryService,
+    private orderItemService: OrderItemService,
   ) {}
   async createProduct(input: CreateProductInput): Promise<boolean> {
     return this.productModel.create(input) ? true : false;
@@ -70,6 +79,41 @@ export class ProductService {
       return false;
     }
     return true;
+  }
+
+  async getQuantityOfProduct(productId: string): Promise<number> {
+    const product = await this.getProductById(productId);
+    return product.quantity;
+  }
+
+  async updateProduct(
+    productId: string,
+    input: UpdateProduct,
+  ): Promise<boolean> {
+    const product = await this.productModel.findOneAndUpdate(
+      { _id: productId },
+      input,
+    );
+    if (!product) {
+      throw new HttpException('Product ID không đúng', HttpStatus.NOT_FOUND);
+    }
+    return true;
+  }
+
+  async sortProduct(input: FilterProductInput): Promise<Product[]> {
+    let products;
+    if (input.filterby === FilterProduct.BESTSELLER) {
+      const listProductId: string[] =
+        await this.orderItemService.getListProductIdInOrderItem();
+      products = await this.productModel.find({ _id: { $in: listProductId } });
+    } else {
+      Constants.generateSortOrder();
+      const { property, option } = Constants.SortOrder[input.filterby];
+      const query: sortQuery = {};
+      query[property] = option as SortOrder;
+      products = await this.productModel.find().sort(query);
+    }
+    return products;
   }
 
   async resetCache(): Promise<void> {

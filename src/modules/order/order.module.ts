@@ -4,6 +4,9 @@ import { OrderResolver } from './order.resolver';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Order } from './entities/order.entities';
 import { OrderSchema } from './schemas/order.schema';
+import { CartModule } from '../cart/cart.module';
+import { ProductModule } from '../product/product.module';
+import { OrderItemModule } from '../order-item/order-item.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { OrderSchema } from './schemas/order.schema';
         },
       },
     ]),
+    CartModule,
+    ProductModule,
+    OrderItemModule,
   ],
   providers: [OrderService, OrderResolver],
 })

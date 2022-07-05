@@ -15,7 +15,6 @@ let CloudinaryService = class CloudinaryService {
             await new Promise((resolve, reject) => {
                 const streamLoad = cloudinary_1.v2.uploader.upload_stream(function (error, result) {
                     if (result) {
-                        console.log(result);
                         const resultUrl = result.secure_url;
                         const resultSecureUrl = result.secure_url;
                         resolve(resultUrl);

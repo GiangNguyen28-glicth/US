@@ -43,13 +43,6 @@ export const ProductSchema = new Schema<Product>(
       ref: Category.name,
       autopopulate: true,
     },
-    createAt: {
-      type: Date,
-      default: Date.now(),
-    },
-    updateAt: {
-      type: Date,
-    },
     slug: {
       type: String,
     },
@@ -58,6 +51,7 @@ export const ProductSchema = new Schema<Product>(
     },
   },
   {
+    timestamps: true,
     toJSON: { getters: true },
     toObject: { getters: true },
   },

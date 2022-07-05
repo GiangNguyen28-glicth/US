@@ -37,8 +37,14 @@ let ProductResolver = class ProductResolver {
         this.productService.resetCache();
         return 'Success';
     }
+    async filterProduct(input) {
+        return this.productService.sortProduct(input);
+    }
     async createProduct(input) {
         return this.productService.createProduct(input);
+    }
+    async updateProduct(input, productId) {
+        return this.productService.updateProduct(productId, input);
     }
 };
 __decorate([
@@ -75,12 +81,27 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "resetCache", null);
 __decorate([
+    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    __param(0, (0, graphql_1.Args)('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [product_input_1.FilterProductInput]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "filterProduct", null);
+__decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [product_input_1.CreateProductInput]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "createProduct", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, graphql_1.Args)('productId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [product_input_1.UpdateProduct, String]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "updateProduct", null);
 ProductResolver = __decorate([
     (0, graphql_1.Resolver)(product_entities_1.Product.name),
     __metadata("design:paramtypes", [product_service_1.ProductService])

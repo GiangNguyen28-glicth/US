@@ -42,13 +42,6 @@ exports.ProductSchema = new mongoose_1.Schema({
         ref: category_entities_1.Category.name,
         autopopulate: true,
     },
-    createAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    updateAt: {
-        type: Date,
-    },
     slug: {
         type: String,
     },
@@ -56,6 +49,7 @@ exports.ProductSchema = new mongoose_1.Schema({
         type: String,
     },
 }, {
+    timestamps: true,
     toJSON: { getters: true },
     toObject: { getters: true },
 });

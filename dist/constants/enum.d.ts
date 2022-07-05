@@ -16,3 +16,11 @@ export declare enum CategoryEnum {
     HOME = "HOME",
     SPORT = "SPORT"
 }
+export declare enum FilterProduct {
+    LATEST = "LATEST",
+    BESTSELLER = "BESTSELLER",
+    DECREASE_PRICE = "DECREASE_PRICE",
+    INCREASE_PRICE = "INCREASE_PRICE",
+    AZ = "AZ",
+    ZA = "ZA"
+}
