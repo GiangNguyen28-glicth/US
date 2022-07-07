@@ -20,9 +20,10 @@ const order_entities_1 = require("./entities/order.entities");
 const cart_service_1 = require("../cart/cart.service");
 const product_service_1 = require("../product/product.service");
 const order_item_service_1 = require("../order-item/order-item.service");
+const enum_1 = require("../../constants/enum");
 let OrderService = class OrderService {
-    constructor(oderModel, cartService, productService, orderItemService) {
-        this.oderModel = oderModel;
+    constructor(orderModel, cartService, productService, orderItemService) {
+        this.orderModel = orderModel;
         this.cartService = cartService;
         this.productService = productService;
         this.orderItemService = orderItemService;
@@ -34,7 +35,7 @@ let OrderService = class OrderService {
         const totalQuantity = this.cartService.totalQuantity(req);
         const isValidCart = await this.cartService.isValidCart(carts);
         if (isValidCart) {
-            const order = await this.oderModel.create({
+            const order = await this.orderModel.create({
                 user: user._id,
                 username,
                 phonenumber,
@@ -78,8 +79,64 @@ let OrderService = class OrderService {
         return true;
     }
     async getOne(orderid) {
-        const order = await this.oderModel.findOne({ _id: orderid });
+        const order = await this.orderModel.findOne({ _id: orderid });
         return order;
+    }
+    async statisticOrder(startOfDate, endOfDate, optionFilter) {
+        const option = this.checkIsMonthOrDate(optionFilter);
+        const orders = await this.orderModel.aggregate([
+            {
+                $project: {
+                    totalPrice: 1,
+                    createdAt: 1,
+                    date: { $dayOfMonth: '$createdAt' },
+                    month: { $month: '$createdAt' },
+                    year: { $year: '$createdAt' },
+                },
+            },
+            {
+                $match: {
+                    createdAt: {
+                        $gte: startOfDate,
+                        $lte: endOfDate,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: option,
+                    totalPrice: { $sum: '$totalPrice' },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalPrice: 1,
+                    month: '$_id.month',
+                    date: '$_id.date',
+                    year: '$_id.year',
+                },
+            },
+            {
+                $sort: {
+                    month: 1,
+                },
+            },
+        ]);
+        return orders;
+    }
+    checkIsMonthOrDate(optionFilter) {
+        if (optionFilter === enum_1.FilterStatistics.SEVENDAYSAGO ||
+            optionFilter === enum_1.FilterStatistics.THIRTYDAYSAGO) {
+            return {
+                date: '$date',
+                month: '$month',
+            };
+        }
+        return {
+            month: '$month',
+            year: '$year',
+        };
     }
 };
 OrderService = __decorate([

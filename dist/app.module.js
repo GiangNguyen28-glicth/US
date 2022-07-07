@@ -25,6 +25,7 @@ const throttler_guard_1 = require("./common/guards/throttler.guard");
 const cloudinary_module_1 = require("./modules/cloudinary/cloudinary.module");
 const review_module_1 = require("./modules/review/review.module");
 const order_item_module_1 = require("./modules/order-item/order-item.module");
+const dashboard_module_1 = require("./modules/dashboard/dashboard.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -46,6 +47,7 @@ AppModule = __decorate([
             review_module_1.ReviewModule,
             order_module_1.OrderModule,
             order_item_module_1.OrderItemModule,
+            dashboard_module_1.DashboardModule,
         ],
         providers: [
             {

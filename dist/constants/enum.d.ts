@@ -24,3 +24,9 @@ export declare enum FilterProduct {
     AZ = "AZ",
     ZA = "ZA"
 }
+export declare enum FilterStatistics {
+    SEVENDAYSAGO = "SEVENDAYSAGO",
+    THIRTYDAYSAGO = "THIRTYDAYSAGO",
+    THISYEAR = "THISYEAR",
+    LASTYEAR = "LASTYEAR"
+}

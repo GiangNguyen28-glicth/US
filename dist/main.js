@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const graphqlUploadExpress_js_1 = __importDefault(require("graphql-upload/graphqlUploadExpress.js"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const express_1 = __importDefault(require("express"));
+const constants_1 = require("./constants/constants");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.set('trust proxy', process.env.NODE_ENV !== 'production');
@@ -23,6 +24,7 @@ async function bootstrap() {
         maxFiles: 100,
         maxFileSize: 10000000,
     }));
+    constants_1.Constants.generateStatisticOrder();
     await app.listen(process.env.PORT || 3000, function () { });
 }
 bootstrap();

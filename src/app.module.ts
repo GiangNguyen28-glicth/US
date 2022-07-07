@@ -16,6 +16,7 @@ import { GqlThrottlerGuard } from './common/guards/throttler.guard';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ReviewModule } from './modules/review/review.module';
 import { OrderItemModule } from './modules/order-item/order-item.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { OrderItemModule } from './modules/order-item/order-item.module';
     ReviewModule,
     OrderModule,
     OrderItemModule,
+    DashboardModule,
   ],
   providers: [
     {

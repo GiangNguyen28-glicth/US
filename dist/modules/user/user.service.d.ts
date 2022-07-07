@@ -15,4 +15,5 @@ export declare class UserService {
     verifyResetpassword(input: ResetPasswordInput): Promise<boolean>;
     updateUser(input: UpdateUserInput, _id: string): Promise<User>;
     checkUserExists(userId: string): Promise<boolean>;
+    getUserByDate(startOfDate: string, endOfDate: string): Promise<User[]>;
 }

@@ -119,4 +119,14 @@ export class UserService {
     }
     return true;
   }
+
+  async getUserByDate(startOfDate: string, endOfDate: string): Promise<User[]> {
+    const user = await this.userModel.find({
+      createAt: {
+        $gte: startOfDate,
+        $lte: endOfDate,
+      },
+    });
+    return user;
+  }
 }

@@ -6,3 +6,6 @@ export declare function getQueryGetAll(prop: string, searchInput: string, fields
 export declare function isEmptyObject(obj: Object): boolean;
 export declare function setInputForOldDocument(input: Object, oldDoc: Object): void;
 export declare function toformatPrice(price: Schema.Types.Decimal128): string;
+export declare function statisticFormatDateToString(staticOption: string): [string, string];
+export declare function setLastDate(endOfDateConvert: Date): Date;
+export declare function setStartDate(startOfDate: Date): Date;

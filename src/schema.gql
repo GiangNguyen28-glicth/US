@@ -85,6 +85,13 @@ input FilterProductInput {
   filterby: FilterProduct
 }
 
+enum FilterStatistics {
+  LASTYEAR
+  SEVENDAYSAGO
+  THIRTYDAYSAGO
+  THISYEAR
+}
+
 enum GenderEnum {
   FEMALE
   LGBT
@@ -185,11 +192,14 @@ type Query {
   getListItem: [LineItem!]!
   getProductByCategory(categoryId: String!): [Product!]!
   getProductById(productId: String!): Product!
+  getProductByRangePrice(price: Float!): [Product!]!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
   resetCache: String!
   searchProduct(input: SearchProductInput!): [Product!]!
+  statistic(input: FilterStatistics!): [User!]!
+  statisticOrder(input: FilterStatistics!): [StatisticOrder!]!
 }
 
 input RegisterInput {
@@ -221,6 +231,13 @@ input SearchProductInput {
   category: ObjectID
   name: String
   price: Int
+}
+
+type StatisticOrder {
+  date: Int
+  month: Int
+  totalPrice: Int!
+  year: Int
 }
 
 input UpdateProduct {

@@ -33,6 +33,9 @@ let ProductResolver = class ProductResolver {
     async getProductById(productId) {
         return this.productService.getProductById(productId);
     }
+    async getProductByRangePrice(price) {
+        return this.productService.getProductByRangePrice(price);
+    }
     async resetCache() {
         this.productService.resetCache();
         return 'Success';
@@ -74,6 +77,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "getProductById", null);
+__decorate([
+    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    __param(0, (0, graphql_1.Args)('price')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "getProductByRangePrice", null);
 __decorate([
     (0, graphql_1.Query)(() => String),
     __metadata("design:type", Function),

@@ -9,10 +9,11 @@ import { User } from '../user/entities/user.entities';
 import { LineItem } from '../cart/entities/cart.entities';
 import { ProductService } from '../product/product.service';
 import { OrderItemService } from '../order-item/order-item.service';
+import { FilterStatistics } from '../../constants/enum';
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectModel(Order.name) private oderModel: Model<Order>,
+    @InjectModel(Order.name) private orderModel: Model<Order>,
     private cartService: CartService,
     private productService: ProductService,
     private orderItemService: OrderItemService,
@@ -31,7 +32,7 @@ export class OrderService {
     const totalQuantity: number = this.cartService.totalQuantity(req);
     const isValidCart: boolean = await this.cartService.isValidCart(carts);
     if (isValidCart) {
-      const order = await this.oderModel.create({
+      const order = await this.orderModel.create({
         user: user._id,
         username,
         phonenumber,
@@ -86,7 +87,69 @@ export class OrderService {
     return true;
   }
   async getOne(orderid: string): Promise<Order> {
-    const order = await this.oderModel.findOne({ _id: orderid });
+    const order = await this.orderModel.findOne({ _id: orderid });
     return order;
+  }
+  async statisticOrder(
+    startOfDate: Date,
+    endOfDate: Date,
+    optionFilter: string,
+  ): Promise<any> {
+    const option: object = this.checkIsMonthOrDate(optionFilter);
+    const orders = await this.orderModel.aggregate([
+      {
+        $project: {
+          totalPrice: 1,
+          createdAt: 1,
+          date: { $dayOfMonth: '$createdAt' },
+          month: { $month: '$createdAt' },
+          year: { $year: '$createdAt' },
+        },
+      },
+      {
+        $match: {
+          createdAt: {
+            $gte: startOfDate,
+            $lte: endOfDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: option,
+          totalPrice: { $sum: '$totalPrice' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalPrice: 1,
+          month: '$_id.month',
+          date: '$_id.date',
+          year: '$_id.year',
+        },
+      },
+      {
+        $sort: {
+          month: 1,
+        },
+      },
+    ]);
+    return orders;
+  }
+  checkIsMonthOrDate(optionFilter: string): object {
+    if (
+      optionFilter === FilterStatistics.SEVENDAYSAGO ||
+      optionFilter === FilterStatistics.THIRTYDAYSAGO
+    ) {
+      return {
+        date: '$date',
+        month: '$month',
+      };
+    }
+    return {
+      month: '$month',
+      year: '$year',
+    };
   }
 }

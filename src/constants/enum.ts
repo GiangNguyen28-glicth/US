@@ -41,3 +41,12 @@ export enum FilterProduct {
 registerEnumType(FilterProduct, {
   name: 'FilterProduct',
 });
+export enum FilterStatistics {
+  SEVENDAYSAGO = 'SEVENDAYSAGO',
+  THIRTYDAYSAGO = 'THIRTYDAYSAGO',
+  THISYEAR = 'THISYEAR',
+  LASTYEAR = 'LASTYEAR',
+}
+registerEnumType(FilterStatistics, {
+  name: 'FilterStatistics',
+});

@@ -26,5 +26,6 @@ import { OrderItemModule } from '../order-item/order-item.module';
     OrderItemModule,
   ],
   providers: [OrderService, OrderResolver],
+  exports: [OrderService],
 })
 export class OrderModule {}

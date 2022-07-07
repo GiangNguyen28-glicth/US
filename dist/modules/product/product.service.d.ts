@@ -20,5 +20,6 @@ export declare class ProductService {
     getQuantityOfProduct(productId: string): Promise<number>;
     updateProduct(productId: string, input: UpdateProduct): Promise<boolean>;
     sortProduct(input: FilterProductInput): Promise<Product[]>;
+    getProductByRangePrice(price: number): Promise<Product[]>;
     resetCache(): Promise<void>;
 }

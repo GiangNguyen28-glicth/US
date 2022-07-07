@@ -2,7 +2,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import moongose from 'mongoose';
 moongose.set('debug', process.env.NODE_ENV === 'prod' ? false : true);
 export const moongoseConfig = MongooseModule.forRoot(
-  process.env.MONGO_URI_LOCALHOST,
+  process.env.MONGO_URI_LOCALHOST_W,
   {
     user: process.env.MONGO_USERNAME,
     pass: process.env.MONGO_PASSWORD,

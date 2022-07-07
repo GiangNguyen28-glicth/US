@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toformatPrice = exports.setInputForOldDocument = exports.isEmptyObject = exports.getQueryGetAll = exports.toKeyword = exports.isUndefinedOrNull = exports.getFieldsInFilter = void 0;
+exports.setStartDate = exports.setLastDate = exports.statisticFormatDateToString = exports.toformatPrice = exports.setInputForOldDocument = exports.isEmptyObject = exports.getQueryGetAll = exports.toKeyword = exports.isUndefinedOrNull = exports.getFieldsInFilter = void 0;
 const common_1 = require("@nestjs/common");
+const constants_1 = require("../constants/constants");
+const enum_1 = require("../constants/enum");
 const string_utils_1 = require("./string.utils");
 function getFieldsInFilter(filter) {
     const fields = {};
@@ -74,4 +76,35 @@ function toformatPrice(price) {
     return priceVND;
 }
 exports.toformatPrice = toformatPrice;
+function statisticFormatDateToString(staticOption) {
+    const { year, month, date } = constants_1.Constants.StatisticOrder[staticOption];
+    const temp = new Date();
+    let endDate = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate(), 7);
+    if (staticOption === enum_1.FilterStatistics.LASTYEAR) {
+        endDate.setFullYear(temp.getFullYear() - 1);
+        endDate.setMonth(constants_1.Constants.MONTH_12);
+        endDate.setDate(constants_1.Constants.DATE_31);
+    }
+    const endOfDate = endDate.toISOString().substring(0, 10);
+    const startDate = new Date(temp.getFullYear() - year, temp.getMonth() - month, temp.getDate() - date, 7);
+    const startOfDate = startDate.toISOString().substring(0, 10);
+    return [startOfDate, endOfDate];
+}
+exports.statisticFormatDateToString = statisticFormatDateToString;
+function setLastDate(endOfDateConvert) {
+    endOfDateConvert.setHours(23);
+    endOfDateConvert.setMinutes(59);
+    endOfDateConvert.setSeconds(59);
+    endOfDateConvert.setMilliseconds(59);
+    return endOfDateConvert;
+}
+exports.setLastDate = setLastDate;
+function setStartDate(startOfDate) {
+    startOfDate.setHours(0);
+    startOfDate.setMinutes(0);
+    startOfDate.setSeconds(0);
+    startOfDate.setMilliseconds(0);
+    return startOfDate;
+}
+exports.setStartDate = setStartDate;
 //# sourceMappingURL=feature.utils.js.map

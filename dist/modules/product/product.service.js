@@ -99,6 +99,10 @@ let ProductService = class ProductService {
         }
         return products;
     }
+    async getProductByRangePrice(price) {
+        const products = await this.productModel.find({ price: { $lte: price } });
+        return products;
+    }
     async resetCache() {
         await this.cacheService.reset();
     }

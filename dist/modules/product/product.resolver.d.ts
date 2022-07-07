@@ -8,6 +8,7 @@ export declare class ProductResolver {
     searchProduct(input: SearchProductInput): Promise<Product[]>;
     getProductByCategory(categoryId: string): Promise<Product[]>;
     getProductById(productId: string): Promise<Product>;
+    getProductByRangePrice(price: number): Promise<Product[]>;
     resetCache(): Promise<string>;
     filterProduct(input: FilterProductInput): Promise<Product[]>;
     createProduct(input: CreateProductInput): Promise<boolean>;

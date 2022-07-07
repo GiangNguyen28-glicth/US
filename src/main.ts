@@ -8,6 +8,7 @@ import { ValidationPipe } from '@nestjs/common';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import { Constants } from './constants/constants';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.set('trust proxy', process.env.NODE_ENV !== 'production');
@@ -23,6 +24,7 @@ async function bootstrap() {
       maxFileSize: 10000000, // 10 MB,
     }),
   );
+  Constants.generateStatisticOrder();
   await app.listen(process.env.PORT || 3000, function () {});
 }
 bootstrap();

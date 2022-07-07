@@ -36,6 +36,13 @@ export class ProductResolver {
     return this.productService.getProductById(productId);
   }
 
+  @Query(() => [Product])
+  async getProductByRangePrice(
+    @Args('price') price: number,
+  ): Promise<Product[]> {
+    return this.productService.getProductByRangePrice(price);
+  }
+
   @Query(() => String)
   async resetCache(): Promise<string> {
     this.productService.resetCache();

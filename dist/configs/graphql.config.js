@@ -19,6 +19,21 @@ exports.graphqlConfig = graphql_1.GraphQLModule.forRoot({
     sortSchema: true,
     buildSchemaOptions: { dateScalarMode: 'isoDate' },
     context: ({ req, res }) => ({ req, res }),
+    formatError: (error) => {
+        var _a;
+        const graphQLFormattedError = {
+            message: (_a = error.extensions) === null || _a === void 0 ? void 0 : _a.exception['response'],
+            extensions: {
+                code: error.extensions.code,
+                exception: {
+                    status: error.extensions.exception['status'],
+                    name: error.extensions.exception['name'],
+                },
+            },
+            path: error.path,
+        };
+        return graphQLFormattedError;
+    },
     debug: false,
     resolvers: {
         Upload: GraphQLUpload_js_1.default,

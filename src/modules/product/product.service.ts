@@ -116,6 +116,11 @@ export class ProductService {
     return products;
   }
 
+  async getProductByRangePrice(price: number): Promise<Product[]> {
+    const products = await this.productModel.find({ price: { $lte: price } });
+    return products;
+  }
+
   async resetCache(): Promise<void> {
     await this.cacheService.reset();
   }

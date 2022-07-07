@@ -133,6 +133,15 @@ let UserService = class UserService {
         }
         return true;
     }
+    async getUserByDate(startOfDate, endOfDate) {
+        const user = await this.userModel.find({
+            createAt: {
+                $gte: startOfDate,
+                $lte: endOfDate,
+            },
+        });
+        return user;
+    }
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),

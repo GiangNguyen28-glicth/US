@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Schema } from 'mongoose';
+import { Constants } from '../constants/constants';
+import { FilterStatistics } from '../constants/enum';
 import { transformTextSearch } from './string.utils';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -77,4 +79,44 @@ export function toformatPrice(price: Schema.Types.Decimal128): string {
     currency: 'VND',
   });
   return priceVND;
+}
+export function statisticFormatDateToString(
+  staticOption: string,
+): [string, string] {
+  const { year, month, date } = Constants.StatisticOrder[staticOption];
+  const temp: Date = new Date();
+  let endDate: Date = new Date(
+    temp.getFullYear(),
+    temp.getMonth(),
+    temp.getDate(),
+    7,
+  );
+  if (staticOption === FilterStatistics.LASTYEAR) {
+    endDate.setFullYear(temp.getFullYear() - 1);
+    endDate.setMonth(Constants.MONTH_12);
+    endDate.setDate(Constants.DATE_31);
+  }
+  const endOfDate: string = endDate.toISOString().substring(0, 10);
+  const startDate: Date = new Date(
+    temp.getFullYear() - year,
+    temp.getMonth() - month,
+    temp.getDate() - date,
+    7,
+  );
+  const startOfDate: string = startDate.toISOString().substring(0, 10);
+  return [startOfDate, endOfDate];
+}
+export function setLastDate(endOfDateConvert: Date): Date {
+  endOfDateConvert.setHours(23);
+  endOfDateConvert.setMinutes(59);
+  endOfDateConvert.setSeconds(59);
+  endOfDateConvert.setMilliseconds(59);
+  return endOfDateConvert;
+}
+export function setStartDate(startOfDate: Date): Date {
+  startOfDate.setHours(0);
+  startOfDate.setMinutes(0);
+  startOfDate.setSeconds(0);
+  startOfDate.setMilliseconds(0);
+  return startOfDate;
 }
