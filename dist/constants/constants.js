@@ -61,6 +61,7 @@ Constants.MONTH_1 = 1;
 Constants.DATE_1 = 1;
 Constants.DATE_31 = 31;
 Constants.KEY_PRODUCT_BY_CATEGORY = 'keyproductbycategory';
+Constants.KEY_DASHBOARD_STATISTIC_ORDER = 'keydashboardstatisticorder';
 Constants.CLOUDINARY = 'Cloudinary';
 Constants.SortOrder = {};
 Constants.StatisticOrder = {};

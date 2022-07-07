@@ -12,6 +12,7 @@ export class Constants {
   public static DATE_1 = 1;
   public static DATE_31 = 31;
   public static KEY_PRODUCT_BY_CATEGORY = 'keyproductbycategory';
+  public static KEY_DASHBOARD_STATISTIC_ORDER = 'keydashboardstatisticorder';
   public static CLOUDINARY = 'Cloudinary';
   public static SortOrder = {};
   public static StatisticOrder = {};

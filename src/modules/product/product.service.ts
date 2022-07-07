@@ -46,9 +46,9 @@ export class ProductService {
     return product;
   }
   async getProductByCategory(categoryId: string): Promise<Product[]> {
-    // if (await checkCacheStore(this.cacheService, categoryId)) {
-    //   return this.cacheService.get(categoryId);
-    // }
+    if (await checkCacheStore(this.cacheService, categoryId)) {
+      return this.cacheService.get(categoryId);
+    }
     const category = await this.categoryService.getOneCategory({
       _id: categoryId,
     });

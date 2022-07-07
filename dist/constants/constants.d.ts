@@ -10,6 +10,7 @@ export declare class Constants {
     static DATE_1: number;
     static DATE_31: number;
     static KEY_PRODUCT_BY_CATEGORY: string;
+    static KEY_DASHBOARD_STATISTIC_ORDER: string;
     static CLOUDINARY: string;
     static SortOrder: {};
     static StatisticOrder: {};

@@ -19,6 +19,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const constants_1 = require("../../constants/constants");
 const feature_utils_1 = require("../../utils/feature.utils");
+const redis_utils_1 = require("../../utils/redis.utils");
 const category_service_1 = require("../category/category.service");
 const product_entities_1 = require("./entities/product.entities");
 const cache_manager_1 = require("cache-manager");
@@ -46,6 +47,9 @@ let ProductService = class ProductService {
         return product;
     }
     async getProductByCategory(categoryId) {
+        if (await (0, redis_utils_1.checkCacheStore)(this.cacheService, categoryId)) {
+            return this.cacheService.get(categoryId);
+        }
         const category = await this.categoryService.getOneCategory({
             _id: categoryId,
         });
