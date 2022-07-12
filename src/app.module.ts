@@ -35,10 +35,10 @@ import { HealthCheckerModule } from './modules/health-checker/health-checker.mod
     ThrottlerModule.forRootAsync({
       useClass: ThrottlerConfigService,
     }),
-    CacheModule.registerAsync<RedisClientOptions>({
-      isGlobal: true,
-      useClass: CacheConfigService,
-    }),
+    // CacheModule.registerAsync<RedisClientOptions>({
+    //   isGlobal: true,
+    //   useClass: CacheConfigService,
+    // }),
     AuthModule,
     UserModule,
     CartModule,

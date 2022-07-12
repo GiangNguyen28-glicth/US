@@ -22,7 +22,6 @@ export class DashboardService {
   constructor(
     private orderService: OrderService,
     private userService: UserService,
-    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}
   async statistic(filterStatistic: string): Promise<User[]> {
     const [startOfDate, endOfDate]: [string, string] =
@@ -32,11 +31,11 @@ export class DashboardService {
   }
   async statisticOrder(filterStatistic: string): Promise<StatisticOrder[]> {
     let listStatisticOrder: StatisticOrder[] = [];
-    listStatisticOrder = await this.getStatisticOrderInCache(filterStatistic);
-    if (listStatisticOrder.length > 0) {
-      console.log('Get Cache');
-      return listStatisticOrder;
-    }
+    // listStatisticOrder = await this.getStatisticOrderInCache(filterStatistic);
+    // if (listStatisticOrder.length > 0) {
+    //   console.log('Get Cache');
+    //   return listStatisticOrder;
+    // }
     const [startOfDate, endOfDate]: [string, string] =
       statisticFormatDateToString(filterStatistic);
     let endOfDateConvert: Date = new Date(endOfDate);
@@ -56,7 +55,7 @@ export class DashboardService {
       endOfDateConvert,
     );
     console.log('Set Cache');
-    this.cacheService.set(filterStatistic, listStatisticOrder);
+    // this.cacheService.set(filterStatistic, listStatisticOrder);
     return listStatisticOrder.length !== 0 ? listStatisticOrder : [];
   }
 
@@ -147,8 +146,8 @@ export class DashboardService {
       ? true
       : false;
   }
-  async getStatisticOrderInCache(key: string): Promise<StatisticOrder[]> {
-    const isExistInCache = await checkCacheStore(this.cacheService, key);
-    return isExistInCache ? this.cacheService.get(key) : [];
-  }
+  // async getStatisticOrderInCache(key: string): Promise<StatisticOrder[]> {
+  //   const isExistInCache = await checkCacheStore(this.cacheService, key);
+  //   return isExistInCache ? this.cacheService.get(key) : [];
+  // }
 }

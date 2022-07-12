@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductService = void 0;
 const common_1 = require("@nestjs/common");
@@ -23,7 +22,6 @@ const mongoose_2 = require("mongoose");
 const constants_1 = require("../../constants/constants");
 const category_service_1 = require("../category/category.service");
 const product_entities_1 = require("./entities/product.entities");
-const cache_manager_1 = require("cache-manager");
 const order_item_service_1 = require("../order-item/order-item.service");
 const faker_1 = require("@faker-js/faker");
 const concreteBuilder_1 = require("../../pattern/Builder/concreteBuilder");
@@ -32,9 +30,8 @@ const string_utils_1 = require("../../utils/string.utils");
 const decimal_js_1 = __importDefault(require("decimal.js"));
 const enum_1 = require("../../constants/enum");
 let ProductService = class ProductService {
-    constructor(productModel, cacheService, categoryService, orderItemService) {
+    constructor(productModel, categoryService, orderItemService) {
         this.productModel = productModel;
-        this.cacheService = cacheService;
         this.categoryService = categoryService;
         this.orderItemService = orderItemService;
     }
@@ -189,14 +186,13 @@ let ProductService = class ProductService {
         return true;
     }
     async resetCache() {
-        await this.cacheService.reset();
     }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(product_entities_1.Product.name)),
-    __param(1, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
-    __metadata("design:paramtypes", [mongoose_2.Model, typeof (_a = typeof cache_manager_1.Cache !== "undefined" && cache_manager_1.Cache) === "function" ? _a : Object, category_service_1.CategoryService,
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        category_service_1.CategoryService,
         order_item_service_1.OrderItemService])
 ], ProductService);
 exports.ProductService = ProductService;

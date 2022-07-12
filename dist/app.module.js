@@ -15,7 +15,6 @@ const mongoose_1 = require("@nestjs/mongoose");
 const throttler_1 = require("@nestjs/throttler");
 const auth_module_1 = require("./auth/auth.module");
 const throttler_guard_1 = require("./common/guards/throttler.guard");
-const cache_config_1 = require("./configs/cache.config");
 const graphql_config_1 = require("./configs/graphql.config");
 const moongose_config_1 = require("./configs/moongose.config");
 const throttler_config_1 = require("./configs/throttler.config");
@@ -45,10 +44,6 @@ AppModule = __decorate([
             }),
             throttler_1.ThrottlerModule.forRootAsync({
                 useClass: throttler_config_1.ThrottlerConfigService,
-            }),
-            common_1.CacheModule.registerAsync({
-                isGlobal: true,
-                useClass: cache_config_1.CacheConfigService,
             }),
             auth_module_1.AuthModule,
             user_module_1.UserModule,

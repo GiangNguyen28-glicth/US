@@ -3,14 +3,12 @@ import { CategoryService } from '../category/category.service';
 import { CreateProductInput, OptionFilterProduct, SearchProductInput, SortProductInput, UpdateProduct } from './dto/product.input';
 import { Product, ResultFilter } from './entities/product.entities';
 import { ProductDocument } from './schemas/product.schema';
-import { Cache } from 'cache-manager';
 import { OrderItemService } from '../order-item/order-item.service';
 export declare class ProductService {
     private productModel;
-    private cacheService;
     private categoryService;
     private orderItemService;
-    constructor(productModel: Model<ProductDocument>, cacheService: Cache, categoryService: CategoryService, orderItemService: OrderItemService);
+    constructor(productModel: Model<ProductDocument>, categoryService: CategoryService, orderItemService: OrderItemService);
     createProduct(input: CreateProductInput): Promise<boolean>;
     getProducts(input: OptionFilterProduct): Promise<ResultFilter>;
     getTotalCount(query: object): Promise<number>;

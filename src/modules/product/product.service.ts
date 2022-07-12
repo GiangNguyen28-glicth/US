@@ -32,7 +32,7 @@ import { SortProductEnum } from '../../constants/enum';
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-    @Inject(CACHE_MANAGER) private cacheService: Cache,
+    // @Inject(CACHE_MANAGER) private cacheService: Cache,
     private categoryService: CategoryService,
     private orderItemService: OrderItemService,
   ) {}
@@ -216,6 +216,6 @@ export class ProductService {
   }
 
   async resetCache(): Promise<void> {
-    await this.cacheService.reset();
+    // await this.cacheService.reset();
   }
 }
