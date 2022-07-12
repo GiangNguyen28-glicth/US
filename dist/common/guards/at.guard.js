@@ -15,6 +15,15 @@ let AtGuard = class AtGuard extends (0, passport_1.AuthGuard)('jwt') {
         const ctx = graphql_1.GqlExecutionContext.create(context);
         return ctx.getContext().req;
     }
+    handleRequest(err, user, info) {
+        if (err || !user) {
+            if (!info) {
+                throw new common_1.HttpException(err, common_1.HttpStatus.UNAUTHORIZED);
+            }
+            throw new common_1.HttpException(info, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        return user;
+    }
 };
 AtGuard = __decorate([
     (0, common_1.Injectable)()

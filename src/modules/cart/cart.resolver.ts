@@ -6,6 +6,7 @@ import { Cart, LineItem } from './entities/cart.entities';
 import { UseGuards } from '@nestjs/common';
 import { AtGuard } from '../../common/guards/at.guard';
 @Resolver(Cart.name)
+@UseGuards(AtGuard)
 export class CartResolver {
   constructor(private cartService: CartService) {}
 
@@ -15,12 +16,12 @@ export class CartResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(AtGuard)
   async addItemToCart(
     @Args('input') input: CreateCartInput,
     @Context('req') req: Request,
     @Context('res') res: Response,
   ): Promise<boolean> {
+    console.log('Running here');
     return this.cartService.addItemToCart(req, res, input);
   }
 

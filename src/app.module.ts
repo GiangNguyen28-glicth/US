@@ -1,29 +1,44 @@
-import { Module } from '@nestjs/common';
-import { cacheConfig } from './configs/cache.config';
-import { graphqlConfig } from './configs/graphql.config';
-import { moongoseConfig } from './configs/moongose.config';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { CacheModule, Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { GraphQLModule } from '@nestjs/graphql';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { RedisClientOptions } from 'redis';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './modules/user/user.module';
+import { GqlThrottlerGuard } from './common/guards/throttler.guard';
+import { CacheConfigService } from './configs/cache.config';
+import { GraphqlService } from './configs/graphql.config';
+import { MoongoseConfigService } from './configs/moongose.config';
+import { ThrottlerConfigService } from './configs/throttler.config';
 import { CartModule } from './modules/cart/cart.module';
-import { LocationModule } from './modules/location/location.module';
 import { CategoryModule } from './modules/category/category.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { LocationModule } from './modules/location/location.module';
 import { MailModule } from './modules/mail/mail.module';
+import { OrderItemModule } from './modules/order-item/order-item.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
-import { throttlerConfig } from './configs/throttler.config';
-import { APP_GUARD } from '@nestjs/core';
-import { GqlThrottlerGuard } from './common/guards/throttler.guard';
-import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ReviewModule } from './modules/review/review.module';
-import { OrderItemModule } from './modules/order-item/order-item.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
-
+import { UserModule } from './modules/user/user.module';
+import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
 @Module({
   imports: [
-    graphqlConfig,
-    moongoseConfig,
-    throttlerConfig,
-    cacheConfig,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      useClass: GraphqlService,
+    }),
+    MongooseModule.forRootAsync({
+      useClass: MoongoseConfigService,
+    }),
+    ThrottlerModule.forRootAsync({
+      useClass: ThrottlerConfigService,
+    }),
+    CacheModule.registerAsync<RedisClientOptions>({
+      isGlobal: true,
+      useClass: CacheConfigService,
+    }),
     AuthModule,
     UserModule,
     CartModule,
@@ -37,6 +52,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     OrderModule,
     OrderItemModule,
     DashboardModule,
+    HealthCheckerModule,
   ],
   providers: [
     {

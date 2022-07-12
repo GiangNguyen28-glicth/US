@@ -21,48 +21,39 @@ let ProductResolver = class ProductResolver {
     constructor(productService) {
         this.productService = productService;
     }
-    async getAllProducts() {
-        return this.productService.getAllProducts();
+    getProducts(input) {
+        return this.productService.getProducts(input);
     }
-    async searchProduct(input) {
-        return this.productService.searchProduct(input);
-    }
-    async getProductByCategory(categoryId) {
+    getProductByCategory(categoryId) {
         return this.productService.getProductByCategory(categoryId);
     }
-    async getProductById(productId) {
-        return this.productService.getProductById(productId);
-    }
-    async getProductByRangePrice(price) {
-        return this.productService.getProductByRangePrice(price);
-    }
     async resetCache() {
-        this.productService.resetCache();
+        await this.productService.resetCache();
         return 'Success';
     }
-    async filterProduct(input) {
-        return this.productService.sortProduct(input);
+    searchProduct(input) {
+        return this.productService.searchProduct(input);
     }
-    async createProduct(input) {
+    getProductBySlug(slug) {
+        return this.productService.getProductBySlug(slug);
+    }
+    createProduct(input) {
         return this.productService.createProduct(input);
     }
-    async updateProduct(input, productId) {
+    updateProduct(input, productId) {
         return this.productService.updateProduct(productId, input);
+    }
+    fakeDataProduct() {
+        return this.productService.updatePrice();
     }
 };
 __decorate([
-    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    (0, graphql_1.Query)(() => product_entities_1.ResultFilter),
+    __param(0, (0, graphql_1.Args)('option')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [product_input_1.OptionFilterProduct]),
     __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "getAllProducts", null);
-__decorate([
-    (0, graphql_1.Query)(() => [product_entities_1.Product]),
-    __param(0, (0, graphql_1.Args)('input')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [product_input_1.SearchProductInput]),
-    __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "searchProduct", null);
+], ProductResolver.prototype, "getProducts", null);
 __decorate([
     (0, graphql_1.Query)(() => [product_entities_1.Product]),
     __param(0, (0, graphql_1.Args)('categoryId')),
@@ -71,20 +62,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "getProductByCategory", null);
 __decorate([
-    (0, graphql_1.Query)(() => product_entities_1.Product),
-    __param(0, (0, graphql_1.Args)('productId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "getProductById", null);
-__decorate([
-    (0, graphql_1.Query)(() => [product_entities_1.Product]),
-    __param(0, (0, graphql_1.Args)('price')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "getProductByRangePrice", null);
-__decorate([
     (0, graphql_1.Query)(() => String),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -92,11 +69,18 @@ __decorate([
 ], ProductResolver.prototype, "resetCache", null);
 __decorate([
     (0, graphql_1.Query)(() => [product_entities_1.Product]),
-    __param(0, (0, graphql_1.Args)('input')),
+    __param(0, (0, graphql_1.Args)('search')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [product_input_1.FilterProductInput]),
+    __metadata("design:paramtypes", [product_input_1.SearchProductInput]),
     __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "filterProduct", null);
+], ProductResolver.prototype, "searchProduct", null);
+__decorate([
+    (0, graphql_1.Query)(() => product_entities_1.Product),
+    __param(0, (0, graphql_1.Args)('slug')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "getProductBySlug", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),
@@ -112,6 +96,12 @@ __decorate([
     __metadata("design:paramtypes", [product_input_1.UpdateProduct, String]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "updateProduct", null);
+__decorate([
+    (0, graphql_1.Query)(() => Boolean),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductResolver.prototype, "fakeDataProduct", null);
 ProductResolver = __decorate([
     (0, graphql_1.Resolver)(product_entities_1.Product.name),
     __metadata("design:paramtypes", [product_service_1.ProductService])

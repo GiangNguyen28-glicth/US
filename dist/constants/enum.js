@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilterStatistics = exports.FilterProduct = exports.CategoryEnum = exports.RandomCodeEnum = exports.RoleEnum = exports.GenderEnum = void 0;
+exports.FilterStatistics = exports.SortProductEnum = exports.CategoryEnum = exports.RandomCodeEnum = exports.RoleEnum = exports.GenderEnum = void 0;
 const graphql_1 = require("@nestjs/graphql");
 var GenderEnum;
 (function (GenderEnum) {
@@ -36,16 +36,16 @@ var CategoryEnum;
 (0, graphql_1.registerEnumType)(CategoryEnum, {
     name: 'CategoryEnum',
 });
-var FilterProduct;
-(function (FilterProduct) {
-    FilterProduct["LATEST"] = "LATEST";
-    FilterProduct["BESTSELLER"] = "BESTSELLER";
-    FilterProduct["DECREASE_PRICE"] = "DECREASE_PRICE";
-    FilterProduct["INCREASE_PRICE"] = "INCREASE_PRICE";
-    FilterProduct["AZ"] = "AZ";
-    FilterProduct["ZA"] = "ZA";
-})(FilterProduct = exports.FilterProduct || (exports.FilterProduct = {}));
-(0, graphql_1.registerEnumType)(FilterProduct, {
+var SortProductEnum;
+(function (SortProductEnum) {
+    SortProductEnum["LATEST"] = "LATEST";
+    SortProductEnum["BESTSELLER"] = "BESTSELLER";
+    SortProductEnum["DECREASE_PRICE"] = "DECREASE_PRICE";
+    SortProductEnum["INCREASE_PRICE"] = "INCREASE_PRICE";
+    SortProductEnum["AZ"] = "AZ";
+    SortProductEnum["ZA"] = "ZA";
+})(SortProductEnum = exports.SortProductEnum || (exports.SortProductEnum = {}));
+(0, graphql_1.registerEnumType)(SortProductEnum, {
     name: 'FilterProduct',
 });
 var FilterStatistics;

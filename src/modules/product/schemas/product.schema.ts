@@ -1,4 +1,6 @@
-import { Document, Schema, Types } from 'mongoose';
+import { Document, Schema } from 'mongoose';
+import { convertDecimal128ToString } from '../../../utils/feature.utils';
+import { ref } from '../../../utils/ref.utils';
 import { Category } from '../../category/entites/category.entities';
 import { Product } from '../entities/product.entities';
 
@@ -12,12 +14,7 @@ export const ProductSchema = new Schema<Product>(
     price: {
       type: Schema.Types.Decimal128,
       min: [0, 'min is 0'],
-      get: function (val: Types.Decimal128): number {
-        if (val) {
-          return +val.toString();
-        }
-        return 0;
-      },
+      get: convertDecimal128ToString,
     },
     displayPrice: {
       type: String,
@@ -34,17 +31,19 @@ export const ProductSchema = new Schema<Product>(
       type: Number,
       default: 0,
     },
+    originalPrice: {
+      type: Schema.Types.Decimal128,
+      min: [0, 'min is 0'],
+      get: convertDecimal128ToString,
+    },
     quantity: {
       type: Number,
     },
     imgUrl: [],
-    category: {
-      type: Schema.Types.ObjectId,
-      ref: Category.name,
-      autopopulate: true,
-    },
+    category: ref(Category, { select: ['_id', 'name'] }),
     slug: {
       type: String,
+      unique: true,
     },
     keyword: {
       type: String,

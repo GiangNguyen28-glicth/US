@@ -30,7 +30,7 @@ export enum CategoryEnum {
 registerEnumType(CategoryEnum, {
   name: 'CategoryEnum',
 });
-export enum FilterProduct {
+export enum SortProductEnum {
   LATEST = 'LATEST',
   BESTSELLER = 'BESTSELLER',
   DECREASE_PRICE = 'DECREASE_PRICE',
@@ -38,7 +38,7 @@ export enum FilterProduct {
   AZ = 'AZ',
   ZA = 'ZA',
 }
-registerEnumType(FilterProduct, {
+registerEnumType(SortProductEnum, {
   name: 'FilterProduct',
 });
 export enum FilterStatistics {

@@ -33,6 +33,11 @@ let AuthResolver = class AuthResolver {
         });
         return this.authService.setJwt(userDoc);
     }
+    test(request) {
+        const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+        console.log(ip);
+        return 'Hello World';
+    }
     async login(input) {
         return await this.authService.signIn(input);
     }
@@ -54,6 +59,13 @@ __decorate([
     __metadata("design:paramtypes", [user_entities_1.User]),
     __metadata("design:returntype", Promise)
 ], AuthResolver.prototype, "refreshToken", null);
+__decorate([
+    (0, graphql_1.Query)(() => String),
+    __param(0, (0, graphql_1.Context)('req')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", String)
+], AuthResolver.prototype, "test", null);
 __decorate([
     (0, graphql_1.Mutation)(() => auth_entities_1.JwtPayload),
     __param(0, (0, graphql_1.Args)('input')),

@@ -12,34 +12,34 @@ export class CategoryResolver {
   constructor(private categoryService: CategoryService) {}
 
   @Query(() => Category)
-  async getChildOfCategory(
+  getChildOfCategory(
     @Args('categoryId') categoryId: string,
   ): Promise<Category> {
     return this.categoryService.getChildOfCategory(categoryId);
   }
 
   @Query(() => [String])
-  async getChildIdCategory(
+  getChildIdCategory(
     @Args('categoryId') categoryId: string,
   ): Promise<string[]> {
     return this.categoryService.getChildIdCategory(categoryId);
   }
 
   @Query(() => [Category])
-  async getCategoryByParentIdAndLevel(
+  getCategoryByParentIdAndLevel(
     @Args('input') input: CategoryGetByParentAndLevel,
   ): Promise<Category[]> {
     return this.categoryService.getCategoryByParentIdAndLevel(input);
   }
   @Query(() => Category)
-  async getCategoryById(
+  getCategoryById(
     @Args('input') input: CategoryGetOneInput,
   ): Promise<Category> {
     return this.categoryService.getOneCategory(input);
   }
 
   @Mutation(() => Boolean)
-  async createCategory(@Args('input') input: CategoryInput): Promise<boolean> {
+  createCategory(@Args('input') input: CategoryInput): Promise<boolean> {
     return this.categoryService.createCategory(input);
   }
 }

@@ -5,4 +5,5 @@ export declare class GqlThrottlerGuard extends ThrottlerGuard {
         req: any;
         res: any;
     };
+    protected getTracker(req: Record<string, any>): string;
 }

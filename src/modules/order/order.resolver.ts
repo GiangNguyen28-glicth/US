@@ -8,9 +8,9 @@ import { AtGuard } from '../../common/guards/at.guard';
 import { GetUser } from '../../common/decorators/getuser.decorator';
 import { User } from '../user/entities/user.entities';
 @Resolver(Order.name)
+// @UseGuards(AtGuard)
 export class OrderResolver {
   constructor(private orderService: OrderService) {}
-  @UseGuards(AtGuard)
   @Mutation(() => Boolean)
   async createOrder(
     @Args('input') input: CreateOrderInput,
@@ -18,6 +18,7 @@ export class OrderResolver {
     @Context('res') res: Response,
     @GetUser() user: User,
   ): Promise<boolean> {
+    console.log('Running here');
     return this.orderService.createOrder(input, req, res, user);
   }
 }

@@ -12,7 +12,7 @@ export declare class AuthService {
     signUp(input: RegisterInput): Promise<boolean>;
     signIn(loginInput: LoginInput): Promise<JwtPayload>;
     setJwt(user: UserDocument): Promise<JwtPayload>;
-    getTokens(_id: string, username: string): Promise<any>;
+    getTokens(_id: string, keyword: string): Promise<any>;
     forgotPassword(email: string): Promise<boolean>;
     resetPassword(input: ResetPasswordInput): Promise<boolean>;
 }

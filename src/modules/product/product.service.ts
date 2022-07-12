@@ -8,21 +8,26 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, SortOrder } from 'mongoose';
 import { Constants } from '../../constants/constants';
-import { getFieldsInFilter, getQueryGetAll } from '../../utils/feature.utils';
 import { checkCacheStore } from '../../utils/redis.utils';
 import { CategoryService } from '../category/category.service';
 import {
   CreateProductInput,
-  FilterProductInput,
+  OptionFilterProduct,
   SearchProductInput,
+  SortProductInput,
   UpdateProduct,
 } from './dto/product.input';
-import { Product } from './entities/product.entities';
+import { Product, ResultFilter } from './entities/product.entities';
 import { ProductDocument } from './schemas/product.schema';
 import { Cache } from 'cache-manager';
-import { FilterProduct } from '../../constants/enum';
 import { OrderItemService } from '../order-item/order-item.service';
 import { sortQuery } from '../../constants/type';
+import { faker } from '@faker-js/faker';
+import { FilterProductBuilder } from '../../pattern/Builder/concreteBuilder';
+import { getSkipValue, priceAfterDiscount } from '../../utils/feature.utils';
+import { transformTextSearch } from '../../utils/string.utils';
+import Decimal from 'decimal.js';
+import { SortProductEnum } from '../../constants/enum';
 @Injectable()
 export class ProductService {
   constructor(
@@ -34,27 +39,76 @@ export class ProductService {
   async createProduct(input: CreateProductInput): Promise<boolean> {
     return this.productModel.create(input) ? true : false;
   }
-  async getAllProducts(): Promise<Product[]> {
-    return this.productModel.find();
-  }
-  async searchProduct(input: SearchProductInput): Promise<Product[]> {
-    const searchInput = input?.name ? input.name : '';
-    delete input.name;
-    const fields = getFieldsInFilter(input);
-    const query = getQueryGetAll('keyword', searchInput, fields);
-    const product: Product[] = await this.productModel.find(query).exec();
-    return product;
-  }
-  async getProductByCategory(categoryId: string): Promise<Product[]> {
-    if (await checkCacheStore(this.cacheService, categoryId)) {
-      return this.cacheService.get(categoryId);
+  async getProducts(input: OptionFilterProduct): Promise<ResultFilter> {
+    try {
+      const query = new FilterProductBuilder()
+        .addRangePrice(input.filter.minPrice, input.filter.maxPrice)
+        .addDiscount(input.filter.isDiscount)
+        .addProductId(input.filter.productId)
+        .buildQuery();
+      const skip: number | undefined = getSkipValue(input.page, input.size);
+      const [products, listKeyword, totalCount] = await Promise.all([
+        this.productModel.find(query).skip(skip).limit(input?.size),
+        this.getKeyword(input.filter.name),
+        this.getTotalCount(query),
+      ]);
+      return {
+        results: products,
+        listKeyword: listKeyword,
+        totalCount: totalCount,
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  getTotalCount(query: object): Promise<number> {
+    return this.productModel.countDocuments(query).exec();
+  }
+
+  async getKeyword(name: string): Promise<string[]> {
+    if (!name) {
+      return [];
+    }
+    name = '^' + transformTextSearch(name);
+    const prouducts = await this.productModel.find(
+      {
+        $and: [
+          {
+            keyword: {
+              $regex: `${name}`,
+              $options: 'i',
+            },
+          },
+        ],
+      },
+      { _id: 0, name: 1 },
+    );
+    return prouducts.map(item => item.name);
+  }
+
+  async searchProduct(input: SearchProductInput): Promise<Product[]> {
+    try {
+      const query = new FilterProductBuilder().addName(input.name).buildQuery();
+      const skip: number | undefined = getSkipValue(input.page, input.size);
+      return this.productModel.find(query).skip(skip).limit(input.size).exec();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getProductByCategory(categoryId: string): Promise<Product[]> {
+    // if (await checkCacheStore(this.cacheService, categoryId)) {
+    //   return this.cacheService.get(categoryId);
+    // }
     const category = await this.categoryService.getOneCategory({
       _id: categoryId,
     });
     const listIdDescendants: string[] =
       await this.categoryService.getChildIdCategory(category._id.toString());
-    let listProducts: Product[] = [];
+    let listProducts: Product[] = await this.productModel.find({
+      category: categoryId,
+    });
     for (let i = 0; i < listIdDescendants.length; i++) {
       const products = await this.productModel.find({
         category: listIdDescendants[i],
@@ -100,9 +154,18 @@ export class ProductService {
     return true;
   }
 
-  async sortProduct(input: FilterProductInput): Promise<Product[]> {
+  async getProductBySlug(slug: string): Promise<Product> {
+    try {
+      const product = await this.productModel.findOne({ slug: slug });
+      return product;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async sortProduct(input: SortProductInput): Promise<Product[]> {
     let products;
-    if (input.filterby === FilterProduct.BESTSELLER) {
+    if (input.filterby === SortProductEnum.BESTSELLER) {
       const listProductId: string[] =
         await this.orderItemService.getListProductIdInOrderItem();
       products = await this.productModel.find({ _id: { $in: listProductId } });
@@ -116,9 +179,40 @@ export class ProductService {
     return products;
   }
 
-  async getProductByRangePrice(price: number): Promise<Product[]> {
-    const products = await this.productModel.find({ price: { $lte: price } });
-    return products;
+  async updatePrice(): Promise<boolean> {
+    const products = await this.productModel.find();
+    for (const i of products) {
+      await this.productModel.findOneAndUpdate(
+        { _id: i._id },
+        {
+          $set: {
+            originalPrice: i.price,
+            price: new Decimal(
+              priceAfterDiscount(i.price, i.discount) as number,
+            ),
+          },
+        },
+      );
+    }
+    return true;
+  }
+
+  createRandomProduct(): CreateProductInput {
+    return {
+      name: faker.commerce.product(),
+      discount: +faker.commerce.price(0, 10),
+      category: '62ba7694f002a7e575034d5c',
+      quantity: faker.datatype.number(20),
+      title: faker.commerce.productDescription(),
+      price: +faker.commerce.price(10000, 100000),
+      imgUrl: [faker.image.cats()],
+    };
+  }
+  async fakeDataProduct(): Promise<boolean> {
+    for (let index = 0; index < 5; index++) {
+      this.createProduct(this.createRandomProduct());
+    }
+    return true;
   }
 
   async resetCache(): Promise<void> {

@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
@@ -17,6 +23,9 @@ export class RolesGuard implements CanActivate {
     }
     const request = ctx.getContext().req;
     const user: User = request.user;
-    return roles.some(role => user.role.includes(role));
+    if (!roles.some(role => user?.role.includes(role))) {
+      throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    }
+    return true;
   }
 }

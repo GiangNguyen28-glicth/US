@@ -1,4 +1,4 @@
-import { FilterProduct, FilterStatistics } from './enum';
+import { SortProductEnum, FilterStatistics } from './enum';
 
 export class Constants {
   public static LOCALE_COUNTRY_CODE_ENG = 'en';
@@ -17,23 +17,23 @@ export class Constants {
   public static SortOrder = {};
   public static StatisticOrder = {};
   public static generateSortOrder() {
-    Constants.SortOrder[FilterProduct.LATEST] = {
+    Constants.SortOrder[SortProductEnum.LATEST] = {
       property: '$natural',
       option: 1,
     };
-    Constants.SortOrder[FilterProduct.DECREASE_PRICE] = {
+    Constants.SortOrder[SortProductEnum.DECREASE_PRICE] = {
       property: 'price',
       option: -1,
     };
-    Constants.SortOrder[FilterProduct.INCREASE_PRICE] = {
+    Constants.SortOrder[SortProductEnum.INCREASE_PRICE] = {
       property: 'price',
       option: 1,
     };
-    Constants.SortOrder[FilterProduct.AZ] = {
+    Constants.SortOrder[SortProductEnum.AZ] = {
       property: 'keyword',
       option: 'asc',
     };
-    Constants.SortOrder[FilterProduct.ZA] = {
+    Constants.SortOrder[SortProductEnum.ZA] = {
       property: 'keyword',
       option: 'desc',
     };

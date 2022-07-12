@@ -13,7 +13,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardResolver = void 0;
+const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
+const role_decorator_1 = require("../../common/decorators/role.decorator");
+const at_guard_1 = require("../../common/guards/at.guard");
+const role_guard_1 = require("../../common/guards/role.guard");
 const enum_1 = require("../../constants/enum");
 const user_entities_1 = require("../user/entities/user.entities");
 const dashboard_service_1 = require("./dashboard.service");
@@ -22,10 +26,10 @@ let DashboardResolver = class DashboardResolver {
     constructor(dashboadService) {
         this.dashboadService = dashboadService;
     }
-    async statistic(input) {
+    statistic(input) {
         return this.dashboadService.statistic(input);
     }
-    async statisticOrder(input) {
+    statisticOrder(input) {
         return this.dashboadService.statisticOrder(input);
     }
 };
@@ -38,6 +42,8 @@ __decorate([
 ], DashboardResolver.prototype, "statistic", null);
 __decorate([
     (0, graphql_1.Query)(() => [dashboard_entities_1.StatisticOrder]),
+    (0, role_decorator_1.hasRoles)(enum_1.RoleEnum.ADMIN),
+    (0, common_1.UseGuards)(at_guard_1.AtGuard, role_guard_1.RolesGuard),
     __param(0, (0, graphql_1.Args)('input', { type: () => enum_1.FilterStatistics })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

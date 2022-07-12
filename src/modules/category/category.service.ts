@@ -16,31 +16,41 @@ export class CategoryService {
     @InjectModel(Category.name) private categoryModel: Model<Category>,
   ) {}
   async createCategory(input: CategoryInput): Promise<boolean> {
-    const category = await this.categoryModel.findOne({ name: input.name });
-    if (category) {
-      throw new HttpException('Category đã tồn tại', HttpStatus.BAD_REQUEST);
+    try {
+      const category = await this.categoryModel.findOne({ name: input.name });
+      if (category) {
+        throw new HttpException('Category đã tồn tại', HttpStatus.BAD_REQUEST);
+      }
+      const categoryDoc = await this.categoryModel.create(input);
+      if (input.parentId) {
+        const parent = await this.getOneCategory({ _id: input.parentId });
+        categoryDoc.parent = parent;
+      }
+      return categoryDoc.save() ? true : false;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    const categoryDoc = await this.categoryModel.create(input);
-    if (input.parentId) {
-      const parent = await this.getOneCategory({ _id: input.parentId });
-      categoryDoc.parent = parent;
-    }
-    await categoryDoc.save();
-    return true;
   }
   async getOneCategory(input: CategoryGetOneInput): Promise<Category> {
-    const { _id } = input;
-    const category = await this.categoryModel.findById(_id);
-    if (!category) {
-      throw new HttpException('Không tìm thấy Category', HttpStatus.NOT_FOUND);
+    try {
+      const { _id } = input;
+      const category = await this.categoryModel.findById(_id);
+      if (!category) {
+        throw new HttpException(
+          'Không tìm thấy Category',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      if (category.parent) {
+        const parent = await this.categoryModel.findOne({
+          _id: category.parent._id,
+        });
+        category.parent = parent;
+      }
+      return category;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    if (category.parent) {
-      const parent = await this.categoryModel.findOne({
-        _id: category.parent._id,
-      });
-      category.parent = parent;
-    }
-    return category;
   }
   async getChildOfCategory(categoryId: string): Promise<Category> {
     const categories: CategoryDocument = await this.categoryModel
@@ -72,6 +82,14 @@ export class CategoryService {
   async getCategoryByParentIdAndLevel(
     input: CategoryGetByParentAndLevel,
   ): Promise<Category[]> {
-    return this.categoryModel.find(input);
+    return this.categoryModel
+      .find(input)
+      .populate({
+        path: 'child',
+        populate: {
+          path: 'child',
+        },
+      })
+      .exec();
   }
 }

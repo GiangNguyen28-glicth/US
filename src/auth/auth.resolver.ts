@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetUser } from '../common/decorators/getuser.decorator';
+import { AtGuard } from '../common/guards/at.guard';
 import { RtGuard } from '../common/guards/rt.guard';
 import { User } from '../modules/user/entities/user.entities';
 import { UserDocument } from '../modules/user/schema/user.schema';
@@ -26,6 +27,13 @@ export class AuthResolver {
       _id: user._id,
     });
     return this.authService.setJwt(userDoc);
+  }
+  @Query(() => String)
+  test(@Context('req') request): string {
+    const ip =
+      request.headers['x-forwarded-for'] || request.socket.remoteAddress;
+    console.log(ip);
+    return 'Hello World';
   }
   @Mutation(() => JwtPayload)
   async login(@Args('input') input: LoginInput): Promise<JwtPayload> {

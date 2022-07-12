@@ -8,6 +8,7 @@ export declare class AuthResolver {
     private userService;
     constructor(authService: AuthService, userService: UserService);
     refreshToken(user: User): Promise<JwtPayload>;
+    test(request: any): string;
     login(input: LoginInput): Promise<JwtPayload>;
     register(input: RegisterInput): Promise<boolean>;
     forgotPassword(email: string): Promise<boolean>;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setStartDate = exports.setLastDate = exports.statisticFormatDateToString = exports.toformatPrice = exports.setInputForOldDocument = exports.isEmptyObject = exports.getQueryGetAll = exports.toKeyword = exports.isUndefinedOrNull = exports.getFieldsInFilter = void 0;
+exports.priceAfterDiscount = exports.getSkipValue = exports.setStartDate = exports.setLastDate = exports.convertDecimal128ToString = exports.statisticFormatDateToString = exports.toformatPrice = exports.setInputForOldDocument = exports.isEmptyObject = exports.getQueryGetAll = exports.toKeyword = exports.isUndefinedOrNull = exports.getFieldsInFilter = void 0;
 const common_1 = require("@nestjs/common");
 const constants_1 = require("../constants/constants");
 const enum_1 = require("../constants/enum");
@@ -79,7 +79,7 @@ exports.toformatPrice = toformatPrice;
 function statisticFormatDateToString(staticOption) {
     const { year, month, date } = constants_1.Constants.StatisticOrder[staticOption];
     const temp = new Date();
-    let endDate = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate(), 7);
+    const endDate = new Date(temp.getFullYear(), temp.getMonth(), temp.getDate(), 7);
     if (staticOption === enum_1.FilterStatistics.LASTYEAR) {
         endDate.setFullYear(temp.getFullYear() - 1);
         endDate.setMonth(constants_1.Constants.MONTH_12);
@@ -91,6 +91,13 @@ function statisticFormatDateToString(staticOption) {
     return [startOfDate, endOfDate];
 }
 exports.statisticFormatDateToString = statisticFormatDateToString;
+function convertDecimal128ToString(val) {
+    if (val) {
+        return +val.toString();
+    }
+    return 0;
+}
+exports.convertDecimal128ToString = convertDecimal128ToString;
 function setLastDate(endOfDateConvert) {
     endOfDateConvert.setHours(23);
     endOfDateConvert.setMinutes(59);
@@ -107,4 +114,19 @@ function setStartDate(startOfDate) {
     return startOfDate;
 }
 exports.setStartDate = setStartDate;
+function getSkipValue(page, size) {
+    if (!page || !size) {
+        return undefined;
+    }
+    return (page - 1) * size;
+}
+exports.getSkipValue = getSkipValue;
+function priceAfterDiscount(price, discount) {
+    if (!discount || discount === 0) {
+        return price;
+    }
+    price = price - price * (discount / 100);
+    return price;
+}
+exports.priceAfterDiscount = priceAfterDiscount;
 //# sourceMappingURL=feature.utils.js.map

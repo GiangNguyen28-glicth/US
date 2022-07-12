@@ -4,23 +4,23 @@ exports.Constants = void 0;
 const enum_1 = require("./enum");
 class Constants {
     static generateSortOrder() {
-        Constants.SortOrder[enum_1.FilterProduct.LATEST] = {
+        Constants.SortOrder[enum_1.SortProductEnum.LATEST] = {
             property: '$natural',
             option: 1,
         };
-        Constants.SortOrder[enum_1.FilterProduct.DECREASE_PRICE] = {
+        Constants.SortOrder[enum_1.SortProductEnum.DECREASE_PRICE] = {
             property: 'price',
             option: -1,
         };
-        Constants.SortOrder[enum_1.FilterProduct.INCREASE_PRICE] = {
+        Constants.SortOrder[enum_1.SortProductEnum.INCREASE_PRICE] = {
             property: 'price',
             option: 1,
         };
-        Constants.SortOrder[enum_1.FilterProduct.AZ] = {
+        Constants.SortOrder[enum_1.SortProductEnum.AZ] = {
             property: 'keyword',
             option: 'asc',
         };
-        Constants.SortOrder[enum_1.FilterProduct.ZA] = {
+        Constants.SortOrder[enum_1.SortProductEnum.ZA] = {
             property: 'keyword',
             option: 'desc',
         };

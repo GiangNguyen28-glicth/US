@@ -1,0 +1,1 @@
+{"query":"{getListItem{product{_id,name},quantity,totalPrice}"}

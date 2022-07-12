@@ -1,4 +1,10 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { FilterStatistics } from '../../constants/enum';
 import {
   setLastDate,
@@ -11,7 +17,6 @@ import { UserService } from '../user/user.service';
 import { StatisticOrder } from './entities/dashboard.entities';
 import { Cache } from 'cache-manager';
 import { checkCacheStore } from '../../utils/redis.utils';
-import { Constants } from '../../constants/constants';
 @Injectable()
 export class DashboardService {
   constructor(

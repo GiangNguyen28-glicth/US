@@ -21,25 +21,23 @@ const user_entities_1 = require("../user/entities/user.entities");
 const review_input_1 = require("./dto/review.input");
 const review_entities_1 = require("./entities/review.entities");
 const review_service_1 = require("./review.service");
-const error_utils_1 = require("../../utils/error.utils");
 let ReviewResolver = class ReviewResolver {
     constructor(reviewService) {
         this.reviewService = reviewService;
     }
-    async checkExistsReview(productId, user) {
+    checkExistsReview(productId, user) {
         return this.reviewService.checkExistsReview(productId, user._id);
     }
-    async countReview(productId) {
+    countReview(productId) {
         return this.reviewService.countReview(productId);
     }
-    async averageRating(productId) {
-        const [data, error] = await (0, error_utils_1.handleRequest)(this.reviewService.averageRating(productId));
-        return data;
+    averageRating(productId) {
+        return this.reviewService.averageRating(productId);
     }
-    async createReview(reviewInput, user) {
+    createReview(reviewInput, user) {
         return this.reviewService.createReview(reviewInput, user);
     }
-    async updateReview(input, user) {
+    updateReview(input, user) {
         return this.reviewService.updateReview(input, user);
     }
 };

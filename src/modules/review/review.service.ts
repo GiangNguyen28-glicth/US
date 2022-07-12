@@ -15,36 +15,55 @@ export class ReviewService {
     private productService: ProductService,
   ) {}
   async createReview(input: ReviewInput, user: User): Promise<boolean> {
-    if (!(await this.productService.checkProductExists(input.productId))) {
-      throw new HttpException(
-        'Sản phẩm hiện không khả dụng',
-        HttpStatus.BAD_REQUEST,
-      );
+    try {
+      if (!(await this.productService.checkProductExists(input.productId))) {
+        throw new HttpException(
+          'Sản phẩm hiện không khả dụng',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      await this.productReviewModel.create({
+        product: input.productId,
+        user: user._id,
+        rating: input.rating,
+      });
+      const averageRating: number = await this.averageRating(input.productId);
+      await this.productService.updateProduct(input.productId, {
+        rating: averageRating,
+      });
+      return true;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    await this.productReviewModel.create({
-      product: input.productId,
-      user: user._id,
-      rating: input.rating,
-    });
-    return true;
   }
 
   async countReview(productId: string): Promise<number> {
     if (!(await this.productService.checkProductExists(productId))) {
       throw new HttpException(
         'Sản phẩm hiện không khả dụng',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
       );
     }
     return this.productReviewModel.find({ product: productId }).count();
   }
 
   async updateReview(input: ReviewInput, user: User): Promise<boolean> {
-    await this.productReviewModel.findOneAndUpdate({
-      product: input.productId,
-      user: user._id,
-    });
-    return true;
+    try {
+      const productReview = await this.productReviewModel.findOneAndUpdate(
+        {
+          product: input.productId,
+          user: user._id,
+        },
+        { rating: input.rating },
+      );
+      const averageRating: number = await this.averageRating(input.productId);
+      await this.productService.updateProduct(input.productId, {
+        rating: averageRating,
+      });
+      return productReview ? true : false;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async checkExistsReview(productId: string, userId: string): Promise<boolean> {
@@ -73,6 +92,6 @@ export class ReviewService {
         },
       },
     ]);
-    return totalrating[0].sum / totalrating[0].count;
+    return totalrating[0]?.sum ? totalrating[0].sum / totalrating[0].count : 0;
   }
 }

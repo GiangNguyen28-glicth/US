@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductSchema = void 0;
 const mongoose_1 = require("mongoose");
+const feature_utils_1 = require("../../../utils/feature.utils");
+const ref_utils_1 = require("../../../utils/ref.utils");
 const category_entities_1 = require("../../category/entites/category.entities");
 exports.ProductSchema = new mongoose_1.Schema({
     name: {
@@ -11,12 +13,7 @@ exports.ProductSchema = new mongoose_1.Schema({
     price: {
         type: mongoose_1.Schema.Types.Decimal128,
         min: [0, 'min is 0'],
-        get: function (val) {
-            if (val) {
-                return +val.toString();
-            }
-            return 0;
-        },
+        get: feature_utils_1.convertDecimal128ToString,
     },
     displayPrice: {
         type: String,
@@ -33,17 +30,19 @@ exports.ProductSchema = new mongoose_1.Schema({
         type: Number,
         default: 0,
     },
+    originalPrice: {
+        type: mongoose_1.Schema.Types.Decimal128,
+        min: [0, 'min is 0'],
+        get: feature_utils_1.convertDecimal128ToString,
+    },
     quantity: {
         type: Number,
     },
     imgUrl: [],
-    category: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: category_entities_1.Category.name,
-        autopopulate: true,
-    },
+    category: (0, ref_utils_1.ref)(category_entities_1.Category, { select: ['_id', 'name'] }),
     slug: {
         type: String,
+        unique: true,
     },
     keyword: {
         type: String,

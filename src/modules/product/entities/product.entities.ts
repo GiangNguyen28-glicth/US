@@ -1,21 +1,24 @@
 import { Field, Float, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 import { Category } from '../../category/entites/category.entities';
+import { IProduct } from '../interfaces/product';
 
 @ObjectType()
-export class Product {
+export class Product implements IProduct {
   @Field(() => ID)
   _id: string;
   @Field({ nullable: true })
-  name?: string;
+  name: string;
   @Field(() => Float)
-  price?: Schema.Types.Decimal128;
+  price: Types.Decimal128 | number;
   @Field(() => Int, { nullable: true })
-  rating?: number;
+  rating: number;
   @Field({ nullable: true })
-  title?: string;
+  title: string;
   @Field(() => Int, { nullable: true })
   discount: number;
+  @Field(() => Float, { nullable: true })
+  originalPrice: Types.Decimal128 | number;
   @Field(() => Int, { nullable: true })
   quantity: number;
   @Field(() => [String])
@@ -28,8 +31,20 @@ export class Product {
   createAt: Date;
   @Field({ nullable: true })
   updateAt: Date;
-  @HideField()
-  slug: string;
+  @Field({ nullable: true })
+  slug?: string;
   @HideField()
   keyword: string;
+}
+
+@ObjectType()
+export class ResultFilter implements IResultFilter<Product> {
+  @Field(() => [Product], { nullable: true })
+  results: Product[];
+
+  @Field(() => [String])
+  listKeyword: string[];
+
+  @Field(() => Int, { nullable: true })
+  totalCount: number;
 }

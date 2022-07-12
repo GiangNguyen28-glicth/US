@@ -13,7 +13,7 @@ export class Category {
   parent: Category;
   @Field()
   level: number;
-  @HideField()
+  @Field()
   slug: string;
   @HideField()
   keyword: string;

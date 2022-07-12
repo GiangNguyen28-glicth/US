@@ -9,9 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Product = void 0;
+exports.ResultFilter = exports.Product = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const mongoose_1 = require("mongoose");
 const category_entities_1 = require("../../category/entites/category.entities");
 let Product = class Product {
 };
@@ -25,7 +24,7 @@ __decorate([
 ], Product.prototype, "name", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.Float),
-    __metadata("design:type", mongoose_1.Schema.Types.Decimal128)
+    __metadata("design:type", Object)
 ], Product.prototype, "price", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
@@ -39,6 +38,10 @@ __decorate([
     (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
     __metadata("design:type", Number)
 ], Product.prototype, "discount", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float, { nullable: true }),
+    __metadata("design:type", Object)
+], Product.prototype, "originalPrice", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
     __metadata("design:type", Number)
@@ -64,7 +67,7 @@ __decorate([
     __metadata("design:type", Date)
 ], Product.prototype, "updateAt", void 0);
 __decorate([
-    (0, graphql_1.HideField)(),
+    (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
 ], Product.prototype, "slug", void 0);
 __decorate([
@@ -75,4 +78,22 @@ Product = __decorate([
     (0, graphql_1.ObjectType)()
 ], Product);
 exports.Product = Product;
+let ResultFilter = class ResultFilter {
+};
+__decorate([
+    (0, graphql_1.Field)(() => [Product], { nullable: true }),
+    __metadata("design:type", Array)
+], ResultFilter.prototype, "results", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [String]),
+    __metadata("design:type", Array)
+], ResultFilter.prototype, "listKeyword", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], ResultFilter.prototype, "totalCount", void 0);
+ResultFilter = __decorate([
+    (0, graphql_1.ObjectType)()
+], ResultFilter);
+exports.ResultFilter = ResultFilter;
 //# sourceMappingURL=product.entities.js.map

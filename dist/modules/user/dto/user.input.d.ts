@@ -3,7 +3,7 @@ import { GenderEnum } from '../../../constants/enum';
 export declare class FilterGetOneUser {
     _id?: string;
     email?: string;
-    username?: string;
+    keyword?: string;
     custom?: object;
 }
 export declare class CreateUserInput {

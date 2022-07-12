@@ -21,19 +21,19 @@ let CategoryResolver = class CategoryResolver {
     constructor(categoryService) {
         this.categoryService = categoryService;
     }
-    async getChildOfCategory(categoryId) {
+    getChildOfCategory(categoryId) {
         return this.categoryService.getChildOfCategory(categoryId);
     }
-    async getChildIdCategory(categoryId) {
+    getChildIdCategory(categoryId) {
         return this.categoryService.getChildIdCategory(categoryId);
     }
-    async getCategoryByParentIdAndLevel(input) {
+    getCategoryByParentIdAndLevel(input) {
         return this.categoryService.getCategoryByParentIdAndLevel(input);
     }
-    async getCategoryById(input) {
+    getCategoryById(input) {
         return this.categoryService.getOneCategory(input);
     }
-    async createCategory(input) {
+    createCategory(input) {
         return this.categoryService.createCategory(input);
     }
 };

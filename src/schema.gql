@@ -9,6 +9,7 @@ type Category {
   level: Float!
   name: String
   parent: Category
+  slug: String!
 }
 
 enum CategoryEnum {
@@ -72,17 +73,12 @@ type District {
   province_code: Int
 }
 
-enum FilterProduct {
-  AZ
-  BESTSELLER
-  DECREASE_PRICE
-  INCREASE_PRICE
-  LATEST
-  ZA
-}
-
-input FilterProductInput {
-  filterby: FilterProduct
+input FilterProduct {
+  isDiscount: Boolean
+  maxPrice: Int
+  minPrice: Int = 0
+  name: String
+  productId: ObjectID
 }
 
 enum FilterStatistics {
@@ -143,6 +139,13 @@ A field whose value conforms with the standard mongodb object ID as described he
 """
 scalar ObjectID
 
+input OptionFilterProduct {
+  filter: FilterProduct
+  page: Int
+  size: Int
+  sort: String
+}
+
 type Order {
   _id: ID!
   address: String!
@@ -163,9 +166,11 @@ type Product {
   displayPrice: String!
   imgUrl: [String!]!
   name: String
+  originalPrice: Float
   price: Float!
   quantity: Int
   rating: Int
+  slug: String
   title: String
   updateAt: DateTime
 }
@@ -182,8 +187,7 @@ type Query {
   checkExistsReview(productId: String!): Boolean!
   confirmMail(input: ConfirmMailInput!): Boolean!
   countReview(productId: String!): Float!
-  filterProduct(input: FilterProductInput!): [Product!]!
-  getAllProducts: [Product!]!
+  fakeDataProduct: Boolean!
   getCategoryById(input: CategoryGetOneInput!): Category!
   getCategoryByParentIdAndLevel(input: CategoryGetByParentAndLevel!): [Category!]!
   getChildIdCategory(categoryId: String!): [String!]!
@@ -191,15 +195,16 @@ type Query {
   getDistrict(province_code: Float!): [District!]!
   getListItem: [LineItem!]!
   getProductByCategory(categoryId: String!): [Product!]!
-  getProductById(productId: String!): Product!
-  getProductByRangePrice(price: Float!): [Product!]!
+  getProductBySlug(slug: String!): Product!
+  getProducts(option: OptionFilterProduct!): ResultFilter!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
   resetCache: String!
-  searchProduct(input: SearchProductInput!): [Product!]!
+  searchProduct(search: SearchProductInput!): [Product!]!
   statistic(input: FilterStatistics!): [User!]!
   statisticOrder(input: FilterStatistics!): [StatisticOrder!]!
+  test: String!
 }
 
 input RegisterInput {
@@ -217,6 +222,12 @@ input ResetPasswordInput {
   userId: ObjectID!
 }
 
+type ResultFilter {
+  listKeyword: [String!]!
+  results: [Product!]
+  totalCount: Int
+}
+
 input ReviewInput {
   productId: ObjectID!
   rating: Int!
@@ -228,9 +239,9 @@ enum RoleEnum {
 }
 
 input SearchProductInput {
-  category: ObjectID
   name: String
-  price: Int
+  page: Int
+  size: Int
 }
 
 type StatisticOrder {

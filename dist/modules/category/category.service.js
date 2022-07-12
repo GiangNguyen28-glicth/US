@@ -22,31 +22,40 @@ let CategoryService = class CategoryService {
         this.categoryModel = categoryModel;
     }
     async createCategory(input) {
-        const category = await this.categoryModel.findOne({ name: input.name });
-        if (category) {
-            throw new common_1.HttpException('Category đã tồn tại', common_1.HttpStatus.BAD_REQUEST);
+        try {
+            const category = await this.categoryModel.findOne({ name: input.name });
+            if (category) {
+                throw new common_1.HttpException('Category đã tồn tại', common_1.HttpStatus.BAD_REQUEST);
+            }
+            const categoryDoc = await this.categoryModel.create(input);
+            if (input.parentId) {
+                const parent = await this.getOneCategory({ _id: input.parentId });
+                categoryDoc.parent = parent;
+            }
+            return categoryDoc.save() ? true : false;
         }
-        const categoryDoc = await this.categoryModel.create(input);
-        if (input.parentId) {
-            const parent = await this.getOneCategory({ _id: input.parentId });
-            categoryDoc.parent = parent;
+        catch (error) {
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
-        await categoryDoc.save();
-        return true;
     }
     async getOneCategory(input) {
-        const { _id } = input;
-        const category = await this.categoryModel.findById(_id);
-        if (!category) {
-            throw new common_1.HttpException('Không tìm thấy Category', common_1.HttpStatus.NOT_FOUND);
+        try {
+            const { _id } = input;
+            const category = await this.categoryModel.findById(_id);
+            if (!category) {
+                throw new common_1.HttpException('Không tìm thấy Category', common_1.HttpStatus.NOT_FOUND);
+            }
+            if (category.parent) {
+                const parent = await this.categoryModel.findOne({
+                    _id: category.parent._id,
+                });
+                category.parent = parent;
+            }
+            return category;
         }
-        if (category.parent) {
-            const parent = await this.categoryModel.findOne({
-                _id: category.parent._id,
-            });
-            category.parent = parent;
+        catch (error) {
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
-        return category;
     }
     async getChildOfCategory(categoryId) {
         const categories = await this.categoryModel
@@ -74,7 +83,15 @@ let CategoryService = class CategoryService {
         return listIdDescendants;
     }
     async getCategoryByParentIdAndLevel(input) {
-        return this.categoryModel.find(input);
+        return this.categoryModel
+            .find(input)
+            .populate({
+            path: 'child',
+            populate: {
+                path: 'child',
+            },
+        })
+            .exec();
     }
 };
 CategoryService = __decorate([

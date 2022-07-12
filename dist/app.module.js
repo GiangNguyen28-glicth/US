@@ -7,34 +7,49 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
+const apollo_1 = require("@nestjs/apollo");
 const common_1 = require("@nestjs/common");
+const core_1 = require("@nestjs/core");
+const graphql_1 = require("@nestjs/graphql");
+const mongoose_1 = require("@nestjs/mongoose");
+const throttler_1 = require("@nestjs/throttler");
+const auth_module_1 = require("./auth/auth.module");
+const throttler_guard_1 = require("./common/guards/throttler.guard");
 const cache_config_1 = require("./configs/cache.config");
 const graphql_config_1 = require("./configs/graphql.config");
 const moongose_config_1 = require("./configs/moongose.config");
-const auth_module_1 = require("./auth/auth.module");
-const user_module_1 = require("./modules/user/user.module");
+const throttler_config_1 = require("./configs/throttler.config");
 const cart_module_1 = require("./modules/cart/cart.module");
-const location_module_1 = require("./modules/location/location.module");
 const category_module_1 = require("./modules/category/category.module");
+const cloudinary_module_1 = require("./modules/cloudinary/cloudinary.module");
+const dashboard_module_1 = require("./modules/dashboard/dashboard.module");
+const location_module_1 = require("./modules/location/location.module");
 const mail_module_1 = require("./modules/mail/mail.module");
+const order_item_module_1 = require("./modules/order-item/order-item.module");
 const order_module_1 = require("./modules/order/order.module");
 const product_module_1 = require("./modules/product/product.module");
-const throttler_config_1 = require("./configs/throttler.config");
-const core_1 = require("@nestjs/core");
-const throttler_guard_1 = require("./common/guards/throttler.guard");
-const cloudinary_module_1 = require("./modules/cloudinary/cloudinary.module");
 const review_module_1 = require("./modules/review/review.module");
-const order_item_module_1 = require("./modules/order-item/order-item.module");
-const dashboard_module_1 = require("./modules/dashboard/dashboard.module");
+const user_module_1 = require("./modules/user/user.module");
+const health_checker_module_1 = require("./modules/health-checker/health-checker.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            graphql_config_1.graphqlConfig,
-            moongose_config_1.moongoseConfig,
-            throttler_config_1.throttlerConfig,
-            cache_config_1.cacheConfig,
+            graphql_1.GraphQLModule.forRootAsync({
+                driver: apollo_1.ApolloDriver,
+                useClass: graphql_config_1.GraphqlService,
+            }),
+            mongoose_1.MongooseModule.forRootAsync({
+                useClass: moongose_config_1.MoongoseConfigService,
+            }),
+            throttler_1.ThrottlerModule.forRootAsync({
+                useClass: throttler_config_1.ThrottlerConfigService,
+            }),
+            common_1.CacheModule.registerAsync({
+                isGlobal: true,
+                useClass: cache_config_1.CacheConfigService,
+            }),
             auth_module_1.AuthModule,
             user_module_1.UserModule,
             cart_module_1.CartModule,
@@ -48,6 +63,7 @@ AppModule = __decorate([
             order_module_1.OrderModule,
             order_item_module_1.OrderItemModule,
             dashboard_module_1.DashboardModule,
+            health_checker_module_1.HealthCheckerModule,
         ],
         providers: [
             {

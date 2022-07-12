@@ -15,6 +15,12 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -23,14 +29,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cacheConfig = void 0;
+exports.CacheConfigService = void 0;
 const common_1 = require("@nestjs/common");
 const redisStore = __importStar(require("cache-manager-redis-store"));
-exports.cacheConfig = common_1.CacheModule.register({
-    store: redisStore,
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-    ttl: +process.env.CACHE_TTL,
-    max: parseInt(process.env.REDIS_MAX_SIZE),
-    isGlobal: true,
-});
+let CacheConfigService = class CacheConfigService {
+    createCacheOptions() {
+        return {
+            store: redisStore,
+            url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+            ttl: +process.env.CACHE_TTL,
+            max: parseInt(process.env.REDIS_MAX_SIZE),
+        };
+    }
+};
+CacheConfigService = __decorate([
+    (0, common_1.Injectable)()
+], CacheConfigService);
+exports.CacheConfigService = CacheConfigService;
 //# sourceMappingURL=cache.config.js.map

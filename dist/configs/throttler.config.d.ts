@@ -1,1 +1,4 @@
-export declare const throttlerConfig: import("@nestjs/common").DynamicModule;
+import { ThrottlerModuleOptions, ThrottlerOptionsFactory } from '@nestjs/throttler';
+export declare class ThrottlerConfigService implements ThrottlerOptionsFactory {
+    createThrottlerOptions(): ThrottlerModuleOptions | Promise<ThrottlerModuleOptions>;
+}

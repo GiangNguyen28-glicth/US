@@ -1,1 +1,4 @@
-export declare const cacheConfig: import("@nestjs/common").DynamicModule;
+import { CacheModuleOptions, CacheOptionsFactory } from '@nestjs/common';
+export declare class CacheConfigService implements CacheOptionsFactory {
+    createCacheOptions(): CacheModuleOptions;
+}

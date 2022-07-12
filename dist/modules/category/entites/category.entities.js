@@ -36,7 +36,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Category.prototype, "level", void 0);
 __decorate([
-    (0, graphql_1.HideField)(),
+    (0, graphql_1.Field)(),
     __metadata("design:type", String)
 ], Category.prototype, "slug", void 0);
 __decorate([

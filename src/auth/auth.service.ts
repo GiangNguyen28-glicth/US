@@ -41,8 +41,8 @@ export class AuthService {
     return await this.setJwt(user);
   }
   async setJwt(user: UserDocument): Promise<JwtPayload> {
-    const { _id, username } = user;
-    const [at, rt] = await this.getTokens(_id, username);
+    const { _id, keyword } = user;
+    const [at, rt] = await this.getTokens(_id, keyword);
     user.currentHashedRefreshToken = rt;
     await user.save();
     const jwtpayload: JwtPayload = new JwtPayload();
@@ -52,12 +52,12 @@ export class AuthService {
     jwtpayload.userInfo = user;
     return jwtpayload;
   }
-  async getTokens(_id: string, username: string): Promise<any> {
+  async getTokens(_id: string, keyword: string): Promise<any> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
           _id: _id,
-          username,
+          keyword,
         },
         {
           secret: process.env.JWT_ACCESS_TOKEN_SECRET,
@@ -67,7 +67,7 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           _id: _id,
-          username,
+          keyword,
         },
         {
           secret: process.env.JWT_REFRESH_TOKEN_SECRET,

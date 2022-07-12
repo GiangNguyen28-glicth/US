@@ -34,6 +34,8 @@ export class CartService {
         });
       }
     } else {
+      await this.isValidQuantityProduct(input.quantity, product, listProduct);
+
       listProduct.push({
         product: product,
         quantity: input.quantity,

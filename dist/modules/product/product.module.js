@@ -34,8 +34,10 @@ ProductModule = __decorate([
                                 this.name = 'BaseSource ' + (0, string_utils_1.randomCode)(12, enum_1.RandomCodeEnum.UPPER);
                             }
                             this.displayPrice = (0, feature_utils_1.toformatPrice)(this.price);
+                            this.originalPrice = this.price;
                             this.slug = (0, string_utils_1.toSlug)(this.name, constants_1.Constants.LOCALE_COUNTRY_CODE_VN);
                             this.keyword = (0, string_utils_1.toKeyword)(this.slug);
+                            this.price = (0, feature_utils_1.priceAfterDiscount)(this.price, this.discount);
                             return next();
                         });
                         return product_schema_1.ProductSchema;

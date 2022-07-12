@@ -1,73 +1,61 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   CreateProductInput,
-  FilterProductInput,
+  OptionFilterProduct,
   SearchProductInput,
   UpdateProduct,
 } from './dto/product.input';
-import { Product } from './entities/product.entities';
+import { Product, ResultFilter } from './entities/product.entities';
 import { ProductService } from './product.service';
 
 @Resolver(Product.name)
 export class ProductResolver {
   constructor(private productService: ProductService) {}
 
-  @Query(() => [Product])
-  async getAllProducts(): Promise<Product[]> {
-    return this.productService.getAllProducts();
+  @Query(() => ResultFilter)
+  getProducts(
+    @Args('option') input: OptionFilterProduct,
+  ): Promise<ResultFilter> {
+    return this.productService.getProducts(input);
   }
 
   @Query(() => [Product])
-  async searchProduct(
-    @Args('input') input: SearchProductInput,
-  ): Promise<Product[]> {
-    return this.productService.searchProduct(input);
-  }
-
-  @Query(() => [Product])
-  async getProductByCategory(
+  getProductByCategory(
     @Args('categoryId') categoryId: string,
   ): Promise<Product[]> {
     return this.productService.getProductByCategory(categoryId);
   }
 
-  @Query(() => Product)
-  async getProductById(@Args('productId') productId: string): Promise<Product> {
-    return this.productService.getProductById(productId);
-  }
-
-  @Query(() => [Product])
-  async getProductByRangePrice(
-    @Args('price') price: number,
-  ): Promise<Product[]> {
-    return this.productService.getProductByRangePrice(price);
-  }
-
   @Query(() => String)
   async resetCache(): Promise<string> {
-    this.productService.resetCache();
+    await this.productService.resetCache();
     return 'Success';
   }
 
   @Query(() => [Product])
-  async filterProduct(
-    @Args('input') input: FilterProductInput,
-  ): Promise<Product[]> {
-    return this.productService.sortProduct(input);
+  searchProduct(@Args('search') input: SearchProductInput): Promise<Product[]> {
+    return this.productService.searchProduct(input);
+  }
+
+  @Query(() => Product)
+  getProductBySlug(@Args('slug') slug: string): Promise<Product> {
+    return this.productService.getProductBySlug(slug);
   }
 
   @Mutation(() => Boolean)
-  async createProduct(
-    @Args('input') input: CreateProductInput,
-  ): Promise<boolean> {
+  createProduct(@Args('input') input: CreateProductInput): Promise<boolean> {
     return this.productService.createProduct(input);
   }
 
   @Mutation(() => Boolean)
-  async updateProduct(
+  updateProduct(
     @Args('input') input: UpdateProduct,
     @Args('productId') productId: string,
   ): Promise<boolean> {
     return this.productService.updateProduct(productId, input);
+  }
+  @Query(() => Boolean)
+  fakeDataProduct(): Promise<boolean> {
+    return this.productService.updatePrice();
   }
 }

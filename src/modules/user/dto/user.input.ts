@@ -11,7 +11,7 @@ export class FilterGetOneUser {
   email?: string;
 
   @Field({ nullable: true })
-  username?: string;
+  keyword?: string;
   // eslint-disable-next-line @typescript-eslint/ban-types
   custom?: object;
 }

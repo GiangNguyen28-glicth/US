@@ -25,7 +25,10 @@ let RolesGuard = class RolesGuard {
         }
         const request = ctx.getContext().req;
         const user = request.user;
-        return roles.some(role => user.role.includes(role));
+        if (!roles.some(role => user === null || user === void 0 ? void 0 : user.role.includes(role))) {
+            throw new common_1.HttpException('Forbidden resource', common_1.HttpStatus.FORBIDDEN);
+        }
+        return true;
     }
 };
 RolesGuard = __decorate([

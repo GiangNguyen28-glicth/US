@@ -16,12 +16,7 @@ exports.ProductReviewSchema = new mongoose_1.Schema({
         max: [5, 'Không được đánh giá quá 5 sao'],
         type: Number,
     },
-    createAt: {
-        type: Date,
-        default: Date.now(),
-    },
-    updateAt: {
-        type: Date,
-    },
+}, {
+    timestamps: true,
 });
 //# sourceMappingURL=review.schema.js.map

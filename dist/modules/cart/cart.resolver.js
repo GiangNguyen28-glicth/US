@@ -27,6 +27,7 @@ let CartResolver = class CartResolver {
         return this.cartService.getListProductInCookie(req);
     }
     async addItemToCart(input, req, res) {
+        console.log('Running here');
         return this.cartService.addItemToCart(req, res, input);
     }
     async deleteItem(productId, req, res) {
@@ -45,7 +46,6 @@ __decorate([
 ], CartResolver.prototype, "getListItem", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
-    (0, common_1.UseGuards)(at_guard_1.AtGuard),
     __param(0, (0, graphql_1.Args)('input')),
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),
@@ -73,6 +73,7 @@ __decorate([
 ], CartResolver.prototype, "updateItem", null);
 CartResolver = __decorate([
     (0, graphql_1.Resolver)(cart_entities_1.Cart.name),
+    (0, common_1.UseGuards)(at_guard_1.AtGuard),
     __metadata("design:paramtypes", [cart_service_1.CartService])
 ], CartResolver);
 exports.CartResolver = CartResolver;

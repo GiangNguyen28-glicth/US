@@ -16,6 +16,9 @@ let GqlThrottlerGuard = class GqlThrottlerGuard extends throttler_1.ThrottlerGua
         const ctx = gqlCtx.getContext();
         return { req: ctx.req, res: ctx.res };
     }
+    getTracker(req) {
+        return req.ips.length ? req.ips[0] : req.ip;
+    }
 };
 GqlThrottlerGuard = __decorate([
     (0, common_1.Injectable)()

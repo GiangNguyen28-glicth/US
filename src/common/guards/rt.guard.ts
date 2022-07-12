@@ -1,7 +1,8 @@
 import {
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,9 +16,9 @@ export class RtGuard extends AuthGuard('jwt-refresh') {
   handleRequest(err: any, user: any, info: any) {
     if (err || !user) {
       if (!info) {
-        throw new UnauthorizedException(err);
+        throw new HttpException(err, HttpStatus.UNAUTHORIZED);
       }
-      throw new UnauthorizedException(info);
+      throw new HttpException(info, HttpStatus.UNAUTHORIZED);
     }
     return user;
   }

@@ -17,8 +17,6 @@ const graphql_1 = require("@nestjs/graphql");
 const order_input_1 = require("./dto/order.input");
 const order_entities_1 = require("./entities/order.entities");
 const order_service_1 = require("./order.service");
-const common_1 = require("@nestjs/common");
-const at_guard_1 = require("../../common/guards/at.guard");
 const getuser_decorator_1 = require("../../common/decorators/getuser.decorator");
 const user_entities_1 = require("../user/entities/user.entities");
 let OrderResolver = class OrderResolver {
@@ -26,11 +24,11 @@ let OrderResolver = class OrderResolver {
         this.orderService = orderService;
     }
     async createOrder(input, req, res, user) {
+        console.log('Running here');
         return this.orderService.createOrder(input, req, res, user);
     }
 };
 __decorate([
-    (0, common_1.UseGuards)(at_guard_1.AtGuard),
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),
     __param(1, (0, graphql_1.Context)('req')),

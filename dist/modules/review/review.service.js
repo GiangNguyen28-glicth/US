@@ -28,28 +28,46 @@ let ReviewService = class ReviewService {
         this.productService = productService;
     }
     async createReview(input, user) {
-        if (!(await this.productService.checkProductExists(input.productId))) {
-            throw new common_1.HttpException('Sản phẩm hiện không khả dụng', common_1.HttpStatus.BAD_REQUEST);
+        try {
+            if (!(await this.productService.checkProductExists(input.productId))) {
+                throw new common_1.HttpException('Sản phẩm hiện không khả dụng', common_1.HttpStatus.NOT_FOUND);
+            }
+            await this.productReviewModel.create({
+                product: input.productId,
+                user: user._id,
+                rating: input.rating,
+            });
+            const averageRating = await this.averageRating(input.productId);
+            await this.productService.updateProduct(input.productId, {
+                rating: averageRating,
+            });
+            return true;
         }
-        await this.productReviewModel.create({
-            product: input.productId,
-            user: user._id,
-            rating: input.rating,
-        });
-        return true;
+        catch (error) {
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
     async countReview(productId) {
         if (!(await this.productService.checkProductExists(productId))) {
-            throw new common_1.HttpException('Sản phẩm hiện không khả dụng', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('Sản phẩm hiện không khả dụng', common_1.HttpStatus.NOT_FOUND);
         }
         return this.productReviewModel.find({ product: productId }).count();
     }
     async updateReview(input, user) {
-        await this.productReviewModel.findOneAndUpdate({
-            product: input.productId,
-            user: user._id,
-        });
-        return true;
+        try {
+            const productReview = await this.productReviewModel.findOneAndUpdate({
+                product: input.productId,
+                user: user._id,
+            }, { rating: input.rating });
+            const averageRating = await this.averageRating(input.productId);
+            await this.productService.updateProduct(input.productId, {
+                rating: averageRating,
+            });
+            return productReview ? true : false;
+        }
+        catch (error) {
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
     async checkExistsReview(productId, userId) {
         const review = await this.productReviewModel.findOne({
@@ -62,6 +80,7 @@ let ReviewService = class ReviewService {
         return true;
     }
     async averageRating(productId) {
+        var _a;
         const totalrating = await this.productReviewModel.aggregate([
             {
                 $match: {
@@ -76,7 +95,7 @@ let ReviewService = class ReviewService {
                 },
             },
         ]);
-        return totalrating[0].sum / totalrating[0].count;
+        return ((_a = totalrating[0]) === null || _a === void 0 ? void 0 : _a.sum) ? totalrating[0].sum / totalrating[0].count : 0;
     }
 };
 ReviewService = __decorate([

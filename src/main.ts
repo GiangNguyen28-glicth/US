@@ -9,8 +9,10 @@ import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { Constants } from './constants/constants';
+import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // app.use(helmet());
   app.set('trust proxy', process.env.NODE_ENV !== 'production');
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());

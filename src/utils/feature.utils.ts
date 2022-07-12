@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import { Constants } from '../constants/constants';
 import { FilterStatistics } from '../constants/enum';
 import { transformTextSearch } from './string.utils';
@@ -72,7 +72,7 @@ export function setInputForOldDocument(input: Object, oldDoc: Object): void {
     }
   }
 }
-export function toformatPrice(price: Schema.Types.Decimal128): string {
+export function toformatPrice(price: Types.Decimal128): string {
   const priceN = parseInt(price.toString());
   const priceVND = priceN.toLocaleString('it-IT', {
     style: 'currency',
@@ -85,7 +85,7 @@ export function statisticFormatDateToString(
 ): [string, string] {
   const { year, month, date } = Constants.StatisticOrder[staticOption];
   const temp: Date = new Date();
-  let endDate: Date = new Date(
+  const endDate: Date = new Date(
     temp.getFullYear(),
     temp.getMonth(),
     temp.getDate(),
@@ -106,6 +106,14 @@ export function statisticFormatDateToString(
   const startOfDate: string = startDate.toISOString().substring(0, 10);
   return [startOfDate, endOfDate];
 }
+export function convertDecimal128ToString(
+  val: Schema.Types.Decimal128,
+): number {
+  if (val) {
+    return +val.toString();
+  }
+  return 0;
+}
 export function setLastDate(endOfDateConvert: Date): Date {
   endOfDateConvert.setHours(23);
   endOfDateConvert.setMinutes(59);
@@ -119,4 +127,22 @@ export function setStartDate(startOfDate: Date): Date {
   startOfDate.setSeconds(0);
   startOfDate.setMilliseconds(0);
   return startOfDate;
+}
+
+export function getSkipValue(page: number, size: number): number | undefined {
+  if (!page || !size) {
+    return undefined;
+  }
+  return (page - 1) * size;
+}
+
+export function priceAfterDiscount(
+  price: number | Types.Decimal128,
+  discount: number,
+): number | Types.Decimal128 {
+  if (!discount || discount === 0) {
+    return price;
+  }
+  price = (price as number) - (price as number) * (discount / 100);
+  return price;
 }

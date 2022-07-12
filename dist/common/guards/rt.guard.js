@@ -18,9 +18,9 @@ let RtGuard = class RtGuard extends (0, passport_1.AuthGuard)('jwt-refresh') {
     handleRequest(err, user, info) {
         if (err || !user) {
             if (!info) {
-                throw new common_1.UnauthorizedException(err);
+                throw new common_1.HttpException(err, common_1.HttpStatus.UNAUTHORIZED);
             }
-            throw new common_1.UnauthorizedException(info);
+            throw new common_1.HttpException(info, common_1.HttpStatus.UNAUTHORIZED);
         }
         return user;
     }
