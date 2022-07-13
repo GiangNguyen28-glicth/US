@@ -8,23 +8,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CartService = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
 const product_service_1 = require("../product/product.service");
+const cart_entities_1 = require("./entities/cart.entities");
 let CartService = class CartService {
-    constructor(productService) {
+    constructor(cartModel, productService) {
+        this.cartModel = cartModel;
         this.productService = productService;
     }
     async addItemToCart(req, res, input) {
         let listProduct = [];
+        let cart;
         const product = await this.productService.getProductById(input.productId);
-        const cookie = req.cookies.listProduct;
+        const cookie = req.cookies.cartId;
         if (this.checkCookie(cookie)) {
-            listProduct = cookie;
+            cart = await this.getCartById(cookie);
+            listProduct = cart.listItem;
             await this.isValidQuantityProduct(input.quantity, product, listProduct);
             const productExisting = listProduct.filter(item => {
-                if (item.product._id === input.productId) {
+                if (item.product._id.toString() === input.productId) {
                     item.quantity = item.quantity + input.quantity;
                     item.totalPrice = this.totalPriceOfItem(item.product, item.quantity);
                     return product;
@@ -37,6 +46,7 @@ let CartService = class CartService {
                     totalPrice: this.totalPriceOfItem(product, input.quantity),
                 });
             }
+            await this.cartModel.findOneAndUpdate({ _id: cart._id }, { listItem: listProduct });
         }
         else {
             await this.isValidQuantityProduct(input.quantity, product, listProduct);
@@ -45,13 +55,14 @@ let CartService = class CartService {
                 quantity: input.quantity,
                 totalPrice: this.totalPriceOfItem(product, input.quantity),
             });
+            cart = await this.cartModel.create({ listItem: listProduct });
         }
-        res.cookie('listProduct', listProduct, this.optionCookie(req));
+        res.cookie('cartId', cart._id, this.optionCookie(req));
         return true;
     }
-    async getListProductInCookie(request) {
-        var _a;
-        return ((_a = request.cookies) === null || _a === void 0 ? void 0 : _a.listProduct) ? request.cookies.listProduct : [];
+    async getListProducInCart(request) {
+        const listProduct = await this.getCartById(request.cookies.cartId);
+        return listProduct.listItem ? listProduct.listItem : [];
     }
     totalQuantity(req) {
         const listProduct = req.cookies.listProduct;
@@ -91,36 +102,51 @@ let CartService = class CartService {
         return true;
     }
     async deleteItem(req, res, productId) {
-        const cookie = req.cookies.listProduct;
-        if (this.checkProductInLineItem(productId, cookie)) {
-            return false;
+        try {
+            let cart = await this.getListProducInCart(req);
+            if (!this.checkProductInLineItem(productId, cart)) {
+                return false;
+            }
+            cart = cart.filter(item => item.product._id.toString() !== productId);
+            await this.cartModel.findOneAndUpdate({ _id: req.cookies.cartId }, { listItem: cart });
+            res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
+            return true;
         }
-        let listProduct = [];
-        if (this.checkCookie(cookie)) {
-            listProduct = cookie.filter(element => element.product._id != productId);
+        catch (error) {
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
-        res.cookie('listProduct', listProduct, this.optionCookie(req));
-        return true;
     }
     async updateItem(input, req, res) {
-        let listProduct = [];
-        const cookie = req.cookies.listProduct;
-        if (this.checkProductInLineItem(input.productId, cookie)) {
+        let cart = await this.getListProducInCart(req);
+        if (!this.checkProductInLineItem(input.productId, cart)) {
             return false;
         }
-        if (this.checkCookie(cookie)) {
-            listProduct = cookie.filter(element => {
-                if (element.product._id == input.productId) {
-                    element.quantity = input.quantity;
-                }
-                return element;
-            });
-        }
-        res.cookie('listProduct', listProduct, this.optionCookie(req));
+        cart = cart.filter(element => {
+            if (element.product._id.toString() == input.productId) {
+                element.quantity = input.quantity;
+                element.totalPrice = this.totalPriceOfItem(element.product, element.quantity);
+            }
+            return element;
+        });
+        await this.cartModel.findOneAndUpdate({ _id: req.cookies.cartId }, { listItem: cart });
+        res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
         return true;
     }
-    deleteCart(response) {
-        response.clearCookie('listProduct');
+    async getCartById(cartId) {
+        try {
+            const cart = await this.cartModel.findOne({ _id: cartId });
+            if (!cart) {
+                throw new common_1.HttpException('Giỏ hàng không tồn tại', common_1.HttpStatus.NOT_FOUND);
+            }
+            return cart;
+        }
+        catch (error) {
+            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
+        }
+    }
+    async deleteCart(response) {
+        await this.cartModel.findOneAndDelete();
+        response.clearCookie('cartId');
     }
     totalPriceOfItem(product, quantity) {
         const totalPrice = parseInt(product.price.toString()) * quantity;
@@ -147,7 +173,9 @@ let CartService = class CartService {
 };
 CartService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [product_service_1.ProductService])
+    __param(0, (0, mongoose_1.InjectModel)(cart_entities_1.Cart.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        product_service_1.ProductService])
 ], CartService);
 exports.CartService = CartService;
 //# sourceMappingURL=cart.service.js.map

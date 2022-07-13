@@ -68,13 +68,14 @@ export class MailService {
 
   async confirmEmail(token: string): Promise<boolean> {
     const email: string = await this.decodeConfirmationToken(token);
-    if (!email) {
+
+    const user = await this.userService.getOne({ email });
+    if (!user) {
       throw new HttpException(
-        'Không thể xác thực Token',
+        'Token không này không còn sử dụng được',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const user = await this.userService.getOne({ email });
     if (user.isEmailConfirmed) {
       throw new HttpException('Email đã được xác minh', HttpStatus.BAD_REQUEST);
     }

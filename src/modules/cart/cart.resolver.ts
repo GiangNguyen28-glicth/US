@@ -11,8 +11,8 @@ export class CartResolver {
   constructor(private cartService: CartService) {}
 
   @Query(() => [LineItem])
-  async getListItem(@Context('req') req: Request): Promise<any> {
-    return this.cartService.getListProductInCookie(req);
+  async getListItemCart(@Context('req') req: Request): Promise<any> {
+    return this.cartService.getListProducInCart(req);
   }
 
   @Mutation(() => Boolean)

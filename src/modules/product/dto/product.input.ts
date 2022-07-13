@@ -71,6 +71,6 @@ export class SearchProductInput extends BasePagenation {
 export class OptionFilterProduct extends BasePagenation {
   @Field({ nullable: true })
   filter: FilterProduct;
-  @Field({ nullable: true })
+  @Field(() => SortProductEnum, { nullable: true })
   sort: SortProductEnum;
 }

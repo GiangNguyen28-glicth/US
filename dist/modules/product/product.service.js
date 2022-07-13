@@ -40,16 +40,21 @@ let ProductService = class ProductService {
     }
     async getProducts(input) {
         try {
-            const query = new concreteBuilder_1.FilterProductBuilder()
+            const [queryFilter, querySort] = new concreteBuilder_1.FilterProductBuilder()
                 .addRangePrice(input.filter.minPrice, input.filter.maxPrice)
                 .addDiscount(input.filter.isDiscount)
                 .addProductId(input.filter.productId)
+                .addSortOption(input.sort)
                 .buildQuery();
             const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
             const [products, listKeyword, totalCount] = await Promise.all([
-                this.productModel.find(query).skip(skip).limit(input === null || input === void 0 ? void 0 : input.size),
+                this.productModel
+                    .find(queryFilter)
+                    .skip(skip)
+                    .limit(input === null || input === void 0 ? void 0 : input.size)
+                    .sort(querySort),
                 this.getKeyword(input.filter.name),
-                this.getTotalCount(query),
+                this.getTotalCount(queryFilter),
             ]);
             return {
                 results: products,
@@ -85,8 +90,14 @@ let ProductService = class ProductService {
         try {
             const query = new concreteBuilder_1.FilterProductBuilder().addName(input.name).buildQuery();
             const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
+            const query2 = await this.sortProduct(enum_1.SortProductEnum.AZ);
+            console.log(query2);
             const [products, totalCount, listKeyword] = await Promise.all([
-                this.productModel.find(query).skip(skip).limit(input === null || input === void 0 ? void 0 : input.size),
+                this.productModel
+                    .find(query)
+                    .skip(skip)
+                    .limit(input === null || input === void 0 ? void 0 : input.size)
+                    .sort(query2),
                 this.getTotalCount(query),
                 this.getKeyword(input.name),
             ]);
@@ -100,21 +111,28 @@ let ProductService = class ProductService {
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async getProductByCategory(categoryId) {
+    async getProductByCategory(page, size, categoryId) {
         const category = await this.categoryService.getOneCategory({
             _id: categoryId,
         });
-        const listIdDescendants = await this.categoryService.getChildIdCategory(category._id.toString());
-        let listProducts = await this.productModel.find({
-            category: categoryId,
-        });
-        for (let i = 0; i < listIdDescendants.length; i++) {
-            const products = await this.productModel.find({
-                category: listIdDescendants[i],
-            });
-            listProducts = listProducts.concat(products);
-        }
-        return listProducts;
+        let listIdDescendants = await this.categoryService.getChildIdCategory(category._id.toString());
+        listIdDescendants = listIdDescendants.concat(categoryId);
+        const skip = (0, feature_utils_1.getSkipValue)(page, size);
+        const [products, totalCount] = await Promise.all([
+            this.productModel
+                .find({
+                category: { $in: listIdDescendants },
+            })
+                .skip(skip)
+                .limit(size),
+            this.getTotalCount({
+                category: { $in: listIdDescendants },
+            }),
+        ]);
+        return {
+            results: products,
+            totalCount: totalCount,
+        };
     }
     async getProductById(productId) {
         const product = await this.productModel.findOne({ _id: productId });
@@ -152,18 +170,17 @@ let ProductService = class ProductService {
     }
     async sortProduct(input) {
         let products;
-        if (input.filterby === enum_1.SortProductEnum.BESTSELLER) {
+        const query = {};
+        if (input === enum_1.SortProductEnum.BESTSELLER) {
             const listProductId = await this.orderItemService.getListProductIdInOrderItem();
             products = await this.productModel.find({ _id: { $in: listProductId } });
         }
         else {
             constants_1.Constants.generateSortOrder();
-            const { property, option } = constants_1.Constants.SortOrder[input.filterby];
-            const query = {};
+            const { property, option } = constants_1.Constants.SortOrder[input];
             query[property] = option;
-            products = await this.productModel.find().sort(query);
         }
-        return products;
+        return query;
     }
     async updatePrice() {
         const products = await this.productModel.find();
@@ -179,6 +196,17 @@ let ProductService = class ProductService {
     }
     createRandomProduct() {
         const data = [
+            {
+                name: 'Bodysuit Ba Lỗ Sơ Sinh Bé Gái Trắng Hoạ Tiết Chấm Bi',
+                discount: +faker_1.faker.commerce.price(0, 10),
+                category: '62ba7663f002a7e575034d4d',
+                quantity: faker_1.faker.datatype.number(20),
+                title: faker_1.faker.commerce.productDescription(),
+                price: 109000,
+                imgUrl: [
+                    'https://traffic-edge12.cdn.vncdn.io/nvn/ncdn/store1/58863/ps/20220509/bodysuit_ba_lo_so_sinh_be_gai_trang_hoa_tiet_cham_bi_baa_baby_1.jpg',
+                ],
+            },
             {
                 name: faker_1.faker.commerce.product(),
                 discount: +faker_1.faker.commerce.price(0, 10),

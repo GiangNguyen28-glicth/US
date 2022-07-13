@@ -1,10 +1,25 @@
+import { SortOrder } from 'mongoose';
+import { Constants } from '../../constants/constants';
+import { SortProductEnum } from '../../constants/enum';
+import { sortQuery } from '../../constants/type';
 import { transformTextSearch } from '../../utils/string.utils';
 import { Builder } from './builder';
 
 export class FilterProductBuilder implements Builder {
-  public query: any = {
+  public queryFilter: any = {
     $and: [],
   };
+
+  public querySort: sortQuery = {};
+  addSortOption(input: SortProductEnum): Builder {
+    if (!input) {
+      return this;
+    }
+    Constants.generateSortOrder();
+    const { property, option } = Constants.SortOrder[input];
+    this.querySort[property] = option as SortOrder;
+    return this;
+  }
   addProductId(productId: string): Builder {
     if (!productId) {
       return this;
@@ -36,13 +51,13 @@ export class FilterProductBuilder implements Builder {
     });
     return this;
   }
-  buildQuery(): object {
-    if (!this.query?.$and?.length) return {};
-    return this.query;
+  buildQuery(): any {
+    if (!this.queryFilter?.$and?.length) return [{}, this.querySort];
+    return [this.queryFilter, this.querySort];
   }
 
   public addSubQuery(query: object) {
-    if (query) this.query['$and'].push(query);
+    if (query) this.queryFilter['$and'].push(query);
     return this;
   }
   public setFilterItem<T>(key: string, value: T) {

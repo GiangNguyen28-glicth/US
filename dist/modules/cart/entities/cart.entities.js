@@ -38,7 +38,7 @@ __decorate([
 ], Cart.prototype, "listItem", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_1.Int),
-    __metadata("design:type", Number)
+    __metadata("design:type", Object)
 ], Cart.prototype, "totalPrice", void 0);
 Cart = __decorate([
     (0, graphql_1.ObjectType)()

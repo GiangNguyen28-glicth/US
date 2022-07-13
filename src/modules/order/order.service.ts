@@ -24,9 +24,7 @@ export class OrderService {
     res: Response,
     user: User,
   ): Promise<boolean> {
-    const carts: LineItem[] = await this.cartService.getListProductInCookie(
-      req,
-    );
+    const carts: LineItem[] = await this.cartService.getListProducInCart(req);
     const { username, phonenumber, address } = input;
     const totalPrice: number = this.cartService.totalPrice(req);
     const totalQuantity: number = this.cartService.totalQuantity(req);

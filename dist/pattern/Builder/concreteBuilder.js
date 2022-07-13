@@ -1,12 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FilterProductBuilder = void 0;
+const constants_1 = require("../../constants/constants");
 const string_utils_1 = require("../../utils/string.utils");
 class FilterProductBuilder {
     constructor() {
-        this.query = {
+        this.queryFilter = {
             $and: [],
         };
+        this.querySort = {};
+    }
+    addSortOption(input) {
+        if (!input) {
+            return this;
+        }
+        constants_1.Constants.generateSortOrder();
+        const { property, option } = constants_1.Constants.SortOrder[input];
+        this.querySort[property] = option;
+        return this;
     }
     addProductId(productId) {
         if (!productId) {
@@ -42,13 +53,13 @@ class FilterProductBuilder {
     }
     buildQuery() {
         var _a, _b;
-        if (!((_b = (_a = this.query) === null || _a === void 0 ? void 0 : _a.$and) === null || _b === void 0 ? void 0 : _b.length))
-            return {};
-        return this.query;
+        if (!((_b = (_a = this.queryFilter) === null || _a === void 0 ? void 0 : _a.$and) === null || _b === void 0 ? void 0 : _b.length))
+            return [{}, this.querySort];
+        return [this.queryFilter, this.querySort];
     }
     addSubQuery(query) {
         if (query)
-            this.query['$and'].push(query);
+            this.queryFilter['$and'].push(query);
         return this;
     }
     setFilterItem(key, value) {

@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { Product } from '../../product/entities/product.entities';
 export declare class LineItem {
     product: Product;
@@ -6,5 +7,5 @@ export declare class LineItem {
 }
 export declare class Cart {
     listItem: LineItem[];
-    totalPrice: number;
+    totalPrice: number | Types.Decimal128;
 }

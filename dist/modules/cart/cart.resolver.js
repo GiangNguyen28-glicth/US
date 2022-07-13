@@ -23,8 +23,8 @@ let CartResolver = class CartResolver {
     constructor(cartService) {
         this.cartService = cartService;
     }
-    async getListItem(req) {
-        return this.cartService.getListProductInCookie(req);
+    async getListItemCart(req) {
+        return this.cartService.getListProducInCart(req);
     }
     async addItemToCart(input, req, res) {
         return this.cartService.addItemToCart(req, res, input);
@@ -42,7 +42,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], CartResolver.prototype, "getListItem", null);
+], CartResolver.prototype, "getListItemCart", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),

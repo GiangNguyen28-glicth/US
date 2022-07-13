@@ -141,7 +141,7 @@ __decorate([
     __metadata("design:type", FilterProduct)
 ], OptionFilterProduct.prototype, "filter", void 0);
 __decorate([
-    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(() => enum_1.SortProductEnum, { nullable: true }),
     __metadata("design:type", String)
 ], OptionFilterProduct.prototype, "sort", void 0);
 OptionFilterProduct = __decorate([

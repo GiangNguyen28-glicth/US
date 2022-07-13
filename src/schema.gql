@@ -138,7 +138,7 @@ input OptionFilterProduct {
   filter: FilterProduct
   page: Int
   size: Int
-  sort: String
+  sort: SortProductEnum
 }
 
 type Order {
@@ -188,8 +188,8 @@ type Query {
   getChildIdCategory(categoryId: String!): [String!]!
   getChildOfCategory(categoryId: String!): Category!
   getDistrict(province_code: Float!): [District!]!
-  getListItem: [LineItem!]!
-  getProductByCategory(categoryId: String!): [Product!]!
+  getListItemCart: [LineItem!]!
+  getProductByCategory(categoryId: ObjectID!, page: Float, size: Float): ResultFilter!
   getProductBySlug(slug: String!): Product!
   getProducts(option: OptionFilterProduct!): ResultFilter!
   getProvince: [Province!]!
@@ -237,6 +237,15 @@ input SearchProductInput {
   name: String
   page: Int
   size: Int
+}
+
+enum SortProductEnum {
+  AZ
+  BESTSELLER
+  DECREASE_PRICE
+  INCREASE_PRICE
+  LATEST
+  ZA
 }
 
 type StatisticOrder {

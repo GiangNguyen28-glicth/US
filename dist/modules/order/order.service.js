@@ -29,7 +29,7 @@ let OrderService = class OrderService {
         this.orderItemService = orderItemService;
     }
     async createOrder(input, req, res, user) {
-        const carts = await this.cartService.getListProductInCookie(req);
+        const carts = await this.cartService.getListProducInCart(req);
         const { username, phonenumber, address } = input;
         const totalPrice = this.cartService.totalPrice(req);
         const totalQuantity = this.cartService.totalQuantity(req);

@@ -1,4 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ObjectIDResolver } from 'graphql-scalars';
 import {
   CreateProductInput,
   OptionFilterProduct,
@@ -19,11 +20,13 @@ export class ProductResolver {
     return this.productService.getProducts(input);
   }
 
-  @Query(() => [Product])
+  @Query(() => ResultFilter)
   getProductByCategory(
-    @Args('categoryId') categoryId: string,
-  ): Promise<Product[]> {
-    return this.productService.getProductByCategory(categoryId);
+    @Args('page', { nullable: true }) page: number,
+    @Args('size', { nullable: true }) size: number,
+    @Args('categoryId', { type: () => ObjectIDResolver }) categoryId: string,
+  ): Promise<ResultFilter> {
+    return this.productService.getProductByCategory(page, size, categoryId);
   }
 
   @Query(() => String)

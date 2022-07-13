@@ -5,7 +5,7 @@ export declare class ProductResolver {
     private productService;
     constructor(productService: ProductService);
     getProducts(input: OptionFilterProduct): Promise<ResultFilter>;
-    getProductByCategory(categoryId: string): Promise<Product[]>;
+    getProductByCategory(page: number, size: number, categoryId: string): Promise<ResultFilter>;
     resetCache(): Promise<string>;
     searchProduct(input: SearchProductInput): Promise<ResultFilter>;
     getProductBySlug(slug: string): Promise<Product>;

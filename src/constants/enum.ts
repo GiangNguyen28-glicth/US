@@ -39,7 +39,7 @@ export enum SortProductEnum {
   ZA = 'ZA',
 }
 registerEnumType(SortProductEnum, {
-  name: 'FilterProduct',
+  name: 'SortProductEnum',
 });
 export enum FilterStatistics {
   SEVENDAYSAGO = 'SEVENDAYSAGO',

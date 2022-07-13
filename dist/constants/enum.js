@@ -46,7 +46,7 @@ var SortProductEnum;
     SortProductEnum["ZA"] = "ZA";
 })(SortProductEnum = exports.SortProductEnum || (exports.SortProductEnum = {}));
 (0, graphql_1.registerEnumType)(SortProductEnum, {
-    name: 'FilterProduct',
+    name: 'SortProductEnum',
 });
 var FilterStatistics;
 (function (FilterStatistics) {

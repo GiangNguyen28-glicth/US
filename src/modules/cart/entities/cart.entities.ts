@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Types } from 'mongoose';
 import { Product } from '../../product/entities/product.entities';
 
 @ObjectType()
@@ -15,5 +16,5 @@ export class Cart {
   @Field(() => [LineItem])
   listItem: LineItem[];
   @Field(() => Int)
-  totalPrice: number;
+  totalPrice: number | Types.Decimal128;
 }

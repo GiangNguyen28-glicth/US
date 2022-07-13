@@ -1,26 +1,34 @@
-import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response } from 'express';
+import { Model } from 'mongoose';
 import { Product } from '../product/entities/product.entities';
 import { ProductService } from '../product/product.service';
 import { CartInput } from './dto/cart.input';
-import { LineItem } from './entities/cart.entities';
+import { Cart, LineItem } from './entities/cart.entities';
+import { CartDocument } from './schemas/cart.schema';
 
 @Injectable()
 export class CartService {
-  constructor(private productService: ProductService) {}
+  constructor(
+    @InjectModel(Cart.name) private cartModel: Model<CartDocument>,
+    private productService: ProductService,
+  ) {}
   async addItemToCart(
     req: Request,
     res: Response,
     input: CartInput,
   ): Promise<boolean> {
     let listProduct: LineItem[] = [];
+    let cart;
     const product = await this.productService.getProductById(input.productId);
-    const cookie = req.cookies.listProduct;
+    const cookie = req.cookies.cartId;
     if (this.checkCookie(cookie)) {
-      listProduct = cookie;
+      cart = await this.getCartById(cookie);
+      listProduct = cart.listItem;
       await this.isValidQuantityProduct(input.quantity, product, listProduct);
       const productExisting = listProduct.filter(item => {
-        if (item.product._id === input.productId) {
+        if (item.product._id.toString() === input.productId) {
           item.quantity = item.quantity + input.quantity;
           item.totalPrice = this.totalPriceOfItem(item.product, item.quantity);
           return product;
@@ -33,21 +41,26 @@ export class CartService {
           totalPrice: this.totalPriceOfItem(product, input.quantity),
         });
       }
+      await this.cartModel.findOneAndUpdate(
+        { _id: cart._id },
+        { listItem: listProduct },
+      );
     } else {
       await this.isValidQuantityProduct(input.quantity, product, listProduct);
-
       listProduct.push({
         product: product,
         quantity: input.quantity,
         totalPrice: this.totalPriceOfItem(product, input.quantity),
       });
+      cart = await this.cartModel.create({ listItem: listProduct });
     }
-    res.cookie('listProduct', listProduct, this.optionCookie(req));
+    res.cookie('cartId', cart._id, this.optionCookie(req));
     return true;
   }
 
-  async getListProductInCookie(request: Request): Promise<LineItem[]> {
-    return request.cookies?.listProduct ? request.cookies.listProduct : [];
+  async getListProducInCart(request: Request): Promise<LineItem[]> {
+    const listProduct = await this.getCartById(request.cookies.cartId);
+    return listProduct.listItem ? listProduct.listItem : [];
   }
 
   totalQuantity(req: Request): number {
@@ -117,40 +130,62 @@ export class CartService {
     res: Response,
     productId: string,
   ): Promise<boolean> {
-    const cookie = req.cookies.listProduct;
-    if (this.checkProductInLineItem(productId, cookie)) {
-      return false;
+    try {
+      let cart = await this.getListProducInCart(req);
+      if (!this.checkProductInLineItem(productId, cart)) {
+        return false;
+      }
+      cart = cart.filter(item => item.product._id.toString() !== productId);
+      await this.cartModel.findOneAndUpdate(
+        { _id: req.cookies.cartId },
+        { listItem: cart },
+      );
+      res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
+      return true;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    let listProduct: LineItem[] = [];
-    if (this.checkCookie(cookie)) {
-      listProduct = cookie.filter(element => element.product._id != productId);
-    }
-    res.cookie('listProduct', listProduct, this.optionCookie(req));
-    return true;
   }
   async updateItem(
     input: CartInput,
     req: Request,
     res: Response,
   ): Promise<boolean> {
-    let listProduct: LineItem[] = [];
-    const cookie = req.cookies.listProduct;
-    if (this.checkProductInLineItem(input.productId, cookie)) {
+    let cart = await this.getListProducInCart(req);
+    if (!this.checkProductInLineItem(input.productId, cart)) {
       return false;
     }
-    if (this.checkCookie(cookie)) {
-      listProduct = cookie.filter(element => {
-        if (element.product._id == input.productId) {
-          element.quantity = input.quantity;
-        }
-        return element;
-      });
-    }
-    res.cookie('listProduct', listProduct, this.optionCookie(req));
+    cart = cart.filter(element => {
+      if (element.product._id.toString() == input.productId) {
+        element.quantity = input.quantity;
+        element.totalPrice = this.totalPriceOfItem(
+          element.product,
+          element.quantity,
+        );
+      }
+      return element;
+    });
+    await this.cartModel.findOneAndUpdate(
+      { _id: req.cookies.cartId },
+      { listItem: cart },
+    );
+    res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
     return true;
   }
-  deleteCart(response: Response): void {
-    response.clearCookie('listProduct');
+  async getCartById(cartId: string): Promise<Cart> {
+    try {
+      const cart = await this.cartModel.findOne({ _id: cartId });
+      if (!cart) {
+        throw new HttpException('Giỏ hàng không tồn tại', HttpStatus.NOT_FOUND);
+      }
+      return cart;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+  async deleteCart(response: Response): Promise<void> {
+    await this.cartModel.findOneAndDelete();
+    response.clearCookie('cartId');
   }
   totalPriceOfItem(product: Product, quantity: number): number {
     const totalPrice: number = parseInt(product.price.toString()) * quantity;
