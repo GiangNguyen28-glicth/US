@@ -1,7 +1,7 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CartService } from './cart.service';
 import { Request, Response } from 'express';
-import { CreateCartInput } from './dto/cart.input';
+import { CartInput } from './dto/cart.input';
 import { Cart, LineItem } from './entities/cart.entities';
 import { UseGuards } from '@nestjs/common';
 import { AtGuard } from '../../common/guards/at.guard';
@@ -17,16 +17,15 @@ export class CartResolver {
 
   @Mutation(() => Boolean)
   async addItemToCart(
-    @Args('input') input: CreateCartInput,
+    @Args('input') input: CartInput,
     @Context('req') req: Request,
     @Context('res') res: Response,
   ): Promise<boolean> {
-    console.log('Running here');
     return this.cartService.addItemToCart(req, res, input);
   }
 
   @Mutation(() => Boolean)
-  async deleteItem(
+  async deleteItemCart(
     @Args('productId') productId: string,
     @Context('req') req: Request,
     @Context('res') res: Response,
@@ -35,8 +34,8 @@ export class CartResolver {
   }
 
   @Mutation(() => Boolean)
-  async updateItem(
-    @Args('input') input: CreateCartInput,
+  async updateItemCart(
+    @Args('input') input: CartInput,
     @Context('req') req: Request,
     @Context('res') res: Response,
   ): Promise<boolean> {

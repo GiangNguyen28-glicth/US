@@ -32,8 +32,10 @@ export class ProductResolver {
     return 'Success';
   }
 
-  @Query(() => [Product])
-  searchProduct(@Args('search') input: SearchProductInput): Promise<Product[]> {
+  @Query(() => ResultFilter)
+  searchProduct(
+    @Args('search') input: SearchProductInput,
+  ): Promise<ResultFilter> {
     return this.productService.searchProduct(input);
   }
 

@@ -14,21 +14,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MailResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const mail_input_1 = require("./dto/mail.input");
 const mail_service_1 = require("./mail.service");
 let MailResolver = class MailResolver {
     constructor(mailService) {
         this.mailService = mailService;
     }
-    async confirmMail(input) {
-        return await this.mailService.confirmEmail(input);
+    async confirmMail(token) {
+        return await this.mailService.confirmEmail(token);
     }
 };
 __decorate([
     (0, graphql_1.Query)(() => Boolean),
-    __param(0, (0, graphql_1.Args)('input')),
+    __param(0, (0, graphql_1.Args)('token')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [mail_input_1.ConfirmMailInput]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], MailResolver.prototype, "confirmMail", null);
 MailResolver = __decorate([

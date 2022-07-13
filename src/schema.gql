@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CartInput {
+  productId: ObjectID!
+  quantity: Int!
+}
+
 type Category {
   _id: ID!
   child: [Category!]
@@ -32,16 +37,6 @@ input CategoryInput {
   level: Int
   name: String
   parentId: ObjectID
-}
-
-input ConfirmMailInput {
-  email: String!
-  token: String!
-}
-
-input CreateCartInput {
-  productId: ObjectID!
-  quantity: Int!
 }
 
 input CreateOrderInput {
@@ -117,17 +112,17 @@ input LoginInput {
 }
 
 type Mutation {
-  addItemToCart(input: CreateCartInput!): Boolean!
+  addItemToCart(input: CartInput!): Boolean!
   createCategory(input: CategoryInput!): Boolean!
   createOrder(input: CreateOrderInput!): Boolean!
   createProduct(input: CreateProductInput!): Boolean!
   createReview(input: ReviewInput!): Boolean!
-  deleteItem(productId: String!): Boolean!
+  deleteItemCart(productId: String!): Boolean!
   forgotPassword(email: String!): Boolean!
   login(input: LoginInput!): JwtPayload!
   register(input: RegisterInput!): Boolean!
   resetPassword(input: ResetPasswordInput!): Boolean!
-  updateItem(input: CreateCartInput!): Boolean!
+  updateItemCart(input: CartInput!): Boolean!
   updateProduct(input: UpdateProduct!, productId: String!): Boolean!
   updateReview(input: ReviewInput!): Boolean!
   updateUser(input: UpdateUserInput!): User!
@@ -185,7 +180,7 @@ type Province {
 type Query {
   averageRating(productId: String!): Float!
   checkExistsReview(productId: String!): Boolean!
-  confirmMail(input: ConfirmMailInput!): Boolean!
+  confirmMail(token: String!): Boolean!
   countReview(productId: String!): Float!
   fakeDataProduct: Boolean!
   getCategoryById(input: CategoryGetOneInput!): Category!
@@ -201,7 +196,7 @@ type Query {
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
   resetCache: String!
-  searchProduct(search: SearchProductInput!): [Product!]!
+  searchProduct(search: SearchProductInput!): ResultFilter!
   statistic(input: FilterStatistics!): [User!]!
   statisticOrder(input: FilterStatistics!): [StatisticOrder!]!
   test: String!
@@ -223,7 +218,7 @@ input ResetPasswordInput {
 }
 
 type ResultFilter {
-  listKeyword: [String!]!
+  listKeyword: [String!]
   results: [Product!]
   totalCount: Int
 }

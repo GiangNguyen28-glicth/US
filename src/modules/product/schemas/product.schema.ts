@@ -40,7 +40,7 @@ export const ProductSchema = new Schema<Product>(
       type: Number,
     },
     imgUrl: [],
-    category: ref(Category, { select: ['_id', 'name'] }),
+    category: ref(Category, { select: ['_id', 'name', '-parent'] }),
     slug: {
       type: String,
       unique: true,

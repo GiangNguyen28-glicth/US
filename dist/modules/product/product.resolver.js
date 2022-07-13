@@ -68,7 +68,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "resetCache", null);
 __decorate([
-    (0, graphql_1.Query)(() => [product_entities_1.Product]),
+    (0, graphql_1.Query)(() => product_entities_1.ResultFilter),
     __param(0, (0, graphql_1.Args)('search')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [product_input_1.SearchProductInput]),

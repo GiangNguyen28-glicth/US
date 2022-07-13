@@ -7,7 +7,7 @@ export declare class ProductResolver {
     getProducts(input: OptionFilterProduct): Promise<ResultFilter>;
     getProductByCategory(categoryId: string): Promise<Product[]>;
     resetCache(): Promise<string>;
-    searchProduct(input: SearchProductInput): Promise<Product[]>;
+    searchProduct(input: SearchProductInput): Promise<ResultFilter>;
     getProductBySlug(slug: string): Promise<Product>;
     createProduct(input: CreateProductInput): Promise<boolean>;
     updateProduct(input: UpdateProduct, productId: string): Promise<boolean>;

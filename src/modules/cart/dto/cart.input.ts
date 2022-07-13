@@ -3,7 +3,7 @@ import { Min } from 'class-validator';
 import { ObjectIDResolver } from 'graphql-scalars';
 
 @InputType()
-export class CreateCartInput {
+export class CartInput {
   @Field(() => ObjectIDResolver)
   productId: string;
   @Field(() => Int)

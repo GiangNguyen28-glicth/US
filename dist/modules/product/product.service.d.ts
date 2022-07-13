@@ -13,7 +13,7 @@ export declare class ProductService {
     getProducts(input: OptionFilterProduct): Promise<ResultFilter>;
     getTotalCount(query: object): Promise<number>;
     getKeyword(name: string): Promise<string[]>;
-    searchProduct(input: SearchProductInput): Promise<Product[]>;
+    searchProduct(input: SearchProductInput): Promise<ResultFilter>;
     getProductByCategory(categoryId: string): Promise<Product[]>;
     getProductById(productId: string): Promise<Product>;
     checkProductExists(productId: string): Promise<boolean>;

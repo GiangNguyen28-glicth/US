@@ -85,10 +85,12 @@ let MailService = class MailService {
             throw new common_1.HttpException('Không thể xác thực token', common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async confirmEmail(confirmEmailInput) {
-        const { email, token } = confirmEmailInput;
+    async confirmEmail(token) {
+        const email = await this.decodeConfirmationToken(token);
+        if (!email) {
+            throw new common_1.HttpException('Không thể xác thực Token', common_1.HttpStatus.BAD_REQUEST);
+        }
         const user = await this.userService.getOne({ email });
-        await this.decodeConfirmationToken(token);
         if (user.isEmailConfirmed) {
             throw new common_1.HttpException('Email đã được xác minh', common_1.HttpStatus.BAD_REQUEST);
         }

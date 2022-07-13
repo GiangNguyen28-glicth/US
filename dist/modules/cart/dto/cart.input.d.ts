@@ -1,4 +1,4 @@
-export declare class CreateCartInput {
+export declare class CartInput {
     productId: string;
     quantity: number;
 }

@@ -27,13 +27,12 @@ let CartResolver = class CartResolver {
         return this.cartService.getListProductInCookie(req);
     }
     async addItemToCart(input, req, res) {
-        console.log('Running here');
         return this.cartService.addItemToCart(req, res, input);
     }
-    async deleteItem(productId, req, res) {
+    async deleteItemCart(productId, req, res) {
         return this.cartService.deleteItem(req, res, productId);
     }
-    async updateItem(input, req, res) {
+    async updateItemCart(input, req, res) {
         return this.cartService.updateItem(input, req, res);
     }
 };
@@ -50,7 +49,7 @@ __decorate([
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [cart_input_1.CreateCartInput, Object, Object]),
+    __metadata("design:paramtypes", [cart_input_1.CartInput, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CartResolver.prototype, "addItemToCart", null);
 __decorate([
@@ -61,16 +60,16 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
-], CartResolver.prototype, "deleteItem", null);
+], CartResolver.prototype, "deleteItemCart", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [cart_input_1.CreateCartInput, Object, Object]),
+    __metadata("design:paramtypes", [cart_input_1.CartInput, Object, Object]),
     __metadata("design:returntype", Promise)
-], CartResolver.prototype, "updateItem", null);
+], CartResolver.prototype, "updateItemCart", null);
 CartResolver = __decorate([
     (0, graphql_1.Resolver)(cart_entities_1.Cart.name),
     (0, common_1.UseGuards)(at_guard_1.AtGuard),

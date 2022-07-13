@@ -87,11 +87,20 @@ export class ProductService {
     return prouducts.map(item => item.name);
   }
 
-  async searchProduct(input: SearchProductInput): Promise<Product[]> {
+  async searchProduct(input: SearchProductInput): Promise<ResultFilter> {
     try {
       const query = new FilterProductBuilder().addName(input.name).buildQuery();
       const skip: number | undefined = getSkipValue(input.page, input.size);
-      return this.productModel.find(query).skip(skip).limit(input.size).exec();
+      const [products, totalCount, listKeyword] = await Promise.all([
+        this.productModel.find(query).skip(skip).limit(input?.size),
+        this.getTotalCount(query),
+        this.getKeyword(input.name),
+      ]);
+      return {
+        results: products,
+        totalCount: totalCount,
+        listKeyword: listKeyword,
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -198,6 +207,17 @@ export class ProductService {
   }
 
   createRandomProduct(): CreateProductInput {
+    const data: any = [
+      {
+        name: faker.commerce.product(),
+        discount: +faker.commerce.price(0, 10),
+        category: '62ba7694f002a7e575034d5c',
+        quantity: faker.datatype.number(20),
+        title: faker.commerce.productDescription(),
+        price: +faker.commerce.price(10000, 100000),
+        imgUrl: [faker.image.cats()],
+      },
+    ];
     return {
       name: faker.commerce.product(),
       discount: +faker.commerce.price(0, 10),

@@ -85,7 +85,7 @@ __decorate([
     __metadata("design:type", Array)
 ], ResultFilter.prototype, "results", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => [String]),
+    (0, graphql_1.Field)(() => [String], { nullable: true }),
     __metadata("design:type", Array)
 ], ResultFilter.prototype, "listKeyword", void 0);
 __decorate([

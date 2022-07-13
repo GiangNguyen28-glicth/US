@@ -85,7 +85,16 @@ let ProductService = class ProductService {
         try {
             const query = new concreteBuilder_1.FilterProductBuilder().addName(input.name).buildQuery();
             const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
-            return this.productModel.find(query).skip(skip).limit(input.size).exec();
+            const [products, totalCount, listKeyword] = await Promise.all([
+                this.productModel.find(query).skip(skip).limit(input === null || input === void 0 ? void 0 : input.size),
+                this.getTotalCount(query),
+                this.getKeyword(input.name),
+            ]);
+            return {
+                results: products,
+                totalCount: totalCount,
+                listKeyword: listKeyword,
+            };
         }
         catch (error) {
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
@@ -169,6 +178,17 @@ let ProductService = class ProductService {
         return true;
     }
     createRandomProduct() {
+        const data = [
+            {
+                name: faker_1.faker.commerce.product(),
+                discount: +faker_1.faker.commerce.price(0, 10),
+                category: '62ba7694f002a7e575034d5c',
+                quantity: faker_1.faker.datatype.number(20),
+                title: faker_1.faker.commerce.productDescription(),
+                price: +faker_1.faker.commerce.price(10000, 100000),
+                imgUrl: [faker_1.faker.image.cats()],
+            },
+        ];
         return {
             name: faker_1.faker.commerce.product(),
             discount: +faker_1.faker.commerce.price(0, 10),

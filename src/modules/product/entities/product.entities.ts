@@ -42,8 +42,8 @@ export class ResultFilter implements IResultFilter<Product> {
   @Field(() => [Product], { nullable: true })
   results: Product[];
 
-  @Field(() => [String])
-  listKeyword: string[];
+  @Field(() => [String], { nullable: true })
+  listKeyword?: string[];
 
   @Field(() => Int, { nullable: true })
   totalCount: number;

@@ -20,6 +20,6 @@ export declare class Product implements IProduct {
 }
 export declare class ResultFilter implements IResultFilter<Product> {
     results: Product[];
-    listKeyword: string[];
+    listKeyword?: string[];
     totalCount: number;
 }

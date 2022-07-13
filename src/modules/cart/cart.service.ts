@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Product } from '../product/entities/product.entities';
 import { ProductService } from '../product/product.service';
-import { CreateCartInput } from './dto/cart.input';
+import { CartInput } from './dto/cart.input';
 import { LineItem } from './entities/cart.entities';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class CartService {
   async addItemToCart(
     req: Request,
     res: Response,
-    input: CreateCartInput,
+    input: CartInput,
   ): Promise<boolean> {
     let listProduct: LineItem[] = [];
     const product = await this.productService.getProductById(input.productId);
@@ -129,7 +129,7 @@ export class CartService {
     return true;
   }
   async updateItem(
-    input: CreateCartInput,
+    input: CartInput,
     req: Request,
     res: Response,
   ): Promise<boolean> {

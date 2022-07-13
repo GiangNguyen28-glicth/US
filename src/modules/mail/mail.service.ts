@@ -43,7 +43,7 @@ export class MailService {
     );
     return token;
   }
-  async decodeConfirmationToken(token: string) {
+  async decodeConfirmationToken(token: string): Promise<string> {
     try {
       const payload = await this.jwtservice.verify(token, {
         secret: process.env.JWT_VERIFICATION_EMAIL_TOKEN_SECRET,
@@ -66,10 +66,15 @@ export class MailService {
     }
   }
 
-  async confirmEmail(confirmEmailInput: ConfirmMailInput): Promise<boolean> {
-    const { email, token } = confirmEmailInput;
+  async confirmEmail(token: string): Promise<boolean> {
+    const email: string = await this.decodeConfirmationToken(token);
+    if (!email) {
+      throw new HttpException(
+        'Không thể xác thực Token',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const user = await this.userService.getOne({ email });
-    await this.decodeConfirmationToken(token);
     if (user.isEmailConfirmed) {
       throw new HttpException('Email đã được xác minh', HttpStatus.BAD_REQUEST);
     }
