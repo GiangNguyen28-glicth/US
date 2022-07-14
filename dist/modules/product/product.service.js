@@ -16,19 +16,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductService = void 0;
+const faker_1 = require("@faker-js/faker");
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
+const decimal_js_1 = __importDefault(require("decimal.js"));
 const mongoose_2 = require("mongoose");
-const constants_1 = require("../../constants/constants");
-const category_service_1 = require("../category/category.service");
-const product_entities_1 = require("./entities/product.entities");
-const order_item_service_1 = require("../order-item/order-item.service");
-const faker_1 = require("@faker-js/faker");
 const concreteBuilder_1 = require("../../pattern/Builder/concreteBuilder");
 const feature_utils_1 = require("../../utils/feature.utils");
 const string_utils_1 = require("../../utils/string.utils");
-const decimal_js_1 = __importDefault(require("decimal.js"));
-const enum_1 = require("../../constants/enum");
+const category_service_1 = require("../category/category.service");
+const order_item_service_1 = require("../order-item/order-item.service");
+const product_entities_1 = require("./entities/product.entities");
 let ProductService = class ProductService {
     constructor(productModel, categoryService, orderItemService) {
         this.productModel = productModel;
@@ -37,34 +35,6 @@ let ProductService = class ProductService {
     }
     async createProduct(input) {
         return this.productModel.create(input) ? true : false;
-    }
-    async getProducts(input) {
-        try {
-            const [queryFilter, querySort] = new concreteBuilder_1.FilterProductBuilder()
-                .addRangePrice(input.filter.minPrice, input.filter.maxPrice)
-                .addDiscount(input.filter.isDiscount)
-                .addProductId(input.filter.productId)
-                .addSortOption(input.sort)
-                .buildQuery();
-            const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
-            const [products, listKeyword, totalCount] = await Promise.all([
-                this.productModel
-                    .find(queryFilter)
-                    .skip(skip)
-                    .limit(input === null || input === void 0 ? void 0 : input.size)
-                    .sort(querySort),
-                this.getKeyword(input.filter.name),
-                this.getTotalCount(queryFilter),
-            ]);
-            return {
-                results: products,
-                listKeyword: listKeyword,
-                totalCount: totalCount,
-            };
-        }
-        catch (error) {
-            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
-        }
     }
     getTotalCount(query) {
         return this.productModel.countDocuments(query).exec();
@@ -88,47 +58,59 @@ let ProductService = class ProductService {
     }
     async searchProduct(input) {
         try {
-            const [query] = new concreteBuilder_1.FilterProductBuilder()
-                .addName(input.name)
+            let listIdDescendants = [];
+            if (input.filter.categoryId) {
+                listIdDescendants = await this.getlistIdDescendants(input.filter.categoryId);
+            }
+            const [queryFilter, querySort] = new concreteBuilder_1.FilterProductBuilder()
+                .addName(input.filter.name)
+                .addRangePrice(input.filter.minPrice, input.filter.maxPrice)
+                .addDiscount(input.filter.isDiscount)
+                .addProductId(input.filter.productId)
+                .addCategoryId(listIdDescendants)
+                .addSortOption(input.sort)
                 .buildQuery();
             const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
             const [products, totalCount, listKeyword] = await Promise.all([
-                this.productModel.find(query).skip(skip).limit(input === null || input === void 0 ? void 0 : input.size),
-                this.getTotalCount(query),
-                this.getKeyword(input.name),
+                this.productModel
+                    .find(queryFilter)
+                    .skip(skip)
+                    .limit(input === null || input === void 0 ? void 0 : input.size)
+                    .sort(querySort),
+                this.getTotalCount(queryFilter),
+                this.getKeyword(input.filter.name),
             ]);
+            const [minPrice, maxPrice] = this.getMinMaxPrice(products);
             return {
                 results: products,
                 totalCount: totalCount,
                 listKeyword: listKeyword,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
             };
         }
         catch (error) {
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async getProductByCategory(page, size, categoryId) {
-        const category = await this.categoryService.getOneCategory({
-            _id: categoryId,
-        });
-        let listIdDescendants = await this.categoryService.getChildIdCategory(category._id.toString());
-        listIdDescendants = listIdDescendants.concat(categoryId);
-        const skip = (0, feature_utils_1.getSkipValue)(page, size);
-        const [products, totalCount] = await Promise.all([
-            this.productModel
-                .find({
-                category: { $in: listIdDescendants },
-            })
-                .skip(skip)
-                .limit(size),
-            this.getTotalCount({
-                category: { $in: listIdDescendants },
-            }),
-        ]);
-        return {
-            results: products,
-            totalCount: totalCount,
-        };
+    async getlistIdDescendants(categoryId) {
+        let listIdDescendants = [];
+        if (categoryId) {
+            listIdDescendants = listIdDescendants.concat(categoryId);
+            const category = await this.categoryService.getOneCategory({
+                _id: categoryId,
+            });
+            listIdDescendants = await this.categoryService.getChildIdCategory(category._id.toString());
+        }
+        return listIdDescendants;
+    }
+    getMinMaxPrice(products) {
+        if (products.length === 0) {
+            return [0, 0];
+        }
+        const maxPrice = Math.max(...products.map(item => item.price));
+        const minPrice = Math.min(...products.map(item => item.price));
+        return [minPrice, maxPrice];
     }
     async getProductById(productId) {
         const product = await this.productModel.findOne({ _id: productId });
@@ -163,20 +145,6 @@ let ProductService = class ProductService {
         catch (error) {
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
-    }
-    async sortProduct(input) {
-        let products;
-        const query = {};
-        if (input === enum_1.SortProductEnum.BESTSELLER) {
-            const listProductId = await this.orderItemService.getListProductIdInOrderItem();
-            products = await this.productModel.find({ _id: { $in: listProductId } });
-        }
-        else {
-            constants_1.Constants.generateSortOrder();
-            const { property, option } = constants_1.Constants.SortOrder[input];
-            query[property] = option;
-        }
-        return query;
     }
     async updatePrice() {
         const products = await this.productModel.find();

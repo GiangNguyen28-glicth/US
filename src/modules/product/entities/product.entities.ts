@@ -48,3 +48,16 @@ export class ResultFilter implements IResultFilter<Product> {
   @Field(() => Int, { nullable: true })
   totalCount: number;
 }
+@ObjectType()
+export class ResultSearch implements IResultFilter<Product> {
+  @Field(() => [Product], { nullable: true })
+  results: Product[];
+  @Field(() => Int, { nullable: true })
+  totalCount: number;
+  @Field(() => Float, { nullable: true })
+  minPrice?: Types.Decimal128 | number;
+  @Field(() => Float, { nullable: true })
+  maxPrice?: Types.Decimal128 | number;
+  @Field(() => [String], { nullable: true })
+  listKeyword?: string[];
+}

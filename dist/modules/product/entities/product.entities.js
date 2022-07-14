@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResultFilter = exports.Product = void 0;
+exports.ResultSearch = exports.ResultFilter = exports.Product = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const category_entities_1 = require("../../category/entites/category.entities");
 let Product = class Product {
@@ -96,4 +96,30 @@ ResultFilter = __decorate([
     (0, graphql_1.ObjectType)()
 ], ResultFilter);
 exports.ResultFilter = ResultFilter;
+let ResultSearch = class ResultSearch {
+};
+__decorate([
+    (0, graphql_1.Field)(() => [Product], { nullable: true }),
+    __metadata("design:type", Array)
+], ResultSearch.prototype, "results", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], ResultSearch.prototype, "totalCount", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float, { nullable: true }),
+    __metadata("design:type", Object)
+], ResultSearch.prototype, "minPrice", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Float, { nullable: true }),
+    __metadata("design:type", Object)
+], ResultSearch.prototype, "maxPrice", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [String], { nullable: true }),
+    __metadata("design:type", Array)
+], ResultSearch.prototype, "listKeyword", void 0);
+ResultSearch = __decorate([
+    (0, graphql_1.ObjectType)()
+], ResultSearch);
+exports.ResultSearch = ResultSearch;
 //# sourceMappingURL=product.entities.js.map

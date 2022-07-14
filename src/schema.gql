@@ -69,6 +69,7 @@ type District {
 }
 
 input FilterProduct {
+  categoryId: ObjectID
   isDiscount: Boolean
   maxPrice: Int
   minPrice: Int = 0
@@ -117,7 +118,7 @@ type Mutation {
   createOrder(input: CreateOrderInput!): Boolean!
   createProduct(input: CreateProductInput!): Boolean!
   createReview(input: ReviewInput!): Boolean!
-  deleteItemCart(productId: String!): Boolean!
+  deleteItemCart(products: [String!]!): Boolean!
   forgotPassword(email: String!): Boolean!
   login(input: LoginInput!): JwtPayload!
   register(input: RegisterInput!): Boolean!
@@ -133,13 +134,6 @@ type Mutation {
 A field whose value conforms with the standard mongodb object ID as described here: https://docs.mongodb.com/manual/reference/method/ObjectId/#ObjectId. Example: 5e5677d71bdc2ae76344968c
 """
 scalar ObjectID
-
-input OptionFilterProduct {
-  filter: FilterProduct
-  page: Int
-  size: Int
-  sort: SortProductEnum
-}
 
 type Order {
   _id: ID!
@@ -189,14 +183,12 @@ type Query {
   getChildOfCategory(categoryId: String!): Category!
   getDistrict(province_code: Float!): [District!]!
   getListItemCart: [LineItem!]!
-  getProductByCategory(categoryId: ObjectID!, page: Float, size: Float): ResultFilter!
   getProductBySlug(slug: String!): Product!
-  getProducts(option: OptionFilterProduct!): ResultFilter!
   getProvince: [Province!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
   resetCache: String!
-  searchProduct(search: SearchProductInput!): ResultFilter!
+  searchProduct(search: SearchProductInput!): ResultSearch!
   statistic(input: FilterStatistics!): [User!]!
   statisticOrder(input: FilterStatistics!): [StatisticOrder!]!
   test: String!
@@ -217,8 +209,10 @@ input ResetPasswordInput {
   userId: ObjectID!
 }
 
-type ResultFilter {
+type ResultSearch {
   listKeyword: [String!]
+  maxPrice: Float
+  minPrice: Float
   results: [Product!]
   totalCount: Int
 }
@@ -234,9 +228,10 @@ enum RoleEnum {
 }
 
 input SearchProductInput {
-  name: String
+  filter: FilterProduct
   page: Int
   size: Int
+  sort: SortProductEnum
 }
 
 enum SortProductEnum {

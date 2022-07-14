@@ -23,3 +23,10 @@ export declare class ResultFilter implements IResultFilter<Product> {
     listKeyword?: string[];
     totalCount: number;
 }
+export declare class ResultSearch implements IResultFilter<Product> {
+    results: Product[];
+    totalCount: number;
+    minPrice?: Types.Decimal128 | number;
+    maxPrice?: Types.Decimal128 | number;
+    listKeyword?: string[];
+}

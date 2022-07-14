@@ -28,7 +28,6 @@ let CartService = class CartService {
         let cart;
         const product = await this.productService.getProductById(input.productId);
         const cookie = req.cookies.cartId;
-        console.log('Cookie:', req.headers);
         if (this.checkCookie(cookie)) {
             cart = await this.getCartById(cookie);
             listProduct = cart.listItem;
@@ -58,8 +57,7 @@ let CartService = class CartService {
             });
             cart = await this.cartModel.create({ listItem: listProduct });
         }
-        const abc = res.cookie('cartId', cart._id, this.optionCookie(req));
-        console.log('CookieRes:', abc);
+        res.cookie('cartId', cart._id, this.optionCookie(req));
         return true;
     }
     async getListProducInCart(request) {
@@ -80,9 +78,9 @@ let CartService = class CartService {
     }
     async isValidQuantityProduct(quantityAddToCart, product, lineItem) {
         if (quantityAddToCart > product.quantity) {
-            throw new common_1.HttpException('Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException(`Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại . ${product.name} chỉ có ${product.quantity} sản phẩm`, common_1.HttpStatus.BAD_REQUEST);
         }
-        const productOfCart = lineItem.filter(item => item.product._id === product._id.toString());
+        const productOfCart = lineItem.filter(item => item.product._id.toString() === product._id.toString());
         if (productOfCart.length === 0) {
             return true;
         }
@@ -103,13 +101,14 @@ let CartService = class CartService {
         }
         return true;
     }
-    async deleteItem(req, res, productId) {
+    async deleteItem(req, res, product) {
         try {
             let cart = await this.getListProducInCart(req);
-            if (!this.checkProductInLineItem(productId, cart)) {
-                return false;
-            }
-            cart = cart.filter(item => item.product._id.toString() !== productId);
+            cart = cart.filter(item => {
+                if (!product.includes(item.product._id.toString())) {
+                    return item;
+                }
+            });
             await this.cartModel.findOneAndUpdate({ _id: req.cookies.cartId }, { listItem: cart });
             res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
             return true;
@@ -120,8 +119,12 @@ let CartService = class CartService {
     }
     async updateItem(input, req, res) {
         let cart = await this.getListProducInCart(req);
+        const product = await this.productService.getProductById(input.productId);
         if (!this.checkProductInLineItem(input.productId, cart)) {
             return false;
+        }
+        if (input.quantity > product.quantity) {
+            throw new common_1.HttpException(`Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại . ${product.name} chỉ có ${product.quantity} sản phẩm`, common_1.HttpStatus.BAD_REQUEST);
         }
         cart = cart.filter(element => {
             if (element.product._id.toString() == input.productId) {

@@ -5,6 +5,7 @@ export interface Builder {
   addName(name: string): Builder;
   addDiscount(isDiscount: boolean): Builder;
   addProductId(productId: string): Builder;
+  addCategoryId(listIdDescendants: string[]): Builder;
   addSortOption(az: SortProductEnum): Builder;
   buildQuery(): any;
 }

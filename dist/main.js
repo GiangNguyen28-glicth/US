@@ -20,6 +20,10 @@ async function bootstrap() {
     process.env.UV_THREADPOOL_SIZE = os_1.default.cpus().length.toString();
     app.use(express_1.default.json({ limit: '1mb' }));
     app.use(express_1.default.urlencoded({ limit: '1mb', extended: true }));
+    app.enableCors({
+        credentials: true,
+        origin: ['http://localhost:2050'],
+    });
     app.use((0, graphqlUploadExpress_js_1.default)({
         maxFiles: 100,
         maxFileSize: 10000000,

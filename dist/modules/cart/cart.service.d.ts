@@ -15,7 +15,7 @@ export declare class CartService {
     totalPrice(req: Request): number;
     isValidQuantityProduct(quantityAddToCart: number, product: Product, lineItem: LineItem[]): Promise<boolean>;
     isValidCart(lineItem: LineItem[]): Promise<boolean>;
-    deleteItem(req: Request, res: Response, productId: string): Promise<boolean>;
+    deleteItem(req: Request, res: Response, product: string[]): Promise<boolean>;
     updateItem(input: CartInput, req: Request, res: Response): Promise<boolean>;
     getCartById(cartId: string): Promise<Cart>;
     deleteCart(response: Response): Promise<void>;

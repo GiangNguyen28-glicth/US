@@ -9,8 +9,8 @@ export class GraphqlService implements GqlOptionsFactory {
   async createGqlOptions(): Promise<ApolloDriverConfig> {
     return {
       cors: {
-        credential: true,
-        origin: '*',
+        credentials: true,
+        origin: ['http://localhost:2050'],
       },
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,

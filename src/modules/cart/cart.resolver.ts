@@ -26,11 +26,11 @@ export class CartResolver {
 
   @Mutation(() => Boolean)
   async deleteItemCart(
-    @Args('productId') productId: string,
+    @Args('products', { type: () => [String] }) products: string[],
     @Context('req') req: Request,
     @Context('res') res: Response,
   ): Promise<boolean> {
-    return this.cartService.deleteItem(req, res, productId);
+    return this.cartService.deleteItem(req, res, products);
   }
 
   @Mutation(() => Boolean)

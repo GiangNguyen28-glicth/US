@@ -23,7 +23,6 @@ export class CartService {
     let cart;
     const product = await this.productService.getProductById(input.productId);
     const cookie = req.cookies.cartId;
-    console.log('Cookie:', req.headers);
     if (this.checkCookie(cookie)) {
       cart = await this.getCartById(cookie);
       listProduct = cart.listItem;
@@ -55,8 +54,7 @@ export class CartService {
       });
       cart = await this.cartModel.create({ listItem: listProduct });
     }
-    const abc = res.cookie('cartId', cart._id, this.optionCookie(req));
-    console.log('CookieRes:', abc);
+    res.cookie('cartId', cart._id, this.optionCookie(req));
     return true;
   }
 
@@ -90,12 +88,12 @@ export class CartService {
   ): Promise<boolean> {
     if (quantityAddToCart > product.quantity) {
       throw new HttpException(
-        'Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại',
+        `Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại . ${product.name} chỉ có ${product.quantity} sản phẩm`,
         HttpStatus.BAD_REQUEST,
       );
     }
     const productOfCart = lineItem.filter(
-      item => item.product._id === product._id.toString(),
+      item => item.product._id.toString() === product._id.toString(),
     );
     if (productOfCart.length === 0) {
       return true;
@@ -130,14 +128,15 @@ export class CartService {
   async deleteItem(
     req: Request,
     res: Response,
-    productId: string,
+    product: string[],
   ): Promise<boolean> {
     try {
       let cart = await this.getListProducInCart(req);
-      if (!this.checkProductInLineItem(productId, cart)) {
-        return false;
-      }
-      cart = cart.filter(item => item.product._id.toString() !== productId);
+      cart = cart.filter(item => {
+        if (!product.includes(item.product._id.toString())) {
+          return item;
+        }
+      });
       await this.cartModel.findOneAndUpdate(
         { _id: req.cookies.cartId },
         { listItem: cart },
@@ -154,8 +153,15 @@ export class CartService {
     res: Response,
   ): Promise<boolean> {
     let cart = await this.getListProducInCart(req);
+    const product = await this.productService.getProductById(input.productId);
     if (!this.checkProductInLineItem(input.productId, cart)) {
       return false;
+    }
+    if (input.quantity > product.quantity) {
+      throw new HttpException(
+        `Không thể chọn số lượng vượt quá số lượng sản phẩm còn lại . ${product.name} chỉ có ${product.quantity} sản phẩm`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
     cart = cart.filter(element => {
       if (element.product._id.toString() == input.productId) {
@@ -174,6 +180,7 @@ export class CartService {
     res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
     return true;
   }
+
   async getCartById(cartId: string): Promise<Cart> {
     try {
       const cart = await this.cartModel.findOne({ _id: cartId });
@@ -189,16 +196,19 @@ export class CartService {
     await this.cartModel.findOneAndDelete();
     response.clearCookie('cartId');
   }
+
   totalPriceOfItem(product: Product, quantity: number): number {
     const totalPrice: number = parseInt(product.price.toString()) * quantity;
     return totalPrice;
   }
+
   checkCookie(cookie): boolean {
     if (cookie != undefined && cookie?.lenght != 0) {
       return true;
     }
     return false;
   }
+
   optionCookie(req: Request): object {
     return {
       path: '/',
@@ -208,6 +218,7 @@ export class CartService {
       sameSite: 'none',
     };
   }
+
   checkProductInLineItem(productId: string, listProduct: LineItem[]): boolean {
     return listProduct.some(element => element.product._id !== productId);
   }

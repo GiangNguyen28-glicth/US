@@ -1,9 +1,12 @@
 import { SortProductEnum } from '../../constants/enum';
 import { sortQuery } from '../../constants/type';
+import { CategoryService } from '../../modules/category/category.service';
 import { Builder } from './builder';
 export declare class FilterProductBuilder implements Builder {
+    categoryService: CategoryService;
     queryFilter: any;
     querySort: sortQuery;
+    addCategoryId(listIdDescendants: string[]): Builder;
     addSortOption(input: SortProductEnum): Builder;
     addProductId(productId: string): Builder;
     addDiscount(isDiscount: boolean): Builder;

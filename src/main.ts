@@ -19,6 +19,10 @@ async function bootstrap() {
   process.env.UV_THREADPOOL_SIZE = os.cpus().length.toString();
   app.use(express.json({ limit: '1mb' }));
   app.use(express.urlencoded({ limit: '1mb', extended: true }));
+  app.enableCors({
+    credentials: true,
+    origin: ['http://localhost:2050'],
+  });
   // app.useGlobalFilters(new GraphQLExceptionFilter());
   app.use(
     graphqlUploadExpress({

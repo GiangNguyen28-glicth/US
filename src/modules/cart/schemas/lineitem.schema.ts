@@ -5,7 +5,7 @@ import { ref } from '../../../utils/ref.utils';
 export type LineItemDocument = LineItem & Document;
 export const LineItemSchema = new Schema<LineItem>({
   product: ref(Product, {
-    select: ['_id', 'name', 'price', 'originalPrice', 'quantity'],
+    select: ['_id', 'name', 'price', 'originalPrice', 'quantity', 'imgUrl'],
   }),
   quantity: {
     type: Number,

@@ -59,18 +59,17 @@ export class FilterProduct {
   isDiscount?: boolean;
   @Field(() => ObjectIDResolver, { nullable: true })
   productId: string;
+  @Field(() => ObjectIDResolver, { nullable: true })
+  categoryId: string;
 }
 
 @InputType()
 export class SearchProductInput extends BasePagenation {
+  @Field(() => SortProductEnum, { nullable: true })
+  sort: SortProductEnum;
   @Field({ nullable: true })
-  name?: string;
+  filter: FilterProduct;
 }
 
 @InputType()
-export class OptionFilterProduct extends BasePagenation {
-  @Field({ nullable: true })
-  filter: FilterProduct;
-  @Field(() => SortProductEnum, { nullable: true })
-  sort: SortProductEnum;
-}
+export class OptionFilterProduct extends BasePagenation {}

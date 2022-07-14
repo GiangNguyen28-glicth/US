@@ -18,8 +18,8 @@ let GraphqlService = class GraphqlService {
     async createGqlOptions() {
         return {
             cors: {
-                credential: true,
-                origin: '*',
+                credentials: true,
+                origin: ['http://localhost:2050'],
             },
             autoSchemaFile: (0, path_1.join)(process.cwd(), 'src/schema.gql'),
             sortSchema: true,

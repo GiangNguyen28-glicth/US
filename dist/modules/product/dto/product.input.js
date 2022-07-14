@@ -120,6 +120,10 @@ __decorate([
     (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver, { nullable: true }),
     __metadata("design:type", String)
 ], FilterProduct.prototype, "productId", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver, { nullable: true }),
+    __metadata("design:type", String)
+], FilterProduct.prototype, "categoryId", void 0);
 FilterProduct = __decorate([
     (0, graphql_1.InputType)()
 ], FilterProduct);
@@ -127,23 +131,19 @@ exports.FilterProduct = FilterProduct;
 let SearchProductInput = class SearchProductInput extends BasePagenation {
 };
 __decorate([
-    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(() => enum_1.SortProductEnum, { nullable: true }),
     __metadata("design:type", String)
-], SearchProductInput.prototype, "name", void 0);
+], SearchProductInput.prototype, "sort", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", FilterProduct)
+], SearchProductInput.prototype, "filter", void 0);
 SearchProductInput = __decorate([
     (0, graphql_1.InputType)()
 ], SearchProductInput);
 exports.SearchProductInput = SearchProductInput;
 let OptionFilterProduct = class OptionFilterProduct extends BasePagenation {
 };
-__decorate([
-    (0, graphql_1.Field)({ nullable: true }),
-    __metadata("design:type", FilterProduct)
-], OptionFilterProduct.prototype, "filter", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => enum_1.SortProductEnum, { nullable: true }),
-    __metadata("design:type", String)
-], OptionFilterProduct.prototype, "sort", void 0);
 OptionFilterProduct = __decorate([
     (0, graphql_1.InputType)()
 ], OptionFilterProduct);

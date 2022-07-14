@@ -6,28 +6,16 @@ import {
   SearchProductInput,
   UpdateProduct,
 } from './dto/product.input';
-import { Product, ResultFilter } from './entities/product.entities';
+import {
+  Product,
+  ResultFilter,
+  ResultSearch,
+} from './entities/product.entities';
 import { ProductService } from './product.service';
 
 @Resolver(Product.name)
 export class ProductResolver {
   constructor(private productService: ProductService) {}
-
-  @Query(() => ResultFilter)
-  getProducts(
-    @Args('option') input: OptionFilterProduct,
-  ): Promise<ResultFilter> {
-    return this.productService.getProducts(input);
-  }
-
-  @Query(() => ResultFilter)
-  getProductByCategory(
-    @Args('page', { nullable: true }) page: number,
-    @Args('size', { nullable: true }) size: number,
-    @Args('categoryId', { type: () => ObjectIDResolver }) categoryId: string,
-  ): Promise<ResultFilter> {
-    return this.productService.getProductByCategory(page, size, categoryId);
-  }
 
   @Query(() => String)
   async resetCache(): Promise<string> {
@@ -35,10 +23,10 @@ export class ProductResolver {
     return 'Success';
   }
 
-  @Query(() => ResultFilter)
+  @Query(() => ResultSearch)
   searchProduct(
     @Args('search') input: SearchProductInput,
-  ): Promise<ResultFilter> {
+  ): Promise<ResultSearch> {
     return this.productService.searchProduct(input);
   }
 

@@ -29,8 +29,8 @@ let CartResolver = class CartResolver {
     async addItemToCart(input, req, res) {
         return this.cartService.addItemToCart(req, res, input);
     }
-    async deleteItemCart(productId, req, res) {
-        return this.cartService.deleteItem(req, res, productId);
+    async deleteItemCart(products, req, res) {
+        return this.cartService.deleteItem(req, res, products);
     }
     async updateItemCart(input, req, res) {
         return this.cartService.updateItem(input, req, res);
@@ -54,11 +54,11 @@ __decorate([
 ], CartResolver.prototype, "addItemToCart", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
-    __param(0, (0, graphql_1.Args)('productId')),
+    __param(0, (0, graphql_1.Args)('products', { type: () => [String] })),
     __param(1, (0, graphql_1.Context)('req')),
     __param(2, (0, graphql_1.Context)('res')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:paramtypes", [Array, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CartResolver.prototype, "deleteItemCart", null);
 __decorate([

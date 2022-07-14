@@ -28,11 +28,11 @@ export declare class FilterProduct {
     name?: string;
     isDiscount?: boolean;
     productId: string;
+    categoryId: string;
 }
 export declare class SearchProductInput extends BasePagenation {
-    name?: string;
+    sort: SortProductEnum;
+    filter: FilterProduct;
 }
 export declare class OptionFilterProduct extends BasePagenation {
-    filter: FilterProduct;
-    sort: SortProductEnum;
 }

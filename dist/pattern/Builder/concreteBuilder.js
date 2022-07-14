@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FilterProductBuilder = void 0;
 const constants_1 = require("../../constants/constants");
+const enum_1 = require("../../constants/enum");
 const string_utils_1 = require("../../utils/string.utils");
 class FilterProductBuilder {
     constructor() {
@@ -10,11 +11,21 @@ class FilterProductBuilder {
         };
         this.querySort = {};
     }
+    addCategoryId(listIdDescendants) {
+        if (listIdDescendants.length === 0) {
+            return this;
+        }
+        this.setFilterItem('category', { $in: listIdDescendants });
+        return this;
+    }
     addSortOption(input) {
         if (!input) {
             return this;
         }
         constants_1.Constants.generateSortOrder();
+        if (input === enum_1.SortProductEnum.BESTSELLER) {
+            return this;
+        }
         const { property, option } = constants_1.Constants.SortOrder[input];
         this.querySort[property] = option;
         return this;

@@ -14,19 +14,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const graphql_scalars_1 = require("graphql-scalars");
 const product_input_1 = require("./dto/product.input");
 const product_entities_1 = require("./entities/product.entities");
 const product_service_1 = require("./product.service");
 let ProductResolver = class ProductResolver {
     constructor(productService) {
         this.productService = productService;
-    }
-    getProducts(input) {
-        return this.productService.getProducts(input);
-    }
-    getProductByCategory(page, size, categoryId) {
-        return this.productService.getProductByCategory(page, size, categoryId);
     }
     async resetCache() {
         await this.productService.resetCache();
@@ -49,29 +42,13 @@ let ProductResolver = class ProductResolver {
     }
 };
 __decorate([
-    (0, graphql_1.Query)(() => product_entities_1.ResultFilter),
-    __param(0, (0, graphql_1.Args)('option')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [product_input_1.OptionFilterProduct]),
-    __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "getProducts", null);
-__decorate([
-    (0, graphql_1.Query)(() => product_entities_1.ResultFilter),
-    __param(0, (0, graphql_1.Args)('page', { nullable: true })),
-    __param(1, (0, graphql_1.Args)('size', { nullable: true })),
-    __param(2, (0, graphql_1.Args)('categoryId', { type: () => graphql_scalars_1.ObjectIDResolver })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, String]),
-    __metadata("design:returntype", Promise)
-], ProductResolver.prototype, "getProductByCategory", null);
-__decorate([
     (0, graphql_1.Query)(() => String),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "resetCache", null);
 __decorate([
-    (0, graphql_1.Query)(() => product_entities_1.ResultFilter),
+    (0, graphql_1.Query)(() => product_entities_1.ResultSearch),
     __param(0, (0, graphql_1.Args)('search')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [product_input_1.SearchProductInput]),
