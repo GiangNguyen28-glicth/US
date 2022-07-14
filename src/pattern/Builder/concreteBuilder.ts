@@ -20,12 +20,16 @@ export class FilterProductBuilder implements Builder {
     this.setFilterItem('category', { $in: listIdDescendants });
     return this;
   }
-  addSortOption(input: SortProductEnum): Builder {
+  addSortOption(input: SortProductEnum, listProductID: string[]): Builder {
     if (!input) {
       return this;
     }
     Constants.generateSortOrder();
     if (input === SortProductEnum.BESTSELLER) {
+      if (listProductID.length === 0) {
+        return this;
+      }
+      this.setFilterItem('_id', { $in: listProductID });
       return this;
     }
     const { property, option } = Constants.SortOrder[input];

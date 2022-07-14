@@ -21,6 +21,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const decimal_js_1 = __importDefault(require("decimal.js"));
 const mongoose_2 = require("mongoose");
+const enum_1 = require("../../constants/enum");
 const concreteBuilder_1 = require("../../pattern/Builder/concreteBuilder");
 const feature_utils_1 = require("../../utils/feature.utils");
 const string_utils_1 = require("../../utils/string.utils");
@@ -59,8 +60,14 @@ let ProductService = class ProductService {
     async searchProduct(input) {
         try {
             let listIdDescendants = [];
+            let listIdProducts = [];
             if (input.filter.categoryId) {
                 listIdDescendants = await this.getlistIdDescendants(input.filter.categoryId);
+            }
+            if (input.sort === enum_1.SortProductEnum.BESTSELLER) {
+                listIdProducts =
+                    await this.orderItemService.getListProductIdInOrderItem();
+                console.log(listIdProducts);
             }
             const [queryFilter, querySort] = new concreteBuilder_1.FilterProductBuilder()
                 .addName(input.filter.name)
@@ -68,7 +75,7 @@ let ProductService = class ProductService {
                 .addDiscount(input.filter.isDiscount)
                 .addProductId(input.filter.productId)
                 .addCategoryId(listIdDescendants)
-                .addSortOption(input.sort)
+                .addSortOption(input.sort, listIdProducts)
                 .buildQuery();
             const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
             const [products, totalCount, listKeyword] = await Promise.all([

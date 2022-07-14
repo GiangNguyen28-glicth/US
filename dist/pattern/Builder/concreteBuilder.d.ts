@@ -7,7 +7,7 @@ export declare class FilterProductBuilder implements Builder {
     queryFilter: any;
     querySort: sortQuery;
     addCategoryId(listIdDescendants: string[]): Builder;
-    addSortOption(input: SortProductEnum): Builder;
+    addSortOption(input: SortProductEnum, listProductID: string[]): Builder;
     addProductId(productId: string): Builder;
     addDiscount(isDiscount: boolean): Builder;
     addRangePrice(minPrice: number, maxPrice: number): Builder;

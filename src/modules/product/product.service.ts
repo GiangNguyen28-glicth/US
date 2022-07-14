@@ -3,6 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Decimal from 'decimal.js';
 import { Model } from 'mongoose';
+import { SortProductEnum } from '../../constants/enum';
 import { FilterProductBuilder } from '../../pattern/Builder/concreteBuilder';
 import { getSkipValue, priceAfterDiscount } from '../../utils/feature.utils';
 import { transformTextSearch } from '../../utils/string.utils';
@@ -55,10 +56,16 @@ export class ProductService {
   async searchProduct(input: SearchProductInput): Promise<ResultSearch> {
     try {
       let listIdDescendants: string[] = [];
+      let listIdProducts: string[] = [];
       if (input.filter.categoryId) {
         listIdDescendants = await this.getlistIdDescendants(
           input.filter.categoryId,
         );
+      }
+      if (input.sort === SortProductEnum.BESTSELLER) {
+        listIdProducts =
+          await this.orderItemService.getListProductIdInOrderItem();
+        console.log(listIdProducts);
       }
       const [queryFilter, querySort] = new FilterProductBuilder()
         .addName(input.filter.name)
@@ -66,7 +73,7 @@ export class ProductService {
         .addDiscount(input.filter.isDiscount)
         .addProductId(input.filter.productId)
         .addCategoryId(listIdDescendants)
-        .addSortOption(input.sort)
+        .addSortOption(input.sort, listIdProducts)
         .buildQuery();
       const skip: number | undefined = getSkipValue(input.page, input.size);
       const [products, totalCount, listKeyword] = await Promise.all([

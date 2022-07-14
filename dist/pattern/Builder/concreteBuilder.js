@@ -18,12 +18,16 @@ class FilterProductBuilder {
         this.setFilterItem('category', { $in: listIdDescendants });
         return this;
     }
-    addSortOption(input) {
+    addSortOption(input, listProductID) {
         if (!input) {
             return this;
         }
         constants_1.Constants.generateSortOrder();
         if (input === enum_1.SortProductEnum.BESTSELLER) {
+            if (listProductID.length === 0) {
+                return this;
+            }
+            this.setFilterItem('_id', { $in: listProductID });
             return this;
         }
         const { property, option } = constants_1.Constants.SortOrder[input];
