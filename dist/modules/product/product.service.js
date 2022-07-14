@@ -88,16 +88,12 @@ let ProductService = class ProductService {
     }
     async searchProduct(input) {
         try {
-            const query = new concreteBuilder_1.FilterProductBuilder().addName(input.name).buildQuery();
+            const [query] = new concreteBuilder_1.FilterProductBuilder()
+                .addName(input.name)
+                .buildQuery();
             const skip = (0, feature_utils_1.getSkipValue)(input.page, input.size);
-            const query2 = await this.sortProduct(enum_1.SortProductEnum.AZ);
-            console.log(query2);
             const [products, totalCount, listKeyword] = await Promise.all([
-                this.productModel
-                    .find(query)
-                    .skip(skip)
-                    .limit(input === null || input === void 0 ? void 0 : input.size)
-                    .sort(query2),
+                this.productModel.find(query).skip(skip).limit(input === null || input === void 0 ? void 0 : input.size),
                 this.getTotalCount(query),
                 this.getKeyword(input.name),
             ]);
@@ -210,7 +206,7 @@ let ProductService = class ProductService {
             {
                 name: faker_1.faker.commerce.product(),
                 discount: +faker_1.faker.commerce.price(0, 10),
-                category: '62ba7694f002a7e575034d5c',
+                category: '62ba7b947310db5018d57aad',
                 quantity: faker_1.faker.datatype.number(20),
                 title: faker_1.faker.commerce.productDescription(),
                 price: +faker_1.faker.commerce.price(10000, 100000),
@@ -220,7 +216,7 @@ let ProductService = class ProductService {
         return {
             name: faker_1.faker.commerce.product(),
             discount: +faker_1.faker.commerce.price(0, 10),
-            category: '62ba7694f002a7e575034d5c',
+            category: '62ba7b947310db5018d57aad',
             quantity: faker_1.faker.datatype.number(20),
             title: faker_1.faker.commerce.productDescription(),
             price: +faker_1.faker.commerce.price(10000, 100000),
@@ -228,7 +224,7 @@ let ProductService = class ProductService {
         };
     }
     async fakeDataProduct() {
-        for (let index = 0; index < 5; index++) {
+        for (let index = 0; index < 10; index++) {
             this.createProduct(this.createRandomProduct());
         }
         return true;

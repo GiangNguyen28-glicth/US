@@ -61,6 +61,6 @@ export class ProductResolver {
   }
   @Query(() => Boolean)
   fakeDataProduct(): Promise<boolean> {
-    return this.productService.updatePrice();
+    return this.productService.fakeDataProduct();
   }
 }

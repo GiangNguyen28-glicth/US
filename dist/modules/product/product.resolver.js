@@ -45,7 +45,7 @@ let ProductResolver = class ProductResolver {
         return this.productService.updateProduct(productId, input);
     }
     fakeDataProduct() {
-        return this.productService.updatePrice();
+        return this.productService.fakeDataProduct();
     }
 };
 __decorate([

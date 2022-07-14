@@ -94,16 +94,12 @@ export class ProductService {
 
   async searchProduct(input: SearchProductInput): Promise<ResultFilter> {
     try {
-      const query = new FilterProductBuilder().addName(input.name).buildQuery();
+      const [query] = new FilterProductBuilder()
+        .addName(input.name)
+        .buildQuery();
       const skip: number | undefined = getSkipValue(input.page, input.size);
-      const query2 = await this.sortProduct(SortProductEnum.AZ);
-      console.log(query2);
       const [products, totalCount, listKeyword] = await Promise.all([
-        this.productModel
-          .find(query)
-          .skip(skip)
-          .limit(input?.size)
-          .sort(query2),
+        this.productModel.find(query).skip(skip).limit(input?.size),
         this.getTotalCount(query),
         this.getKeyword(input.name),
       ]);
@@ -241,7 +237,7 @@ export class ProductService {
       {
         name: faker.commerce.product(),
         discount: +faker.commerce.price(0, 10),
-        category: '62ba7694f002a7e575034d5c',
+        category: '62ba7b947310db5018d57aad',
         quantity: faker.datatype.number(20),
         title: faker.commerce.productDescription(),
         price: +faker.commerce.price(10000, 100000),
@@ -251,7 +247,7 @@ export class ProductService {
     return {
       name: faker.commerce.product(),
       discount: +faker.commerce.price(0, 10),
-      category: '62ba7694f002a7e575034d5c',
+      category: '62ba7b947310db5018d57aad',
       quantity: faker.datatype.number(20),
       title: faker.commerce.productDescription(),
       price: +faker.commerce.price(10000, 100000),
@@ -259,7 +255,7 @@ export class ProductService {
     };
   }
   async fakeDataProduct(): Promise<boolean> {
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 10; index++) {
       this.createProduct(this.createRandomProduct());
     }
     return true;

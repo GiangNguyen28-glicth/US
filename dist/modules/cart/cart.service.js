@@ -28,6 +28,7 @@ let CartService = class CartService {
         let cart;
         const product = await this.productService.getProductById(input.productId);
         const cookie = req.cookies.cartId;
+        console.log('Cookie:', req.headers);
         if (this.checkCookie(cookie)) {
             cart = await this.getCartById(cookie);
             listProduct = cart.listItem;
@@ -57,7 +58,8 @@ let CartService = class CartService {
             });
             cart = await this.cartModel.create({ listItem: listProduct });
         }
-        res.cookie('cartId', cart._id, this.optionCookie(req));
+        const abc = res.cookie('cartId', cart._id, this.optionCookie(req));
+        console.log('CookieRes:', abc);
         return true;
     }
     async getListProducInCart(request) {

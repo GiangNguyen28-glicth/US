@@ -39,7 +39,7 @@ exports.ProductSchema = new mongoose_1.Schema({
         type: Number,
     },
     imgUrl: [],
-    category: (0, ref_utils_1.ref)(category_entities_1.Category, { select: ['_id', 'name', '-parent'] }),
+    category: (0, ref_utils_1.ref)(category_entities_1.Category, { select: ['_id', 'name', 'code', '-parent'] }),
     slug: {
         type: String,
         unique: true,
