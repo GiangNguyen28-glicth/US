@@ -23,13 +23,11 @@ let CartService = class CartService {
         this.cartModel = cartModel;
         this.productService = productService;
     }
-    async addItemToCart(req, res, input) {
+    async addItemToCart(input, user) {
         let listProduct = [];
-        let cart;
+        let cart = await this.getCartByUserId(user);
         const product = await this.productService.getProductById(input.productId);
-        const cookie = req.cookies.cartId;
-        if (this.checkCookie(cookie)) {
-            cart = await this.getCartById(cookie);
+        if (cart.listItem.length > 0) {
             listProduct = cart.listItem;
             await this.isValidQuantityProduct(input.quantity, product, listProduct);
             const productExisting = listProduct.filter(item => {
@@ -55,13 +53,12 @@ let CartService = class CartService {
                 quantity: input.quantity,
                 totalPrice: this.totalPriceOfItem(product, input.quantity),
             });
-            cart = await this.cartModel.create({ listItem: listProduct });
+            cart = await this.cartModel.findOneAndUpdate({ user: user._id.toString() }, { listItem: listProduct });
         }
-        res.cookie('cartId', cart._id, this.optionCookie(req));
         return true;
     }
-    async getListProducInCart(request) {
-        const listProduct = await this.getCartById(request.cookies.cartId);
+    async getListProducInCart(user) {
+        const listProduct = await this.getCartByUserId(user);
         return listProduct.listItem ? listProduct.listItem : [];
     }
     totalQuantity(req) {
@@ -101,24 +98,23 @@ let CartService = class CartService {
         }
         return true;
     }
-    async deleteItem(req, res, product) {
+    async deleteItem(product, user) {
         try {
-            let cart = await this.getListProducInCart(req);
+            let cart = await this.getListProducInCart(user);
             cart = cart.filter(item => {
                 if (!product.includes(item.product._id.toString())) {
                     return item;
                 }
             });
-            await this.cartModel.findOneAndUpdate({ _id: req.cookies.cartId }, { listItem: cart });
-            res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
+            await this.cartModel.findOneAndUpdate({ user: user._id }, { listItem: cart });
             return true;
         }
         catch (error) {
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
     }
-    async updateItem(input, req, res) {
-        let cart = await this.getListProducInCart(req);
+    async updateItem(input, user) {
+        let cart = await this.getListProducInCart(user);
         const product = await this.productService.getProductById(input.productId);
         if (!this.checkProductInLineItem(input.productId, cart)) {
             return false;
@@ -133,15 +129,14 @@ let CartService = class CartService {
             }
             return element;
         });
-        await this.cartModel.findOneAndUpdate({ _id: req.cookies.cartId }, { listItem: cart });
-        res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
+        await this.cartModel.findOneAndUpdate({ user: user._id }, { listItem: cart });
         return true;
     }
-    async getCartById(cartId) {
+    async getCartByUserId(user) {
         try {
-            const cart = await this.cartModel.findOne({ _id: cartId });
+            let cart = await this.cartModel.findOne({ user: user._id.toString() });
             if (!cart) {
-                throw new common_1.HttpException('Giỏ hàng không tồn tại', common_1.HttpStatus.NOT_FOUND);
+                cart = await this.cartModel.create({ user: user, listItem: [] });
             }
             return cart;
         }

@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import { Constants } from './constants/constants';
 import helmet from 'helmet';
+import { outputStartupInformation } from './utils/ip.utils';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // app.use(helmet());
@@ -31,6 +32,7 @@ async function bootstrap() {
     }),
   );
   Constants.generateStatisticOrder();
-  await app.listen(process.env.PORT || 3000, function () {});
+  Constants.generateSortOrder();
+  await app.listen(process.env.PORT || 3000, () => {});
 }
 bootstrap();

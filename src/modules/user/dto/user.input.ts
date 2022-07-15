@@ -27,7 +27,7 @@ export class CreateUserInput {
   @Field(() => GenderEnum, { nullable: true })
   gender?: GenderEnum;
   @Field(() => RoleEnum, { nullable: true })
-  role?: true;
+  role?: RoleEnum;
   @Field({ nullable: true })
   verifyEmail?: boolean;
 }

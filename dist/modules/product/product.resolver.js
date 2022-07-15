@@ -31,6 +31,9 @@ let ProductResolver = class ProductResolver {
     getProductBySlug(slug) {
         return this.productService.getProductBySlug(slug);
     }
+    getSortOption() {
+        return this.productService.getSortOption();
+    }
     createProduct(input) {
         return this.productService.createProduct(input);
     }
@@ -61,6 +64,12 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductResolver.prototype, "getProductBySlug", null);
+__decorate([
+    (0, graphql_1.Query)(() => [product_entities_1.OptionSort]),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Array)
+], ProductResolver.prototype, "getSortOption", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
     __param(0, (0, graphql_1.Args)('input')),

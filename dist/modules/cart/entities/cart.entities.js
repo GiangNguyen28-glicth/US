@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Cart = exports.LineItem = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const product_entities_1 = require("../../product/entities/product.entities");
+const user_entities_1 = require("../../user/entities/user.entities");
 let LineItem = class LineItem {
 };
 __decorate([
@@ -33,6 +34,10 @@ exports.LineItem = LineItem;
 let Cart = class Cart {
 };
 __decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID, { nullable: true }),
+    __metadata("design:type", String)
+], Cart.prototype, "_id", void 0);
+__decorate([
     (0, graphql_1.Field)(() => [LineItem]),
     __metadata("design:type", Array)
 ], Cart.prototype, "listItem", void 0);
@@ -40,6 +45,10 @@ __decorate([
     (0, graphql_1.Field)(() => graphql_1.Int),
     __metadata("design:type", Object)
 ], Cart.prototype, "totalPrice", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => user_entities_1.User),
+    __metadata("design:type", user_entities_1.User)
+], Cart.prototype, "user", void 0);
 Cart = __decorate([
     (0, graphql_1.ObjectType)()
 ], Cart);

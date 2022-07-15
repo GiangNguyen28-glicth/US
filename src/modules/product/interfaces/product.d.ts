@@ -15,8 +15,7 @@ export interface IProduct extends IEntity {
 }
 
 export type IProductUpdate = IEntityUpdate<IProduct>;
-export type IEntityCreate<T> = Omit<
-  T,
+export type ICreateProduct<IProduct> = Omit<
+  IProduct,
   keyof IEntity | 'displayPrice' | 'originalPrice' | 'rating'
 >;
-export type IProductCreate = IEntityCreate<IProduct>;

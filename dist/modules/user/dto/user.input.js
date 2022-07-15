@@ -51,7 +51,7 @@ __decorate([
 ], CreateUserInput.prototype, "gender", void 0);
 __decorate([
     (0, graphql_1.Field)(() => enum_1.RoleEnum, { nullable: true }),
-    __metadata("design:type", Boolean)
+    __metadata("design:type", String)
 ], CreateUserInput.prototype, "role", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),

@@ -3,6 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Decimal from 'decimal.js';
 import { Model } from 'mongoose';
+import { Constants } from '../../constants/constants';
 import { SortProductEnum } from '../../constants/enum';
 import { FilterProductBuilder } from '../../pattern/Builder/concreteBuilder';
 import { getSkipValue, priceAfterDiscount } from '../../utils/feature.utils';
@@ -14,7 +15,7 @@ import {
   SearchProductInput,
   UpdateProduct,
 } from './dto/product.input';
-import { Product, ResultSearch } from './entities/product.entities';
+import { OptionSort, Product, ResultSearch } from './entities/product.entities';
 import { ProductDocument } from './schemas/product.schema';
 @Injectable()
 export class ProductService {
@@ -57,23 +58,22 @@ export class ProductService {
     try {
       let listIdDescendants: string[] = [];
       let listIdProducts: string[] = [];
-      if (input.filter.categoryId) {
+      if (input?.filter?.categoryId) {
         listIdDescendants = await this.getlistIdDescendants(
           input.filter.categoryId,
         );
       }
-      if (input.sort === SortProductEnum.BESTSELLER) {
+      if (input?.sort === SortProductEnum.BESTSELLER) {
         listIdProducts =
           await this.orderItemService.getListProductIdInOrderItem();
-        console.log(listIdProducts);
       }
       const [queryFilter, querySort] = new FilterProductBuilder()
-        .addName(input.filter.name)
-        .addRangePrice(input.filter.minPrice, input.filter.maxPrice)
-        .addDiscount(input.filter.isDiscount)
-        .addProductId(input.filter.productId)
+        .addName(input?.filter?.name)
+        .addRangePrice(input?.filter?.minPrice, input?.filter?.maxPrice)
+        .addDiscount(input?.filter?.isDiscount)
+        .addProductId(input?.filter?.productId)
         .addCategoryId(listIdDescendants)
-        .addSortOption(input.sort, listIdProducts)
+        .addSortOption(input?.sort, listIdProducts)
         .buildQuery();
       const skip: number | undefined = getSkipValue(input.page, input.size);
       const [products, totalCount, listKeyword] = await Promise.all([
@@ -83,7 +83,7 @@ export class ProductService {
           .limit(input?.size)
           .sort(querySort),
         this.getTotalCount(queryFilter),
-        this.getKeyword(input.filter.name),
+        this.getKeyword(input?.filter?.name),
       ]);
       const [minPrice, maxPrice] = this.getMinMaxPrice(products);
       return {
@@ -101,13 +101,13 @@ export class ProductService {
   async getlistIdDescendants(categoryId: string): Promise<string[]> {
     let listIdDescendants: string[] = [];
     if (categoryId) {
-      listIdDescendants = listIdDescendants.concat(categoryId);
       const category = await this.categoryService.getOneCategory({
         _id: categoryId,
       });
       listIdDescendants = await this.categoryService.getChildIdCategory(
         category._id.toString(),
       );
+      listIdDescendants = listIdDescendants.concat(categoryId);
     }
     return listIdDescendants;
   }
@@ -167,6 +167,15 @@ export class ProductService {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  getSortOption(): OptionSort[] {
+    const listOptionSort: OptionSort[] = [];
+    for (const item in Constants.SortOrder) {
+      const { code, title } = Constants.SortOrder[item].value;
+      listOptionSort.push({ code, title });
+    }
+    return listOptionSort;
   }
 
   async updatePrice(): Promise<boolean> {

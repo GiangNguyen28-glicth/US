@@ -24,7 +24,6 @@ export class FilterProductBuilder implements Builder {
     if (!input) {
       return this;
     }
-    Constants.generateSortOrder();
     if (input === SortProductEnum.BESTSELLER) {
       if (listProductID.length === 0) {
         return this;
@@ -44,7 +43,11 @@ export class FilterProductBuilder implements Builder {
     return this;
   }
   addDiscount(isDiscount: boolean): Builder {
+    if (isDiscount === undefined) {
+      return this;
+    }
     if (!isDiscount) {
+      this.setFilterItem('discount', { $eq: 0 });
       return this;
     }
     this.setFilterItem('discount', { $ne: 0 });

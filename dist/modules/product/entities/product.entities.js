@@ -9,8 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResultSearch = exports.ResultFilter = exports.Product = void 0;
+exports.OptionSort = exports.ResultSearch = exports.Product = void 0;
 const graphql_1 = require("@nestjs/graphql");
+const enum_1 = require("../../../constants/enum");
 const category_entities_1 = require("../../category/entites/category.entities");
 let Product = class Product {
 };
@@ -78,24 +79,6 @@ Product = __decorate([
     (0, graphql_1.ObjectType)()
 ], Product);
 exports.Product = Product;
-let ResultFilter = class ResultFilter {
-};
-__decorate([
-    (0, graphql_1.Field)(() => [Product], { nullable: true }),
-    __metadata("design:type", Array)
-], ResultFilter.prototype, "results", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => [String], { nullable: true }),
-    __metadata("design:type", Array)
-], ResultFilter.prototype, "listKeyword", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
-    __metadata("design:type", Number)
-], ResultFilter.prototype, "totalCount", void 0);
-ResultFilter = __decorate([
-    (0, graphql_1.ObjectType)()
-], ResultFilter);
-exports.ResultFilter = ResultFilter;
 let ResultSearch = class ResultSearch {
 };
 __decorate([
@@ -122,4 +105,18 @@ ResultSearch = __decorate([
     (0, graphql_1.ObjectType)()
 ], ResultSearch);
 exports.ResultSearch = ResultSearch;
+let OptionSort = class OptionSort {
+};
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], OptionSort.prototype, "code", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], OptionSort.prototype, "title", void 0);
+OptionSort = __decorate([
+    (0, graphql_1.ObjectType)()
+], OptionSort);
+exports.OptionSort = OptionSort;
 //# sourceMappingURL=product.entities.js.map

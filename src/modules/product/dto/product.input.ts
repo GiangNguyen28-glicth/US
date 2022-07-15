@@ -2,11 +2,14 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 import { Min } from 'class-validator';
 import { ObjectIDResolver } from 'graphql-scalars';
 import { SortProductEnum } from 'constants/enum';
-import { IProduct, IProductCreate } from '../interfaces/product';
-import { Types } from 'mongoose';
+import {
+  ICreateProduct,
+  IProduct,
+  IProductUpdate,
+} from '../interfaces/product';
 
 @InputType()
-export class CreateProductInput implements IProductCreate {
+export class CreateProductInput implements ICreateProduct<IProduct> {
   @Field({ nullable: true })
   name: string;
   @Field(() => Int)
@@ -24,7 +27,7 @@ export class CreateProductInput implements IProductCreate {
 }
 
 @InputType()
-export class UpdateProduct {
+export class UpdateProduct implements Partial<IProduct> {
   @Field({ nullable: true })
   name?: string;
   @Field(() => Int, { nullable: true })

@@ -1,11 +1,12 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GetUser } from '../common/decorators/getuser.decorator';
-import { AtGuard } from '../common/guards/at.guard';
 import { RtGuard } from '../common/guards/rt.guard';
+import { Constants } from '../constants/constants';
 import { User } from '../modules/user/entities/user.entities';
 import { UserDocument } from '../modules/user/schema/user.schema';
 import { UserService } from '../modules/user/user.service';
+import { toSlug } from '../utils/string.utils';
 import { AuthService } from './auth.service';
 import {
   LoginInput,
@@ -33,6 +34,11 @@ export class AuthResolver {
     const ip =
       request.headers['x-forwarded-for'] || request.socket.remoteAddress;
     console.log(ip);
+    const abc = toSlug(
+      'Áo Ba Lỗ Bé Trai Vàng In Bạn Sư Tử',
+      Constants.LOCALE_COUNTRY_CODE_VN,
+    );
+    console.log(abc);
     return 'Hello World';
   }
   @Mutation(() => JwtPayload)

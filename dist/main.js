@@ -29,7 +29,8 @@ async function bootstrap() {
         maxFileSize: 10000000,
     }));
     constants_1.Constants.generateStatisticOrder();
-    await app.listen(process.env.PORT || 3000, function () { });
+    constants_1.Constants.generateSortOrder();
+    await app.listen(process.env.PORT || 3000, () => { });
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

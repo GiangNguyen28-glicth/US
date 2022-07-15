@@ -13,6 +13,7 @@ exports.CategoryGetByParentAndLevel = exports.CategoryGetOneInput = exports.Cate
 const graphql_1 = require("@nestjs/graphql");
 const enum_1 = require("../../../constants/enum");
 const graphql_scalars_1 = require("graphql-scalars");
+const class_validator_1 = require("class-validator");
 let CategoryInput = class CategoryInput {
 };
 __decorate([
@@ -20,17 +21,19 @@ __decorate([
     __metadata("design:type", String)
 ], CategoryInput.prototype, "code", void 0);
 __decorate([
-    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(),
     __metadata("design:type", String)
 ], CategoryInput.prototype, "name", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    (0, graphql_1.Field)(() => graphql_1.Int),
+    (0, class_validator_1.Min)(1, { message: 'Level tối thiểu là 1' }),
+    (0, class_validator_1.Max)(3, { message: 'Level tối đa là 3' }),
     __metadata("design:type", Number)
 ], CategoryInput.prototype, "level", void 0);
 __decorate([
     (0, graphql_1.Field)(() => graphql_scalars_1.ObjectIDResolver, { nullable: true }),
-    __metadata("design:type", String)
-], CategoryInput.prototype, "parentId", void 0);
+    __metadata("design:type", Object)
+], CategoryInput.prototype, "parent", void 0);
 CategoryInput = __decorate([
     (0, graphql_1.InputType)()
 ], CategoryInput);

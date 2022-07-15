@@ -1,6 +1,7 @@
 import { GenderEnum, RoleEnum } from '../../../constants/enum';
-export declare class User {
-    _id?: string;
+import { IUser } from '../interfaces/user';
+export declare class User implements IUser {
+    _id: string;
     username?: string;
     email?: string;
     password?: string;
@@ -8,8 +9,8 @@ export declare class User {
     gender?: GenderEnum;
     address?: string;
     role?: RoleEnum;
-    createAt?: Date;
-    updateAt?: Date;
+    createAt: Date;
+    updateAt: Date;
     isEmailConfirmed?: boolean;
     isExprise?: Date;
     currentHashedRefreshToken?: string;

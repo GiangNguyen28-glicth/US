@@ -27,35 +27,34 @@ let CategoryService = class CategoryService {
             if (category) {
                 throw new common_1.HttpException('Category đã tồn tại', common_1.HttpStatus.BAD_REQUEST);
             }
-            const categoryDoc = await this.categoryModel.create(input);
-            if (input.parentId) {
-                const parent = await this.getOneCategory({ _id: input.parentId });
+            if (input.parent) {
+                console.log(typeof input.parent);
+                const parent = await this.getOneCategory({
+                    _id: input.parent,
+                });
+                const categoryDoc = await this.categoryModel.create(input);
                 categoryDoc.parent = parent;
+                return categoryDoc.save() ? true : false;
             }
-            return categoryDoc.save() ? true : false;
+            return this.categoryModel.create(input) ? true : false;
         }
         catch (error) {
             throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
         }
     }
     async getOneCategory(input) {
-        try {
-            const { _id } = input;
-            const category = await this.categoryModel.findById(_id);
-            if (!category) {
-                throw new common_1.HttpException('Không tìm thấy Category', common_1.HttpStatus.NOT_FOUND);
-            }
-            if (category.parent) {
-                const parent = await this.categoryModel.findOne({
-                    _id: category.parent._id,
-                });
-                category.parent = parent;
-            }
-            return category;
+        const { _id } = input;
+        const category = await this.categoryModel.findById(_id);
+        if (!category) {
+            throw new common_1.HttpException('Không tìm thấy Category', common_1.HttpStatus.NOT_FOUND);
         }
-        catch (error) {
-            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
+        if (category.parent) {
+            const parent = await this.categoryModel.findOne({
+                _id: category.parent,
+            });
+            category.parent = parent;
         }
+        return category;
     }
     async getChildOfCategory(categoryId) {
         const categories = await this.categoryModel

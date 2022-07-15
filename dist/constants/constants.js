@@ -7,22 +7,48 @@ class Constants {
         Constants.SortOrder[enum_1.SortProductEnum.LATEST] = {
             property: '$natural',
             option: 1,
+            value: {
+                code: enum_1.SortProductEnum.LATEST,
+                title: 'Mới nhất',
+            },
         };
         Constants.SortOrder[enum_1.SortProductEnum.DECREASE_PRICE] = {
             property: 'price',
             option: -1,
+            value: {
+                code: enum_1.SortProductEnum.DECREASE_PRICE,
+                title: 'Giá giảm dần',
+            },
         };
         Constants.SortOrder[enum_1.SortProductEnum.INCREASE_PRICE] = {
             property: 'price',
             option: 1,
+            value: {
+                code: enum_1.SortProductEnum.INCREASE_PRICE,
+                title: 'Giá tăng dần',
+            },
         };
         Constants.SortOrder[enum_1.SortProductEnum.AZ] = {
             property: 'keyword',
             option: 'asc',
+            value: {
+                code: enum_1.SortProductEnum.AZ,
+                title: 'Theo bảng chữ cái A-Z',
+            },
         };
         Constants.SortOrder[enum_1.SortProductEnum.ZA] = {
             property: 'keyword',
             option: 'desc',
+            value: {
+                code: enum_1.SortProductEnum.ZA,
+                title: 'Theo bảng chữ cái Z-A',
+            },
+        };
+        Constants.SortOrder[enum_1.SortProductEnum.BESTSELLER] = {
+            value: {
+                code: enum_1.SortProductEnum.BESTSELLER,
+                title: 'Bán chạy nhất',
+            },
         };
     }
     static generateStatisticOrder() {

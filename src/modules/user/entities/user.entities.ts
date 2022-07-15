@@ -1,10 +1,11 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { GenderEnum, RoleEnum } from '../../../constants/enum';
+import { IUser } from '../interfaces/user';
 
 @ObjectType()
-export class User {
+export class User implements IUser {
   @Field(() => ID, { nullable: true })
-  _id?: string;
+  _id: string;
   @Field({ nullable: true })
   username?: string;
   @Field({ nullable: true })
@@ -20,9 +21,9 @@ export class User {
   @Field(() => RoleEnum, { nullable: true })
   role?: RoleEnum;
   @Field({ nullable: true })
-  createAt?: Date;
+  createAt: Date;
   @Field({ nullable: true })
-  updateAt?: Date;
+  updateAt: Date;
   @HideField()
   isEmailConfirmed?: boolean;
   @HideField()

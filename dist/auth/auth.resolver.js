@@ -17,8 +17,10 @@ const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
 const getuser_decorator_1 = require("../common/decorators/getuser.decorator");
 const rt_guard_1 = require("../common/guards/rt.guard");
+const constants_1 = require("../constants/constants");
 const user_entities_1 = require("../modules/user/entities/user.entities");
 const user_service_1 = require("../modules/user/user.service");
+const string_utils_1 = require("../utils/string.utils");
 const auth_service_1 = require("./auth.service");
 const auth_input_1 = require("./dto/auth.input");
 const auth_entities_1 = require("./entities/auth.entities");
@@ -36,6 +38,8 @@ let AuthResolver = class AuthResolver {
     test(request) {
         const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
         console.log(ip);
+        const abc = (0, string_utils_1.toSlug)('Áo Ba Lỗ Bé Trai Vàng In Bạn Sư Tử', constants_1.Constants.LOCALE_COUNTRY_CODE_VN);
+        console.log(abc);
         return 'Hello World';
     }
     async login(input) {

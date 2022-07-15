@@ -1,9 +1,11 @@
 import { CategoryEnum } from '../../../constants/enum';
-export declare class CategoryInput {
+import { ICategory, ICategoryCreate } from '../interfaces/category';
+import { Category } from '../entites/category.entities';
+export declare class CategoryInput implements ICategoryCreate<ICategory> {
     code: CategoryEnum;
     name: string;
     level: number;
-    parentId: string;
+    parent: Category | string;
 }
 export declare class CategoryGetOneInput {
     _id: string;

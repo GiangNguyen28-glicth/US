@@ -22,7 +22,6 @@ class FilterProductBuilder {
         if (!input) {
             return this;
         }
-        constants_1.Constants.generateSortOrder();
         if (input === enum_1.SortProductEnum.BESTSELLER) {
             if (listProductID.length === 0) {
                 return this;
@@ -42,7 +41,11 @@ class FilterProductBuilder {
         return this;
     }
     addDiscount(isDiscount) {
+        if (isDiscount === undefined) {
+            return this;
+        }
         if (!isDiscount) {
+            this.setFilterItem('discount', { $eq: 0 });
             return this;
         }
         this.setFilterItem('discount', { $ne: 0 });

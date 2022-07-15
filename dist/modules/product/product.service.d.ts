@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 import { CategoryService } from '../category/category.service';
 import { OrderItemService } from '../order-item/order-item.service';
 import { CreateProductInput, SearchProductInput, UpdateProduct } from './dto/product.input';
-import { Product, ResultSearch } from './entities/product.entities';
+import { OptionSort, Product, ResultSearch } from './entities/product.entities';
 import { ProductDocument } from './schemas/product.schema';
 export declare class ProductService {
     private productModel;
@@ -20,6 +20,7 @@ export declare class ProductService {
     getQuantityOfProduct(productId: string): Promise<number>;
     updateProduct(productId: string, input: UpdateProduct): Promise<boolean>;
     getProductBySlug(slug: string): Promise<Product>;
+    getSortOption(): OptionSort[];
     updatePrice(): Promise<boolean>;
     createRandomProduct(): CreateProductInput;
     fakeDataProduct(): Promise<boolean>;

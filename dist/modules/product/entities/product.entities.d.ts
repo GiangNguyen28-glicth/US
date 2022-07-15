@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { SortProductEnum } from '../../../constants/enum';
 import { Category } from '../../category/entites/category.entities';
 import { IProduct } from '../interfaces/product';
 export declare class Product implements IProduct {
@@ -18,15 +19,14 @@ export declare class Product implements IProduct {
     slug?: string;
     keyword: string;
 }
-export declare class ResultFilter implements IResultFilter<Product> {
-    results: Product[];
-    listKeyword?: string[];
-    totalCount: number;
-}
 export declare class ResultSearch implements IResultFilter<Product> {
     results: Product[];
     totalCount: number;
     minPrice?: Types.Decimal128 | number;
     maxPrice?: Types.Decimal128 | number;
     listKeyword?: string[];
+}
+export declare class OptionSort {
+    code: SortProductEnum;
+    title: string;
 }

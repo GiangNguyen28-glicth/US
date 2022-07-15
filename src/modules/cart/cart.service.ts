@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { Model } from 'mongoose';
 import { Product } from '../product/entities/product.entities';
 import { ProductService } from '../product/product.service';
+import { User } from '../user/entities/user.entities';
 import { CartInput } from './dto/cart.input';
 import { Cart, LineItem } from './entities/cart.entities';
 import { CartDocument } from './schemas/cart.schema';
@@ -14,17 +15,11 @@ export class CartService {
     @InjectModel(Cart.name) private cartModel: Model<CartDocument>,
     private productService: ProductService,
   ) {}
-  async addItemToCart(
-    req: Request,
-    res: Response,
-    input: CartInput,
-  ): Promise<boolean> {
+  async addItemToCart(input: CartInput, user: User): Promise<boolean> {
     let listProduct: LineItem[] = [];
-    let cart;
+    let cart = await this.getCartByUserId(user);
     const product = await this.productService.getProductById(input.productId);
-    const cookie = req.cookies.cartId;
-    if (this.checkCookie(cookie)) {
-      cart = await this.getCartById(cookie);
+    if (cart.listItem.length > 0) {
       listProduct = cart.listItem;
       await this.isValidQuantityProduct(input.quantity, product, listProduct);
       const productExisting = listProduct.filter(item => {
@@ -52,20 +47,22 @@ export class CartService {
         quantity: input.quantity,
         totalPrice: this.totalPriceOfItem(product, input.quantity),
       });
-      cart = await this.cartModel.create({ listItem: listProduct });
+      cart = await this.cartModel.findOneAndUpdate(
+        { user: user._id.toString() },
+        { listItem: listProduct },
+      );
     }
-    res.cookie('cartId', cart._id, this.optionCookie(req));
     return true;
   }
 
-  async getListProducInCart(request: Request): Promise<LineItem[]> {
-    const listProduct = await this.getCartById(request.cookies.cartId);
+  async getListProducInCart(user: User): Promise<LineItem[]> {
+    const listProduct = await this.getCartByUserId(user);
     return listProduct.listItem ? listProduct.listItem : [];
   }
 
   totalQuantity(req: Request): number {
     const listProduct: LineItem[] = req.cookies.listProduct;
-    let totalQuantity: number = 0;
+    let totalQuantity = 0;
     listProduct.forEach(
       lineItem => (totalQuantity = totalQuantity + lineItem.quantity),
     );
@@ -74,7 +71,7 @@ export class CartService {
 
   totalPrice(req: Request): number {
     const listProduct: LineItem[] = req.cookies.listProduct;
-    let totalPrice: number = 0;
+    let totalPrice = 0;
     listProduct.forEach(
       lineItem => (totalPrice = lineItem.totalPrice + totalPrice),
     );
@@ -125,34 +122,25 @@ export class CartService {
     }
     return true;
   }
-  async deleteItem(
-    req: Request,
-    res: Response,
-    product: string[],
-  ): Promise<boolean> {
+  async deleteItem(product: string[], user: User): Promise<boolean> {
     try {
-      let cart = await this.getListProducInCart(req);
+      let cart = await this.getListProducInCart(user);
       cart = cart.filter(item => {
         if (!product.includes(item.product._id.toString())) {
           return item;
         }
       });
       await this.cartModel.findOneAndUpdate(
-        { _id: req.cookies.cartId },
+        { user: user._id },
         { listItem: cart },
       );
-      res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
       return true;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  async updateItem(
-    input: CartInput,
-    req: Request,
-    res: Response,
-  ): Promise<boolean> {
-    let cart = await this.getListProducInCart(req);
+  async updateItem(input: CartInput, user: User): Promise<boolean> {
+    let cart = await this.getListProducInCart(user);
     const product = await this.productService.getProductById(input.productId);
     if (!this.checkProductInLineItem(input.productId, cart)) {
       return false;
@@ -174,18 +162,17 @@ export class CartService {
       return element;
     });
     await this.cartModel.findOneAndUpdate(
-      { _id: req.cookies.cartId },
+      { user: user._id },
       { listItem: cart },
     );
-    res.cookie('cartId', req.cookies.cartId, this.optionCookie(req));
     return true;
   }
 
-  async getCartById(cartId: string): Promise<Cart> {
+  async getCartByUserId(user: User): Promise<Cart> {
     try {
-      const cart = await this.cartModel.findOne({ _id: cartId });
+      let cart = await this.cartModel.findOne({ user: user._id.toString() });
       if (!cart) {
-        throw new HttpException('Giỏ hàng không tồn tại', HttpStatus.NOT_FOUND);
+        cart = await this.cartModel.create({ user: user, listItem: [] });
       }
       return cart;
     } catch (error) {

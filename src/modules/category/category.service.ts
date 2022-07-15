@@ -21,36 +21,34 @@ export class CategoryService {
       if (category) {
         throw new HttpException('Category đã tồn tại', HttpStatus.BAD_REQUEST);
       }
-      const categoryDoc = await this.categoryModel.create(input);
-      if (input.parentId) {
-        const parent = await this.getOneCategory({ _id: input.parentId });
+      if (input.parent) {
+        console.log(typeof input.parent);
+        const parent = await this.getOneCategory({
+          _id: input.parent as string,
+        });
+        const categoryDoc = await this.categoryModel.create(input);
+
         categoryDoc.parent = parent;
+        return categoryDoc.save() ? true : false;
       }
-      return categoryDoc.save() ? true : false;
+      return this.categoryModel.create(input) ? true : false;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
   async getOneCategory(input: CategoryGetOneInput): Promise<Category> {
-    try {
-      const { _id } = input;
-      const category = await this.categoryModel.findById(_id);
-      if (!category) {
-        throw new HttpException(
-          'Không tìm thấy Category',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      if (category.parent) {
-        const parent = await this.categoryModel.findOne({
-          _id: category.parent._id,
-        });
-        category.parent = parent;
-      }
-      return category;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    const { _id } = input;
+    const category = await this.categoryModel.findById(_id);
+    if (!category) {
+      throw new HttpException('Không tìm thấy Category', HttpStatus.NOT_FOUND);
     }
+    if (category.parent) {
+      const parent = await this.categoryModel.findOne({
+        _id: category.parent,
+      });
+      category.parent = parent;
+    }
+    return category;
   }
   async getChildOfCategory(categoryId: string): Promise<Category> {
     const categories: CategoryDocument = await this.categoryModel

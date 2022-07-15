@@ -29,12 +29,20 @@ __decorate([
 ], Category.prototype, "name", void 0);
 __decorate([
     (0, graphql_1.Field)(() => Category_1, { nullable: true }),
-    __metadata("design:type", Category)
+    __metadata("design:type", Object)
 ], Category.prototype, "parent", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", Number)
 ], Category.prototype, "level", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", Date)
+], Category.prototype, "createAt", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", Date)
+], Category.prototype, "updateAt", void 0);
 __decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", String)

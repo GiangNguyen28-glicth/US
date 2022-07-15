@@ -11,10 +11,12 @@ type Category {
   _id: ID!
   child: [Category!]
   code: CategoryEnum!
+  createAt: DateTime
   level: Float!
   name: String
   parent: Category
   slug: String!
+  updateAt: DateTime
 }
 
 enum CategoryEnum {
@@ -34,9 +36,9 @@ input CategoryGetOneInput {
 
 input CategoryInput {
   code: CategoryEnum!
-  level: Int
-  name: String
-  parentId: ObjectID
+  level: Int!
+  name: String!
+  parent: ObjectID
 }
 
 input CreateOrderInput {
@@ -135,6 +137,11 @@ A field whose value conforms with the standard mongodb object ID as described he
 """
 scalar ObjectID
 
+type OptionSort {
+  code: String
+  title: String
+}
+
 type Order {
   _id: ID!
   address: String!
@@ -185,6 +192,7 @@ type Query {
   getListItemCart: [LineItem!]!
   getProductBySlug(slug: String!): Product!
   getProvince: [Province!]!
+  getSortOption: [OptionSort!]!
   getWards(district_code: Float!): [Wards!]!
   refreshToken: JwtPayload!
   resetCache: String!

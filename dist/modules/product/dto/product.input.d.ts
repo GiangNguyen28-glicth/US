@@ -1,6 +1,6 @@
 import { SortProductEnum } from 'constants/enum';
-import { IProductCreate } from '../interfaces/product';
-export declare class CreateProductInput implements IProductCreate {
+import { ICreateProduct, IProduct } from '../interfaces/product';
+export declare class CreateProductInput implements ICreateProduct<IProduct> {
     name: string;
     price: number;
     title: string;
@@ -9,7 +9,7 @@ export declare class CreateProductInput implements IProductCreate {
     imgUrl: string[];
     category: string;
 }
-export declare class UpdateProduct {
+export declare class UpdateProduct implements Partial<IProduct> {
     name?: string;
     price?: number;
     rating?: number;

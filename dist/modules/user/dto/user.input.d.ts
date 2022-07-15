@@ -1,5 +1,5 @@
 import { BaseUser } from '../../../auth/dto/auth.input';
-import { GenderEnum } from '../../../constants/enum';
+import { GenderEnum, RoleEnum } from '../../../constants/enum';
 export declare class FilterGetOneUser {
     _id?: string;
     email?: string;
@@ -11,7 +11,7 @@ export declare class CreateUserInput {
     email: string;
     password: string;
     gender?: GenderEnum;
-    role?: true;
+    role?: RoleEnum;
     verifyEmail?: boolean;
 }
 export declare class UpdateUserInput extends BaseUser {

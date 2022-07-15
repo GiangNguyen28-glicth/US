@@ -1,8 +1,9 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { CategoryEnum } from '../../../constants/enum';
+import { ICategory } from '../interfaces/category';
 
 @ObjectType()
-export class Category {
+export class Category implements ICategory {
   @Field(() => ID)
   _id: string;
   @Field(() => CategoryEnum)
@@ -10,9 +11,13 @@ export class Category {
   @Field({ nullable: true })
   name: string;
   @Field(() => Category, { nullable: true })
-  parent: Category;
+  parent: Category | string;
   @Field()
   level: number;
+  @Field({ nullable: true })
+  createAt: Date;
+  @Field({ nullable: true })
+  updateAt: Date;
   @Field()
   slug: string;
   @HideField()

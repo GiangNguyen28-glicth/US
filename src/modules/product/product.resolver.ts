@@ -1,16 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { ObjectIDResolver } from 'graphql-scalars';
 import {
   CreateProductInput,
-  OptionFilterProduct,
   SearchProductInput,
   UpdateProduct,
 } from './dto/product.input';
-import {
-  Product,
-  ResultFilter,
-  ResultSearch,
-} from './entities/product.entities';
+import { OptionSort, Product, ResultSearch } from './entities/product.entities';
 import { ProductService } from './product.service';
 
 @Resolver(Product.name)
@@ -35,6 +29,10 @@ export class ProductResolver {
     return this.productService.getProductBySlug(slug);
   }
 
+  @Query(() => [OptionSort])
+  getSortOption(): OptionSort[] {
+    return this.productService.getSortOption();
+  }
   @Mutation(() => Boolean)
   createProduct(@Args('input') input: CreateProductInput): Promise<boolean> {
     return this.productService.createProduct(input);

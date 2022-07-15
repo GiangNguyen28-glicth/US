@@ -20,22 +20,48 @@ export class Constants {
     Constants.SortOrder[SortProductEnum.LATEST] = {
       property: '$natural',
       option: 1,
+      value: {
+        code: SortProductEnum.LATEST,
+        title: 'Mới nhất',
+      },
     };
     Constants.SortOrder[SortProductEnum.DECREASE_PRICE] = {
       property: 'price',
       option: -1,
+      value: {
+        code: SortProductEnum.DECREASE_PRICE,
+        title: 'Giá giảm dần',
+      },
     };
     Constants.SortOrder[SortProductEnum.INCREASE_PRICE] = {
       property: 'price',
       option: 1,
+      value: {
+        code: SortProductEnum.INCREASE_PRICE,
+        title: 'Giá tăng dần',
+      },
     };
     Constants.SortOrder[SortProductEnum.AZ] = {
       property: 'keyword',
       option: 'asc',
+      value: {
+        code: SortProductEnum.AZ,
+        title: 'Theo bảng chữ cái A-Z',
+      },
     };
     Constants.SortOrder[SortProductEnum.ZA] = {
       property: 'keyword',
       option: 'desc',
+      value: {
+        code: SortProductEnum.ZA,
+        title: 'Theo bảng chữ cái Z-A',
+      },
+    };
+    Constants.SortOrder[SortProductEnum.BESTSELLER] = {
+      value: {
+        code: SortProductEnum.BESTSELLER,
+        title: 'Bán chạy nhất',
+      },
     };
   }
   public static generateStatisticOrder() {

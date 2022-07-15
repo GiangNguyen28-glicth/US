@@ -1,5 +1,6 @@
 import { Field, Float, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Types } from 'mongoose';
+import { SortProductEnum } from '../../../constants/enum';
 import { Category } from '../../category/entites/category.entities';
 import { IProduct } from '../interfaces/product';
 
@@ -38,17 +39,6 @@ export class Product implements IProduct {
 }
 
 @ObjectType()
-export class ResultFilter implements IResultFilter<Product> {
-  @Field(() => [Product], { nullable: true })
-  results: Product[];
-
-  @Field(() => [String], { nullable: true })
-  listKeyword?: string[];
-
-  @Field(() => Int, { nullable: true })
-  totalCount: number;
-}
-@ObjectType()
 export class ResultSearch implements IResultFilter<Product> {
   @Field(() => [Product], { nullable: true })
   results: Product[];
@@ -60,4 +50,12 @@ export class ResultSearch implements IResultFilter<Product> {
   maxPrice?: Types.Decimal128 | number;
   @Field(() => [String], { nullable: true })
   listKeyword?: string[];
+}
+
+@ObjectType()
+export class OptionSort {
+  @Field({ nullable: true })
+  code: SortProductEnum;
+  @Field({ nullable: true })
+  title: string;
 }
