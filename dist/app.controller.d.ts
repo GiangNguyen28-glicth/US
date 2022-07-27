@@ -1,3 +1,4 @@
+import { Request } from 'express';
 export declare class AppController {
-    testOs(): string;
+    testOs(req: Request): string;
 }

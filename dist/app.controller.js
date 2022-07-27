@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -16,16 +19,26 @@ exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const throttler_1 = require("@nestjs/throttler");
 const os_1 = __importDefault(require("os"));
+const node_device_detector_1 = __importDefault(require("node-device-detector"));
 let AppController = class AppController {
-    testOs() {
-        console.log(os_1.default.hostname());
+    testOs(req) {
+        const detector = new node_device_detector_1.default({
+            clientIndexes: true,
+            deviceIndexes: true,
+            deviceAliasCode: false,
+        });
+        console.log(req.get('User-Agent'));
+        const userAgent = 'Mozilla/5.0 (Linux; Android 5.0; NX505J Build/KVT49L) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.78 Mobile Safari/537.36';
+        const result = detector.detect(req.get('User-Agent'));
+        console.log('result parse', result);
         return os_1.default.hostname();
     }
 };
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", String)
 ], AppController.prototype, "testOs", null);
 AppController = __decorate([
