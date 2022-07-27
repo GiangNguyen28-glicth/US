@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FilterStatistics = exports.SortProductEnum = exports.CategoryEnum = exports.RandomCodeEnum = exports.RoleEnum = exports.GenderEnum = void 0;
+exports.Permission = exports.FilterStatistics = exports.SortProductEnum = exports.CategoryEnum = exports.RandomCodeEnum = exports.RoleEnum = exports.GenderEnum = void 0;
 const graphql_1 = require("@nestjs/graphql");
 var GenderEnum;
 (function (GenderEnum) {
@@ -57,5 +57,13 @@ var FilterStatistics;
 })(FilterStatistics = exports.FilterStatistics || (exports.FilterStatistics = {}));
 (0, graphql_1.registerEnumType)(FilterStatistics, {
     name: 'FilterStatistics',
+});
+var Permission;
+(function (Permission) {
+    Permission["FULL"] = "FULL";
+    Permission["READ_PRODUCT"] = "READ_PRODUCT";
+})(Permission = exports.Permission || (exports.Permission = {}));
+(0, graphql_1.registerEnumType)(Permission, {
+    name: 'Permission',
 });
 //# sourceMappingURL=enum.js.map

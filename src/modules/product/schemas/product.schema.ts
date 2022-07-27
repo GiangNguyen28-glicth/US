@@ -1,10 +1,12 @@
-import { Document, Schema } from 'mongoose';
+import { Document, Model, Schema } from 'mongoose';
 import { convertDecimal128ToString } from '../../../utils/feature.utils';
 import { ref } from '../../../utils/ref.utils';
 import { Category } from '../../category/entites/category.entities';
 import { Product } from '../entities/product.entities';
+import { IProduct } from '../interfaces/product';
 
 export type ProductDocument = Product & Document;
+export type ProductModelType = Model<IProduct>;
 export const ProductSchema = new Schema<Product>(
   {
     name: {

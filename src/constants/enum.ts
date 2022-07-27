@@ -50,3 +50,11 @@ export enum FilterStatistics {
 registerEnumType(FilterStatistics, {
   name: 'FilterStatistics',
 });
+export enum Permission {
+  FULL = 'FULL',
+
+  READ_PRODUCT = 'READ_PRODUCT',
+}
+registerEnumType(Permission, {
+  name: 'Permission',
+});

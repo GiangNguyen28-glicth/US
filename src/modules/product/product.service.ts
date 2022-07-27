@@ -16,11 +16,12 @@ import {
   UpdateProduct,
 } from './dto/product.input';
 import { OptionSort, Product, ResultSearch } from './entities/product.entities';
-import { ProductDocument } from './schemas/product.schema';
+import { ProductDocument, ProductModelType } from './schemas/product.schema';
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    @InjectModel(Product.name) private productTest: ProductModelType,
     // @Inject(CACHE_MANAGER) private cacheService: Cache,
     private categoryService: CategoryService,
     private orderItemService: OrderItemService,
@@ -38,20 +39,22 @@ export class ProductService {
       return [];
     }
     name = '^' + transformTextSearch(name);
-    const prouducts = await this.productModel.find(
-      {
-        $and: [
-          {
-            keyword: {
-              $regex: `${name}`,
-              $options: 'i',
+    const prouducts = await this.productModel
+      .find(
+        {
+          $and: [
+            {
+              keyword: {
+                $regex: `${name}`,
+                $options: 'i',
+              },
             },
-          },
-        ],
-      },
-      { _id: 0, name: 1 },
-    );
-    return prouducts.map(item => item.name);
+          ],
+        },
+        { _id: 0, name: 1 },
+      )
+      .distinct('name');
+    return [...prouducts];
   }
 
   async searchProduct(input: SearchProductInput): Promise<ResultSearch> {
@@ -163,9 +166,12 @@ export class ProductService {
   async getProductBySlug(slug: string): Promise<Product> {
     try {
       const product = await this.productModel.findOne({ slug: slug });
+      if (!product) {
+        throw new HttpException('slug không hợp lệ !', HttpStatus.NOT_FOUND);
+      }
       return product;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw error;
     }
   }
 
@@ -237,6 +243,8 @@ export class ProductService {
   }
 
   async resetCache(): Promise<void> {
+    const product = await this.productTest.find();
+    console.log(product);
     // await this.cacheService.reset();
   }
 }

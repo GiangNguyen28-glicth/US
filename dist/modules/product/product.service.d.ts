@@ -3,12 +3,13 @@ import { CategoryService } from '../category/category.service';
 import { OrderItemService } from '../order-item/order-item.service';
 import { CreateProductInput, SearchProductInput, UpdateProduct } from './dto/product.input';
 import { OptionSort, Product, ResultSearch } from './entities/product.entities';
-import { ProductDocument } from './schemas/product.schema';
+import { ProductDocument, ProductModelType } from './schemas/product.schema';
 export declare class ProductService {
     private productModel;
+    private productTest;
     private categoryService;
     private orderItemService;
-    constructor(productModel: Model<ProductDocument>, categoryService: CategoryService, orderItemService: OrderItemService);
+    constructor(productModel: Model<ProductDocument>, productTest: ProductModelType, categoryService: CategoryService, orderItemService: OrderItemService);
     createProduct(input: CreateProductInput): Promise<boolean>;
     getTotalCount(query: object): Promise<number>;
     getKeyword(name: string): Promise<string[]>;

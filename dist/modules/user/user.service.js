@@ -65,6 +65,7 @@ let UserService = class UserService {
         const salt = await bcrypt.genSalt();
         const hashPassword = await bcrypt.hash(password, salt);
         user.role = enum_1.RoleEnum.USER;
+        user.permission = [enum_1.Permission.FULL, enum_1.Permission.READ_PRODUCT];
         user.password = hashPassword;
         await user.save();
         return user;

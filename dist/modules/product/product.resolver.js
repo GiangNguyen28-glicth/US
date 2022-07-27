@@ -13,7 +13,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductResolver = void 0;
+const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
+const permission_decorator_1 = require("../../common/decorators/permission.decorator");
+const role_decorator_1 = require("../../common/decorators/role.decorator");
+const at_guard_1 = require("../../common/guards/at.guard");
+const authorization_guard_1 = require("../../common/guards/authorization.guard");
+const role_guard_1 = require("../../common/guards/role.guard");
+const enum_1 = require("../../constants/enum");
 const product_input_1 = require("./dto/product.input");
 const product_entities_1 = require("./entities/product.entities");
 const product_service_1 = require("./product.service");
@@ -40,8 +47,9 @@ let ProductResolver = class ProductResolver {
     updateProduct(input, productId) {
         return this.productService.updateProduct(productId, input);
     }
-    fakeDataProduct() {
-        return this.productService.fakeDataProduct();
+    async fakeDataProduct() {
+        await this.productService.resetCache();
+        return true;
     }
 };
 __decorate([
@@ -59,6 +67,9 @@ __decorate([
 ], ProductResolver.prototype, "searchProduct", null);
 __decorate([
     (0, graphql_1.Query)(() => product_entities_1.Product),
+    (0, role_decorator_1.hasRoles)(enum_1.RoleEnum.ADMIN),
+    (0, permission_decorator_1.NeedPermission)(enum_1.Permission.FULL, enum_1.Permission.READ_PRODUCT),
+    (0, common_1.UseGuards)(at_guard_1.AtGuard, role_guard_1.RolesGuard, authorization_guard_1.PermissionGuard),
     __param(0, (0, graphql_1.Args)('slug')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

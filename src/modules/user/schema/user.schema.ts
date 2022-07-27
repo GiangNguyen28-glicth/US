@@ -1,6 +1,6 @@
 import { User } from '../entities/user.entities';
 import { Document, Schema } from 'mongoose';
-import { GenderEnum, RoleEnum } from '../../../constants/enum';
+import { GenderEnum, Permission, RoleEnum } from '../../../constants/enum';
 export type UserDocument = User & Document;
 export const UserSchema = new Schema<User>({
   username: {
@@ -27,6 +27,10 @@ export const UserSchema = new Schema<User>({
   address: {
     type: String,
     trim: true,
+  },
+  permission: {
+    type: [String],
+    enum: Object.values(Permission),
   },
   role: {
     type: String,

@@ -1,4 +1,4 @@
-import { GenderEnum, RoleEnum } from '../../../constants/enum';
+import { GenderEnum, Permission, RoleEnum } from '../../../constants/enum';
 import { IUser } from '../interfaces/user';
 export declare class User implements IUser {
     _id: string;
@@ -8,6 +8,7 @@ export declare class User implements IUser {
     phonenumber?: string;
     gender?: GenderEnum;
     address?: string;
+    permission?: Permission[];
     role?: RoleEnum;
     createAt: Date;
     updateAt: Date;

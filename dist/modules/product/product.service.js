@@ -30,8 +30,9 @@ const category_service_1 = require("../category/category.service");
 const order_item_service_1 = require("../order-item/order-item.service");
 const product_entities_1 = require("./entities/product.entities");
 let ProductService = class ProductService {
-    constructor(productModel, categoryService, orderItemService) {
+    constructor(productModel, productTest, categoryService, orderItemService) {
         this.productModel = productModel;
+        this.productTest = productTest;
         this.categoryService = categoryService;
         this.orderItemService = orderItemService;
     }
@@ -46,7 +47,8 @@ let ProductService = class ProductService {
             return [];
         }
         name = '^' + (0, string_utils_1.transformTextSearch)(name);
-        const prouducts = await this.productModel.find({
+        const prouducts = await this.productModel
+            .find({
             $and: [
                 {
                     keyword: {
@@ -55,8 +57,9 @@ let ProductService = class ProductService {
                     },
                 },
             ],
-        }, { _id: 0, name: 1 });
-        return prouducts.map(item => item.name);
+        }, { _id: 0, name: 1 })
+            .distinct('name');
+        return [...prouducts];
     }
     async searchProduct(input) {
         var _a, _b, _c, _d, _e, _f, _g;
@@ -148,10 +151,13 @@ let ProductService = class ProductService {
     async getProductBySlug(slug) {
         try {
             const product = await this.productModel.findOne({ slug: slug });
+            if (!product) {
+                throw new common_1.HttpException('slug không hợp lệ !', common_1.HttpStatus.NOT_FOUND);
+            }
             return product;
         }
         catch (error) {
-            throw new common_1.HttpException(error.message, common_1.HttpStatus.BAD_REQUEST);
+            throw error;
         }
     }
     getSortOption() {
@@ -214,13 +220,15 @@ let ProductService = class ProductService {
         return true;
     }
     async resetCache() {
+        const product = await this.productTest.find();
+        console.log(product);
     }
 };
 ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(product_entities_1.Product.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model,
-        category_service_1.CategoryService,
+    __param(1, (0, mongoose_1.InjectModel)(product_entities_1.Product.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model, Object, category_service_1.CategoryService,
         order_item_service_1.OrderItemService])
 ], ProductService);
 exports.ProductService = ProductService;

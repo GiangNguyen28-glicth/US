@@ -43,6 +43,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "address", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => [enum_1.Permission], { nullable: true }),
+    __metadata("design:type", Array)
+], User.prototype, "permission", void 0);
+__decorate([
     (0, graphql_1.Field)(() => enum_1.RoleEnum, { nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);

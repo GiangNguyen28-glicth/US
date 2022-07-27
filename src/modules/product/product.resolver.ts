@@ -1,4 +1,11 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { NeedPermission } from '../../common/decorators/permission.decorator';
+import { hasRoles } from '../../common/decorators/role.decorator';
+import { AtGuard } from '../../common/guards/at.guard';
+import { PermissionGuard } from '../../common/guards/authorization.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Permission, RoleEnum } from '../../constants/enum';
 import {
   CreateProductInput,
   SearchProductInput,
@@ -25,6 +32,9 @@ export class ProductResolver {
   }
 
   @Query(() => Product)
+  @hasRoles(RoleEnum.ADMIN)
+  @NeedPermission(Permission.FULL, Permission.READ_PRODUCT)
+  @UseGuards(AtGuard, RolesGuard, PermissionGuard)
   getProductBySlug(@Args('slug') slug: string): Promise<Product> {
     return this.productService.getProductBySlug(slug);
   }
@@ -46,7 +56,8 @@ export class ProductResolver {
     return this.productService.updateProduct(productId, input);
   }
   @Query(() => Boolean)
-  fakeDataProduct(): Promise<boolean> {
-    return this.productService.fakeDataProduct();
+  async fakeDataProduct(): Promise<boolean> {
+    await this.productService.resetCache();
+    return true;
   }
 }

@@ -29,6 +29,10 @@ exports.UserSchema = new mongoose_1.Schema({
         type: String,
         trim: true,
     },
+    permission: {
+        type: [String],
+        enum: Object.values(enum_1.Permission),
+    },
     role: {
         type: String,
         enum: Object.values(enum_1.RoleEnum),

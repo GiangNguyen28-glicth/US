@@ -1,4 +1,4 @@
-import { GenderEnum, RoleEnum } from '../../../constants/enum';
+import { GenderEnum, Permission, RoleEnum } from '../../../constants/enum';
 
 export interface IUser extends IEntity {
   username?: string;
@@ -7,6 +7,7 @@ export interface IUser extends IEntity {
   phonenumber?: string;
   gender?: GenderEnum;
   address?: string;
+  permission?: Permission[];
   role?: RoleEnum;
   isEmailConfirmed?: boolean;
   isExprise?: Date;

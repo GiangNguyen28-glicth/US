@@ -11,7 +11,7 @@ import { FilterGetOneUser, UpdateUserInput } from './dto/user.input';
 import { User } from './entities/user.entities';
 import { UserDocument } from './schema/user.schema';
 import * as bcrypt from 'bcrypt';
-import { RoleEnum } from '../../constants/enum';
+import { Permission, RoleEnum } from '../../constants/enum';
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
@@ -33,6 +33,7 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     user.role = RoleEnum.USER;
+    user.permission = [Permission.FULL, Permission.READ_PRODUCT];
     user.password = hashPassword;
     await user.save();
     return user;

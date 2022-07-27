@@ -30,3 +30,7 @@ export declare enum FilterStatistics {
     THISYEAR = "THISYEAR",
     LASTYEAR = "LASTYEAR"
 }
+export declare enum Permission {
+    FULL = "FULL",
+    READ_PRODUCT = "READ_PRODUCT"
+}

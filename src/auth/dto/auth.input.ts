@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEmail, IsOptional, Matches } from 'class-validator';
+import { IsEmail, IsOptional, IsPhoneNumber, Matches } from 'class-validator';
 import { ObjectIDResolver } from 'graphql-scalars';
 
 @InputType()
@@ -7,9 +7,7 @@ export class BaseUser {
   @Field({ nullable: true })
   username?: string;
   @Field({ nullable: true })
-  @Matches(/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, {
-    message: 'Số điện thoại không hợp lệ',
-  })
+  @IsPhoneNumber('VN')
   @IsOptional()
   phonenumber?: string;
 }

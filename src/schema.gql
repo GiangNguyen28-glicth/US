@@ -154,6 +154,11 @@ type Order {
   username: String!
 }
 
+enum Permission {
+  FULL
+  READ_PRODUCT
+}
+
 type Product {
   _id: ID!
   category: Category!
@@ -280,6 +285,7 @@ type User {
   email: String
   gender: GenderEnum
   keyword: String
+  permission: [Permission!]
   phonenumber: String
   role: RoleEnum
   slug: String

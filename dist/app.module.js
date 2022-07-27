@@ -30,6 +30,7 @@ const product_module_1 = require("./modules/product/product.module");
 const review_module_1 = require("./modules/review/review.module");
 const user_module_1 = require("./modules/user/user.module");
 const health_checker_module_1 = require("./modules/health-checker/health-checker.module");
+const app_controller_1 = require("./app.controller");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -66,6 +67,7 @@ AppModule = __decorate([
                 useClass: throttler_guard_1.GqlThrottlerGuard,
             },
         ],
+        controllers: [app_controller_1.AppController],
     })
 ], AppModule);
 exports.AppModule = AppModule;

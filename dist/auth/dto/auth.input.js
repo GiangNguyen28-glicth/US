@@ -21,9 +21,7 @@ __decorate([
 ], BaseUser.prototype, "username", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
-    (0, class_validator_1.Matches)(/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, {
-        message: 'Số điện thoại không hợp lệ',
-    }),
+    (0, class_validator_1.IsPhoneNumber)('VN'),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], BaseUser.prototype, "phonenumber", void 0);

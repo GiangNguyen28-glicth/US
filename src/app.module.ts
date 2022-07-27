@@ -23,6 +23,7 @@ import { ProductModule } from './modules/product/product.module';
 import { ReviewModule } from './modules/review/review.module';
 import { UserModule } from './modules/user/user.module';
 import { HealthCheckerModule } from './modules/health-checker/health-checker.module';
+import { AppController } from './app.controller';
 @Module({
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
@@ -60,5 +61,6 @@ import { HealthCheckerModule } from './modules/health-checker/health-checker.mod
       useClass: GqlThrottlerGuard,
     },
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
