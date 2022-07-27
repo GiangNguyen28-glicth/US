@@ -7,6 +7,6 @@ export class AppController {
   @Get()
   testOs(): string {
     console.log(os.hostname());
-    return 'Hello World';
+    return os.hostname();
   }
 }

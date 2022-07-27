@@ -19,7 +19,7 @@ const os_1 = __importDefault(require("os"));
 let AppController = class AppController {
     testOs() {
         console.log(os_1.default.hostname());
-        return 'Hello World';
+        return os_1.default.hostname();
     }
 };
 __decorate([
