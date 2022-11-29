@@ -16,8 +16,8 @@ export class WebsocketExceptionsFilter extends BaseWsExceptionFilter {
       JSON.stringify({
         event: 'error',
         data: {
-          id: (client as any).id,
-          rid: data.rid,
+          id: (client as any)?.id,
+          rid: data?.rid,
           ...details,
         },
       }),

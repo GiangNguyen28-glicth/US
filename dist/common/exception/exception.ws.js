@@ -20,7 +20,7 @@ let WebsocketExceptionsFilter = class WebsocketExceptionsFilter extends websocke
         console.log('This is details', details);
         client.send(JSON.stringify({
             event: 'error',
-            data: Object.assign({ id: client.id, rid: data.rid }, details),
+            data: Object.assign({ id: client === null || client === void 0 ? void 0 : client.id, rid: data === null || data === void 0 ? void 0 : data.rid }, details),
         }));
     }
 };
