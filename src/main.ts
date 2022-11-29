@@ -36,18 +36,3 @@ async function bootstrap() {
   await app.listen(process.env.PORT || 2000);
 }
 bootstrap();
-// export const bootstrapServerless = async () => {
-//   const app = await bootstrap();
-//   const globalPrefix = '.netlify/functions/main';
-//   app.setGlobalPrefix(globalPrefix);
-//   await app.init();
-//   const expressApp = app.getHttpAdapter().getInstance();
-//   return serverless(expressApp);
-// };
-
-// async function startServer() {
-//   const app = await bootstrap();
-//   await app.listen(2000);
-// }
-
-// startServer();

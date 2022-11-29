@@ -1,9 +1,6 @@
-import {
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ArgumentsHost, ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class WsGuard extends AuthGuard('ws') {
@@ -13,10 +10,7 @@ export class WsGuard extends AuthGuard('ws') {
   }
   handleRequest(err: any, user: any, info: any) {
     if (err || !user) {
-      if (!info) {
-        throw new UnauthorizedException(err.message);
-      }
-      throw new UnauthorizedException(err.message);
+      throw new WsException('UnauthorizedException');
     }
     return user;
   }

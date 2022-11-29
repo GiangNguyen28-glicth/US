@@ -25,6 +25,7 @@ const create_message_input_1 = require("../message/dto/create-message.input");
 const message_service_1 = require("../message/message.service");
 const user_entities_1 = require("../user/entities/user.entities");
 const socket_io_1 = require("socket.io");
+const exception_ws_1 = require("../../common/exception/exception.ws");
 const ws_guard_1 = require("../../common/guard/ws.guard");
 const constants_1 = require("../../constants/constants");
 const logger_service_1 = require("../logger/logger.service");
@@ -87,15 +88,10 @@ let ChatGateway = class ChatGateway {
     async handleConnection(socket, ...args) {
         console.log('Connection Done');
     }
-    async verifyFirstConnection(socket) {
+    async verifyFirstConnection(socket, user) {
         try {
             let socketIds = [];
             if (socket.handshake.query && socket.handshake.query.token) {
-                const token = socket.handshake.query.token;
-                const payload = await this.jwtService.verify(token, {
-                    secret: process.env.JWT_ACCESS_TOKEN_SECRET,
-                });
-                const user = await this.userService.findOne({ _id: payload._id });
                 socket.userId = user._id.toString();
                 const socketKey = constants_1.Constants.SOCKET + user._id.toString();
                 socketIds = await this.cacheManager.get(socketKey);
@@ -184,9 +180,6 @@ let ChatGateway = class ChatGateway {
             });
         }
     }
-    handleError(error) {
-        console.log(error);
-    }
 };
 __decorate([
     (0, websockets_1.WebSocketServer)(),
@@ -206,9 +199,12 @@ __decorate([
 ], ChatGateway.prototype, "handleConnection", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('verifyFirstConnection'),
+    (0, common_1.UseGuards)(ws_guard_1.WsGuard),
     __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, getuser_decorators_1.GetUserWS)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket]),
+    __metadata("design:paramtypes", [socket_io_1.Socket,
+        user_entities_1.User]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "verifyFirstConnection", null);
 __decorate([
@@ -255,14 +251,10 @@ __decorate([
     __metadata("design:paramtypes", [user_entities_1.User]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "getAllUserMatchedTabMatched", null);
-__decorate([
-    (0, websockets_1.SubscribeMessage)('error'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], ChatGateway.prototype, "handleError", null);
 ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ transport: ['websocket'], allowEIO3: true, cors: '*' }),
+    (0, common_1.UseFilters)(exception_ws_1.WebsocketExceptionsFilter),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true })),
     __param(0, (0, common_1.Inject)((0, common_1.forwardRef)(() => user_service_1.UserService))),
     __param(1, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
     __metadata("design:paramtypes", [user_service_1.UserService, typeof (_a = typeof cache_manager_1.Cache !== "undefined" && cache_manager_1.Cache) === "function" ? _a : Object, jwt_1.JwtService,

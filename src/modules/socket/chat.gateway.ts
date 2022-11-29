@@ -3,7 +3,10 @@ import {
   forwardRef,
   Inject,
   UnauthorizedException,
+  UseFilters,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
@@ -25,7 +28,7 @@ import { Message } from 'modules/message/entities/message.entity';
 import { MessageService } from 'modules/message/message.service';
 import { User } from 'modules/user/entities/user.entities';
 import { Server, Socket } from 'socket.io';
-import { IJwtPayload } from '../../auth/entities/auth.entities';
+import { WebsocketExceptionsFilter } from '../../common/exception/exception.ws';
 import { WsGuard } from '../../common/guard/ws.guard';
 import { Constants } from '../../constants/constants';
 import { LoggerService } from '../logger/logger.service';
@@ -33,6 +36,8 @@ import { UserService } from '../user/user.service';
 import { SocketService } from './socket.service';
 
 @WebSocketGateway({ transport: ['websocket'], allowEIO3: true, cors: '*' })
+@UseFilters(WebsocketExceptionsFilter)
+@UsePipes(new ValidationPipe({ transform: true }))
 export class ChatGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
@@ -101,15 +106,14 @@ export class ChatGateway
   }
 
   @SubscribeMessage('verifyFirstConnection')
-  async verifyFirstConnection(@ConnectedSocket() socket: Socket) {
+  @UseGuards(WsGuard)
+  async verifyFirstConnection(
+    @ConnectedSocket() socket: Socket,
+    @GetUserWS() user: User,
+  ) {
     try {
       let socketIds: string[] = [];
       if (socket.handshake.query && socket.handshake.query.token) {
-        const token: string = socket.handshake.query.token as string;
-        const payload: IJwtPayload = await this.jwtService.verify(token, {
-          secret: process.env.JWT_ACCESS_TOKEN_SECRET,
-        });
-        const user = await this.userService.findOne({ _id: payload._id });
         (socket as any).userId = user._id.toString();
         const socketKey = Constants.SOCKET + user._id.toString();
         socketIds = await this.cacheManager.get(socketKey);
@@ -218,10 +222,5 @@ export class ChatGateway
         this.server.sockets.to(item).emit(event, data);
       });
     }
-  }
-
-  @SubscribeMessage('error')
-  handleError(error) {
-    console.log(error);
   }
 }

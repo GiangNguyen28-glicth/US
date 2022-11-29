@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WsGuard = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
+const websockets_1 = require("@nestjs/websockets");
 let WsGuard = class WsGuard extends (0, passport_1.AuthGuard)('ws') {
     getRequest(context) {
         const ctx = context.switchToWs().getClient().handshake;
@@ -16,10 +17,7 @@ let WsGuard = class WsGuard extends (0, passport_1.AuthGuard)('ws') {
     }
     handleRequest(err, user, info) {
         if (err || !user) {
-            if (!info) {
-                throw new common_1.UnauthorizedException(err.message);
-            }
-            throw new common_1.UnauthorizedException(err.message);
+            throw new websockets_1.WsException('UnauthorizedException');
         }
         return user;
     }

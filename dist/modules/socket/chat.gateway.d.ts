@@ -23,7 +23,7 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     handleDisconnect(socket: Socket): Promise<void>;
     handleBroadcastDisconnection(userId: string): Promise<void>;
     handleConnection(socket: Socket, ...args: any[]): Promise<void>;
-    verifyFirstConnection(socket: Socket): Promise<void>;
+    verifyFirstConnection(socket: Socket, user: User): Promise<void>;
     afterInit(server: Server): void;
     sendMessage(data: CreateMessageInput, user: User): Promise<Message>;
     userOnline(user: User): Promise<any>;
@@ -31,5 +31,4 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     getAllUserMatchedTabMessage(user: User): Promise<void>;
     getAllUserMatchedTabMatched(user: User): Promise<void>;
     sendEmit(socketIds: any, event: string, data: any): void;
-    handleError(error: any): void;
 }
