@@ -27,6 +27,7 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     sendMessage(data: CreateMessageInput, user: User): Promise<Message>;
     userOnline(user: User): Promise<any>;
     handleHeartBeat(socket: Socket, data: any, user: User): void;
-    getAllUserMatched(user: User): Promise<void>;
+    getAllUserMatchedTabMessage(user: User): Promise<void>;
+    getAllUserMatchedTabMatched(user: User): Promise<void>;
     sendEmit(socketIds: any, event: string, data: any): void;
 }

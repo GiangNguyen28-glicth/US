@@ -161,14 +161,24 @@ export class ChatGateway
     this.loggerService.debug(socket.id);
   }
 
-  @SubscribeMessage('getAllUserMatched')
+  @SubscribeMessage('getAllUserMatched_tabMessage')
   @UseGuards(WsGuard)
-  async getAllUserMatched(@GetUserWS() user: User) {
+  async getAllUserMatchedTabMessage(@GetUserWS() user: User) {
     const [socketIds, users] = await Promise.all([
       this.cacheManager.get(Constants.SOCKET + user._id.toString()),
       this.conversationService.getAllUserMatched(null, user, true),
     ]);
-    this.sendEmit(socketIds, 'listUserMatched', users);
+    this.sendEmit(socketIds, 'listUserMatched_tabMessage', users);
+  }
+
+  @SubscribeMessage('getAllUserMatched_tabMatched')
+  @UseGuards(WsGuard)
+  async getAllUserMatchedTabMatched(@GetUserWS() user: User) {
+    const [socketIds, users] = await Promise.all([
+      this.cacheManager.get(Constants.SOCKET + user._id.toString()),
+      this.conversationService.getAllUserMatched(null, user, false),
+    ]);
+    this.sendEmit(socketIds, 'listUserMatched_tabMatched', users);
   }
 
   sendEmit(socketIds, event: string, data) {

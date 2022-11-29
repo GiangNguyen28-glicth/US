@@ -130,12 +130,19 @@ let ChatGateway = class ChatGateway {
         console.log('This is user', user);
         this.loggerService.debug(socket.id);
     }
-    async getAllUserMatched(user) {
+    async getAllUserMatchedTabMessage(user) {
         const [socketIds, users] = await Promise.all([
             this.cacheManager.get(constants_1.Constants.SOCKET + user._id.toString()),
             this.conversationService.getAllUserMatched(null, user, true),
         ]);
-        this.sendEmit(socketIds, 'listUserMatched', users);
+        this.sendEmit(socketIds, 'listUserMatched_tabMessage', users);
+    }
+    async getAllUserMatchedTabMatched(user) {
+        const [socketIds, users] = await Promise.all([
+            this.cacheManager.get(constants_1.Constants.SOCKET + user._id.toString()),
+            this.conversationService.getAllUserMatched(null, user, false),
+        ]);
+        this.sendEmit(socketIds, 'listUserMatched_tabMatched', users);
     }
     sendEmit(socketIds, event, data) {
         if (socketIds) {
@@ -190,13 +197,21 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], ChatGateway.prototype, "handleHeartBeat", null);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('getAllUserMatched'),
+    (0, websockets_1.SubscribeMessage)('getAllUserMatched_tabMessage'),
     (0, common_1.UseGuards)(ws_guard_1.WsGuard),
     __param(0, (0, getuser_decorators_1.GetUserWS)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_entities_1.User]),
     __metadata("design:returntype", Promise)
-], ChatGateway.prototype, "getAllUserMatched", null);
+], ChatGateway.prototype, "getAllUserMatchedTabMessage", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('getAllUserMatched_tabMatched'),
+    (0, common_1.UseGuards)(ws_guard_1.WsGuard),
+    __param(0, (0, getuser_decorators_1.GetUserWS)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entities_1.User]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "getAllUserMatchedTabMatched", null);
 ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ transport: ['websocket'], allowEIO3: true, cors: '*' }),
     __param(0, (0, common_1.Inject)((0, common_1.forwardRef)(() => user_service_1.UserService))),
