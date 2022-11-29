@@ -373,9 +373,11 @@ let UserService = class UserService {
     }
     async insertManyUser() {
         try {
-            const users = await this.userModel.find();
-            let count = 0;
-            for (const user of users) {
+            const usersL = await this.userModel.find();
+            let count = 17;
+            for (const user of usersL) {
+                user.geoLocation = new user_entities_1.GeoLocation();
+                user.geoLocation.coordinates = [106.7116815, 10.821203];
                 await user.save();
                 count++;
             }

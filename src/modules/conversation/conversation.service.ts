@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
+import { Constants } from '../../constants/constants';
 import { FilterBuilder } from '../../utils/filter.query';
 import { throwIfNotExists } from '../../utils/model.utils';
 import { PaginationInput } from '../common/dto/common.dto';
@@ -87,7 +88,7 @@ export class ConversationService {
         .skip(input?.size)
         .limit((input?.page - 1) * input?.size)
         .sort(querySort)
-        .populate('members'),
+        .populate('members', Constants.EXCLUDE_FIELDS),
       this.conversionModel.count(queryFilter),
     ]);
     results = this.filterByLastMessaged(results, user._id.toString());

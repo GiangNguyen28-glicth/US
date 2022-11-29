@@ -22,5 +22,5 @@ Constants.VERIFY_ACCOUNT_CODE = 'Verify_your_code';
 Constants.RESET_CODE_DELETE_ACCOUNT = 'reset_code_delete_account';
 Constants.RESET_CODE_PASSWORD = 'reset_code_password';
 Constants.CLOUDINARY = 'Cloudinary';
-Constants.EXCLUDE_FIELDS = '-password';
+Constants.EXCLUDE_FIELDS = '-password,-slug,-keyword,-isConfirm,-registerType';
 //# sourceMappingURL=constants.js.map

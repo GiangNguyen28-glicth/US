@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConversationService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
+const constants_1 = require("../../constants/constants");
 const filter_query_1 = require("../../utils/filter.query");
 const model_utils_1 = require("../../utils/model.utils");
 const logger_service_1 = require("../logger/logger.service");
@@ -72,7 +73,7 @@ let ConversationService = class ConversationService {
                 .skip(input === null || input === void 0 ? void 0 : input.size)
                 .limit(((input === null || input === void 0 ? void 0 : input.page) - 1) * (input === null || input === void 0 ? void 0 : input.size))
                 .sort(querySort)
-                .populate('members'),
+                .populate('members', constants_1.Constants.EXCLUDE_FIELDS),
             this.conversionModel.count(queryFilter),
         ]);
         results = this.filterByLastMessaged(results, user._id.toString());

@@ -25,10 +25,15 @@ import {
   MySettingInput,
   UpdateUserInput,
 } from './dto/create-user.dto';
-import { MatchRequest, User, UserResult } from './entities/user.entities';
+import {
+  GeoLocation,
+  MatchRequest,
+  User,
+  UserResult,
+} from './entities/user.entities';
 import { UserHelper } from './helper/user.helper';
 import { UserModelType } from './schema/user.schema';
-
+import { mappingData } from '../../pattern/mapping.tinder';
 @Injectable()
 export class UserService {
   constructor(
@@ -473,17 +478,17 @@ export class UserService {
   async insertManyUser(): Promise<boolean> {
     try {
       // const users = mappingData();
-      // await this.userModel.insertMany(users);
-      const users = await this.userModel.find();
-      let count = 0;
-      for (const user of users) {
+      // const usersL = await this.userModel.insertMany(users);
+      const usersL = await this.userModel.find();
+      let count = 17;
+      for (const user of usersL) {
         // if (user.email === undefined) {
         //   user.email = `user${count}@gmail.com`;
         //   user.password = await this.hashPassword('1');
         //   user.isConfirmMail = true;
         // }
-        // user.matched = [];
-        // user.matchRequest = [];
+        user.geoLocation = new GeoLocation();
+        user.geoLocation.coordinates = [106.7116815, 10.821203];
         await user.save();
         count++;
       }
