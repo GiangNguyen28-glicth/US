@@ -3,7 +3,6 @@ import { registerEnumType } from '@nestjs/graphql';
 export enum GenderEnum {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
-  LGBT = 'LGBT',
 }
 registerEnumType(GenderEnum, {
   name: 'GenderEnum',
@@ -15,46 +14,70 @@ export enum RoleEnum {
 registerEnumType(RoleEnum, {
   name: 'RoleEnum',
 });
-export enum RandomCodeEnum {
-  LOWER = 'LOWER',
-  UPPER = 'UPPER',
-  NUMBER = 'NUMBER',
+
+export enum FilterByDate {
+  SEVEN_DAYS_AGO = 'SEVEN_DAYS_AGO',
+  THIRTY_DAYS_AGO = 'THIRTY_DAYS_AGO',
+  THIS_YEAR = 'THIS_YEAR',
+  LAST_YEAR = 'LAST_YEAR',
 }
-registerEnumType(RandomCodeEnum, {
-  name: 'RandomCodeEnum',
+registerEnumType(FilterByDate, {
+  name: 'FilterByDate',
 });
-export enum CategoryEnum {
-  HOME = 'HOME',
-  SPORT = 'SPORT',
-}
-registerEnumType(CategoryEnum, {
-  name: 'CategoryEnum',
-});
-export enum SortProductEnum {
-  LATEST = 'LATEST',
-  BESTSELLER = 'BESTSELLER',
-  DECREASE_PRICE = 'DECREASE_PRICE',
-  INCREASE_PRICE = 'INCREASE_PRICE',
+
+export enum SortOption {
   AZ = 'AZ',
   ZA = 'ZA',
+  AGE = 'AGE',
 }
-registerEnumType(SortProductEnum, {
-  name: 'SortProductEnum',
+registerEnumType(SortOption, {
+  name: 'SortOption',
 });
-export enum FilterStatistics {
-  SEVENDAYSAGO = 'SEVENDAYSAGO',
-  THIRTYDAYSAGO = 'THIRTYDAYSAGO',
-  THISYEAR = 'THISYEAR',
-  LASTYEAR = 'LASTYEAR',
-}
-registerEnumType(FilterStatistics, {
-  name: 'FilterStatistics',
-});
-export enum Permission {
-  FULL = 'FULL',
 
-  READ_PRODUCT = 'READ_PRODUCT',
+export enum MessageType {
+  IMAGE = 'Image',
+  TEXT = 'Text',
 }
-registerEnumType(Permission, {
-  name: 'Permission',
+registerEnumType(MessageType, {
+  name: 'MessageType',
+});
+
+export enum RegisterType {
+  GOOGLE = 'Google',
+  FACEBOOK = 'Facebook',
+  NORMAL = 'Normal',
+}
+registerEnumType(RegisterType, {
+  name: 'RegisterType',
+});
+
+export enum LookingFor {
+  MEN = 'Men',
+  WOMEN = 'Women',
+  ALL = 'All',
+}
+registerEnumType(LookingFor, {
+  name: 'LookingFor',
+});
+
+export enum StatusActive {
+  ONLINE = 'Online',
+  OFFLINE = 'Offline',
+}
+registerEnumType(StatusActive, {
+  name: 'StatusActive',
+});
+
+export enum TagType {
+  PASSIONS = 'Passions',
+  LIFE_STYLE = 'Life style',
+  EDUCATION = 'Education',
+  PETS = 'Pets',
+  DIETARY_PREFERENCE = 'Dietary Preference',
+  PERSONALITY_TYPE = 'Personality Type',
+  ZODIAC = 'Zodiac',
+  SMOKE_QUESTION = 'Smoke question',
+}
+registerEnumType(TagType, {
+  name: 'TagType',
 });

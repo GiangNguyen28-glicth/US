@@ -1,7 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { FilterGetOneUser } from '../../modules/user/dto/user.input';
 import { User } from '../../modules/user/entities/user.entities';
 import { UserService } from '../../modules/user/user.service';
 import { IJwtPayload } from '../entities/auth.entities';
@@ -16,17 +20,13 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
   async validate(payload: IJwtPayload): Promise<User> {
     try {
-      const input: FilterGetOneUser = payload;
-      const user = await this.userService.getOne(input);
+      const user = await this.userService.findOne({ _id: payload._id });
       if (!user) {
-        throw new HttpException(
-          'Authentication Failed',
-          HttpStatus.UNAUTHORIZED,
-        );
+        throw new UnauthorizedException('jwt not accepted');
       }
       return user;
     } catch (error) {
-      throw new HttpException('Token hết hạn', HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
 }

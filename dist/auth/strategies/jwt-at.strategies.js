@@ -25,15 +25,14 @@ let AtStrategy = class AtStrategy extends (0, passport_1.PassportStrategy)(passp
     }
     async validate(payload) {
         try {
-            const input = payload;
-            const user = await this.userService.getOne(input);
+            const user = await this.userService.findOne({ _id: payload._id });
             if (!user) {
-                throw new common_1.HttpException('Authentication Failed', common_1.HttpStatus.UNAUTHORIZED);
+                throw new common_1.UnauthorizedException('jwt not accepted');
             }
             return user;
         }
         catch (error) {
-            throw new common_1.HttpException('Token hết hạn', common_1.HttpStatus.UNAUTHORIZED);
+            throw error;
         }
     }
 };

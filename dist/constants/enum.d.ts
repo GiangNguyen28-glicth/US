@@ -1,36 +1,47 @@
 export declare enum GenderEnum {
     MALE = "MALE",
-    FEMALE = "FEMALE",
-    LGBT = "LGBT"
+    FEMALE = "FEMALE"
 }
 export declare enum RoleEnum {
     USER = "USER",
     ADMIN = "ADMIN"
 }
-export declare enum RandomCodeEnum {
-    LOWER = "LOWER",
-    UPPER = "UPPER",
-    NUMBER = "NUMBER"
+export declare enum FilterByDate {
+    SEVEN_DAYS_AGO = "SEVEN_DAYS_AGO",
+    THIRTY_DAYS_AGO = "THIRTY_DAYS_AGO",
+    THIS_YEAR = "THIS_YEAR",
+    LAST_YEAR = "LAST_YEAR"
 }
-export declare enum CategoryEnum {
-    HOME = "HOME",
-    SPORT = "SPORT"
-}
-export declare enum SortProductEnum {
-    LATEST = "LATEST",
-    BESTSELLER = "BESTSELLER",
-    DECREASE_PRICE = "DECREASE_PRICE",
-    INCREASE_PRICE = "INCREASE_PRICE",
+export declare enum SortOption {
     AZ = "AZ",
-    ZA = "ZA"
+    ZA = "ZA",
+    AGE = "AGE"
 }
-export declare enum FilterStatistics {
-    SEVENDAYSAGO = "SEVENDAYSAGO",
-    THIRTYDAYSAGO = "THIRTYDAYSAGO",
-    THISYEAR = "THISYEAR",
-    LASTYEAR = "LASTYEAR"
+export declare enum MessageType {
+    IMAGE = "Image",
+    TEXT = "Text"
 }
-export declare enum Permission {
-    FULL = "FULL",
-    READ_PRODUCT = "READ_PRODUCT"
+export declare enum RegisterType {
+    GOOGLE = "Google",
+    FACEBOOK = "Facebook",
+    NORMAL = "Normal"
+}
+export declare enum LookingFor {
+    MEN = "Men",
+    WOMEN = "Women",
+    ALL = "All"
+}
+export declare enum StatusActive {
+    ONLINE = "Online",
+    OFFLINE = "Offline"
+}
+export declare enum TagType {
+    PASSIONS = "Passions",
+    LIFE_STYLE = "Life style",
+    EDUCATION = "Education",
+    PETS = "Pets",
+    DIETARY_PREFERENCE = "Dietary Preference",
+    PERSONALITY_TYPE = "Personality Type",
+    ZODIAC = "Zodiac",
+    SMOKE_QUESTION = "Smoke question"
 }

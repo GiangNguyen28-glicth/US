@@ -1,28 +1,29 @@
 import 'dotenv/config';
-
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import os from 'os';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import express from 'express';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.js';
 import cookieParser from 'cookie-parser';
-import express from 'express';
-import { Constants } from './constants/constants';
-import helmet from 'helmet';
-import { outputStartupInformation } from './utils/ip.utils';
+import { ValidationPipe } from '@nestjs/common';
+import { LoggerService } from './modules/logger/logger.service';
+import fs from 'fs';
+// import serverless from 'serverless-http';
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  // app.use(helmet());
+  const dir = '../../tmp';
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
   app.set('trust proxy', process.env.NODE_ENV !== 'production');
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
-  process.env.UV_THREADPOOL_SIZE = os.cpus().length.toString();
   app.use(express.json({ limit: '1mb' }));
   app.use(express.urlencoded({ limit: '1mb', extended: true }));
   app.enableCors({
     credentials: true,
-    origin: ['http://localhost:2050'],
+    origin: '*',
   });
   // app.useGlobalFilters(new GraphQLExceptionFilter());
   app.use(
@@ -31,8 +32,22 @@ async function bootstrap() {
       maxFileSize: 10000000, // 10 MB,
     }),
   );
-  Constants.generateStatisticOrder();
-  Constants.generateSortOrder();
-  await app.listen(process.env.PORT || 3000, () => {});
+  app.useLogger(new LoggerService());
+  await app.listen(process.env.PORT || 2000);
 }
 bootstrap();
+// export const bootstrapServerless = async () => {
+//   const app = await bootstrap();
+//   const globalPrefix = '.netlify/functions/main';
+//   app.setGlobalPrefix(globalPrefix);
+//   await app.init();
+//   const expressApp = app.getHttpAdapter().getInstance();
+//   return serverless(expressApp);
+// };
+
+// async function startServer() {
+//   const app = await bootstrap();
+//   await app.listen(2000);
+// }
+
+// startServer();

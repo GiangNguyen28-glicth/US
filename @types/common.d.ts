@@ -1,14 +1,19 @@
-interface IResultFilter<T> {
+interface IResult<T> {
   results: T[];
   totalCount: number;
 }
 
 interface IEntity {
-  _id: string;
-  createAt: Date;
-  updateAt: Date;
+  _id?: string;
+  isDeleted?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
   slug?: string;
-  keyword: string;
+  keyword?: string;
 }
 
-type IEntityUpdate<T> = Omit<T, keyof IEntity>;
+type IOmitEntity<T> = Omit<T, keyof IEntity>;
+type IEntityInput<T, V extends keyof IOmitEntity<T> | null> = Omit<
+  IOmitEntity<T>,
+  V | null
+>;

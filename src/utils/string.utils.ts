@@ -1,16 +1,6 @@
 import slugify from 'slugify';
 import { Constants } from '../constants/constants';
-import { RandomCodeEnum } from '../constants/enum';
-export function randomCode(length: number, option?: RandomCodeEnum): string {
-  let alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if (option && option === RandomCodeEnum.LOWER) {
-    alphabet = '0123456789abcdefghjklmnopqrstuvwxyz';
-  }
-  if (option && option === RandomCodeEnum.NUMBER) {
-    alphabet = '0123456789';
-  }
-  return alphabet;
-}
+
 export function toSlug(text: string, locale?: string): string {
   if (!text) return '';
   text = text.replace('$', '').replace('%', '');

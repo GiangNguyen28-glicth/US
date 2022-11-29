@@ -10,9 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RtStrategy = void 0;
+const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const passport_jwt_1 = require("passport-jwt");
-const common_1 = require("@nestjs/common");
 let RtStrategy = class RtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt-refresh') {
     constructor() {
         super({
@@ -27,10 +27,13 @@ let RtStrategy = class RtStrategy extends (0, passport_1.PassportStrategy)(passp
                 .get('authorization')
                 .replace('Bearer', '')
                 .trim();
-            return Object.assign(Object.assign({}, payload), { refreshToken });
+            return {
+                _id: payload._id,
+                refreshToken,
+            };
         }
         catch (error) {
-            throw new common_1.HttpException('Token Token', common_1.HttpStatus.UNAUTHORIZED);
+            throw error;
         }
     }
 };

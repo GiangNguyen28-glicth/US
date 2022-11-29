@@ -1,94 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Constants = void 0;
-const enum_1 = require("./enum");
 class Constants {
-    static generateSortOrder() {
-        Constants.SortOrder[enum_1.SortProductEnum.LATEST] = {
-            property: '$natural',
-            option: 1,
-            value: {
-                code: enum_1.SortProductEnum.LATEST,
-                title: 'Mới nhất',
-            },
-        };
-        Constants.SortOrder[enum_1.SortProductEnum.DECREASE_PRICE] = {
-            property: 'price',
-            option: -1,
-            value: {
-                code: enum_1.SortProductEnum.DECREASE_PRICE,
-                title: 'Giá giảm dần',
-            },
-        };
-        Constants.SortOrder[enum_1.SortProductEnum.INCREASE_PRICE] = {
-            property: 'price',
-            option: 1,
-            value: {
-                code: enum_1.SortProductEnum.INCREASE_PRICE,
-                title: 'Giá tăng dần',
-            },
-        };
-        Constants.SortOrder[enum_1.SortProductEnum.AZ] = {
-            property: 'keyword',
-            option: 'asc',
-            value: {
-                code: enum_1.SortProductEnum.AZ,
-                title: 'Theo bảng chữ cái A-Z',
-            },
-        };
-        Constants.SortOrder[enum_1.SortProductEnum.ZA] = {
-            property: 'keyword',
-            option: 'desc',
-            value: {
-                code: enum_1.SortProductEnum.ZA,
-                title: 'Theo bảng chữ cái Z-A',
-            },
-        };
-        Constants.SortOrder[enum_1.SortProductEnum.BESTSELLER] = {
-            value: {
-                code: enum_1.SortProductEnum.BESTSELLER,
-                title: 'Bán chạy nhất',
-            },
-        };
-    }
-    static generateStatisticOrder() {
-        const today = new Date();
-        Constants.StatisticOrder[enum_1.FilterStatistics.SEVENDAYSAGO] = {
-            year: 0,
-            month: 0,
-            date: 7,
-        };
-        Constants.StatisticOrder[enum_1.FilterStatistics.THIRTYDAYSAGO] = {
-            year: 0,
-            month: 0,
-            date: 30,
-        };
-        Constants.StatisticOrder[enum_1.FilterStatistics.THISYEAR] = {
-            year: 0,
-            month: today.getMonth(),
-            date: today.getDate() - 1,
-        };
-        Constants.StatisticOrder[enum_1.FilterStatistics.LASTYEAR] = {
-            year: 1,
-            month: today.getMonth(),
-            date: today.getDate() - 1,
-        };
-    }
 }
 exports.Constants = Constants;
 Constants.LOCALE_COUNTRY_CODE_ENG = 'en';
 Constants.LOCALE_COUNTRY_CODE_VN = 'vi';
-Constants.CATEGORY_LEVEL_1 = 1;
-Constants.CATEGORY_LEVEL_2 = 2;
-Constants.CATEGORY_LEVEL_3 = 3;
-Constants.CATEGORY_MAX_LEVEL = 3;
-Constants.MONTH_12 = 11;
-Constants.MONTH_1 = 1;
-Constants.DATE_1 = 1;
-Constants.DATE_31 = 31;
-Constants.KEY_PRODUCT_BY_CATEGORY = 'keyproductbycategory';
-Constants.KEY_DASHBOARD_STATISTIC_ORDER = 'keydashboardstatisticorder';
+Constants.UPDATE_PROFILE = 'update_profile';
+Constants.CHANGE_SETTING = 'mySetting';
+Constants.REFRESH_TOKEN_TTL = 365 * 24 * 60 * 60;
+Constants.SOCKET_ID_TTL = 7 * 24 * 60 * 60;
+Constants.TTL_RESET_CODE_PASSWORD = 60 * 15;
+Constants.TTL_CODE_DELETE_ACCOUNT = 60 * 15;
+Constants.MESSAGE_HAS_DELETED = 'Tin nhắn đã được thu hồi !';
+Constants.MAX_COUNT_IN_USER_EMBEDDED = 999999;
+Constants.BEARER_TOKEN = 'Bearer ';
+Constants.SOCKET = 'Socket';
+Constants.DEFAULT_DISTANCE = 1000000000000;
+Constants.VERIFY_ACCOUNT_SUBJECT = 'Verify your account';
+Constants.VERIFY_ACCOUNT_CODE = 'Verify_your_code';
+Constants.RESET_CODE_DELETE_ACCOUNT = 'reset_code_delete_account';
+Constants.RESET_CODE_PASSWORD = 'reset_code_password';
 Constants.CLOUDINARY = 'Cloudinary';
-Constants.SortOrder = {};
-Constants.StatisticOrder = {};
+Constants.EXCLUDE_FIELDS = '-password';
 //# sourceMappingURL=constants.js.map

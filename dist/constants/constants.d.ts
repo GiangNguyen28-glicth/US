@@ -1,19 +1,25 @@
+import { SortOrder } from 'mongoose';
 export declare class Constants {
     static LOCALE_COUNTRY_CODE_ENG: string;
     static LOCALE_COUNTRY_CODE_VN: string;
-    static CATEGORY_LEVEL_1: number;
-    static CATEGORY_LEVEL_2: number;
-    static CATEGORY_LEVEL_3: number;
-    static CATEGORY_MAX_LEVEL: number;
-    static MONTH_12: number;
-    static MONTH_1: number;
-    static DATE_1: number;
-    static DATE_31: number;
-    static KEY_PRODUCT_BY_CATEGORY: string;
-    static KEY_DASHBOARD_STATISTIC_ORDER: string;
+    static UPDATE_PROFILE: string;
+    static CHANGE_SETTING: string;
+    static REFRESH_TOKEN_TTL: number;
+    static SOCKET_ID_TTL: number;
+    static TTL_RESET_CODE_PASSWORD: number;
+    static TTL_CODE_DELETE_ACCOUNT: number;
+    static MESSAGE_HAS_DELETED: string;
+    static MAX_COUNT_IN_USER_EMBEDDED: number;
+    static BEARER_TOKEN: string;
+    static SOCKET: string;
+    static DEFAULT_DISTANCE: number;
+    static VERIFY_ACCOUNT_SUBJECT: string;
+    static VERIFY_ACCOUNT_CODE: string;
+    static RESET_CODE_DELETE_ACCOUNT: string;
+    static RESET_CODE_PASSWORD: string;
     static CLOUDINARY: string;
-    static SortOrder: {};
-    static StatisticOrder: {};
-    static generateSortOrder(): void;
-    static generateStatisticOrder(): void;
+    static EXCLUDE_FIELDS: string;
 }
+export type SortQuery = {
+    [key: string]: SortOrder;
+};

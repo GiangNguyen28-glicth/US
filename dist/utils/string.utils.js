@@ -3,21 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.transformTextSearch = exports.toKeyword = exports.toSlug = exports.randomCode = void 0;
+exports.transformTextSearch = exports.toKeyword = exports.toSlug = void 0;
 const slugify_1 = __importDefault(require("slugify"));
 const constants_1 = require("../constants/constants");
-const enum_1 = require("../constants/enum");
-function randomCode(length, option) {
-    let alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (option && option === enum_1.RandomCodeEnum.LOWER) {
-        alphabet = '0123456789abcdefghjklmnopqrstuvwxyz';
-    }
-    if (option && option === enum_1.RandomCodeEnum.NUMBER) {
-        alphabet = '0123456789';
-    }
-    return alphabet;
-}
-exports.randomCode = randomCode;
 function toSlug(text, locale) {
     if (!text)
         return '';

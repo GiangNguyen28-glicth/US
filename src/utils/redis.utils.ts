@@ -1,11 +1,14 @@
 import { Cache } from 'cache-manager';
-export async function checkCacheStore(
-  cacheService: Cache,
-  key: string,
-): Promise<boolean> {
-  const valueInCache = await cacheService.get(key);
-  if (valueInCache) {
-    return true;
+export async function getValueWithSocketKey(
+  cacheManager: Cache,
+  socketKey: string[],
+): Promise<any> {
+  let socketIds: string[] = [];
+  for (let i = 0; i < socketKey.length; i++) {
+    const cacheValue = await cacheManager.get(socketKey[i]);
+    if (cacheValue) {
+      socketIds = socketIds.concat(cacheValue);
+    }
   }
-  return false;
+  return socketIds;
 }

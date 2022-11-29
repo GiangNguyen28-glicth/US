@@ -8,26 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
-const jwt_1 = require("@nestjs/jwt");
-const role_guard_1 = require("../common/guards/role.guard");
-const mail_module_1 = require("../modules/mail/mail.module");
-const user_module_1 = require("../modules/user/user.module");
-const auth_resolver_1 = require("./auth.resolver");
 const auth_service_1 = require("./auth.service");
-const jwt_at_strategies_1 = require("./strategies/jwt-at.strategies");
+const auth_resolver_1 = require("./auth.resolver");
+const jwt_1 = require("@nestjs/jwt");
 const jwt_rt_strategies_1 = require("./strategies/jwt-rt.strategies");
+const jwt_at_strategies_1 = require("./strategies/jwt-at.strategies");
+const user_module_1 = require("../modules/user/user.module");
+const mail_service_1 = require("../modules/mail/mail.service");
+const auth_controller_1 = require("./auth.controller");
+const google_strategies_1 = require("./strategies/google.strategies");
+const facebook_stategies_1 = require("./strategies/facebook.stategies");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
-        imports: [user_module_1.UserModule, mail_module_1.MailModule],
+        imports: [user_module_1.UserModule],
+        controllers: [auth_controller_1.AuthController],
         providers: [
-            auth_resolver_1.AuthResolver,
             auth_service_1.AuthService,
-            jwt_at_strategies_1.AtStrategy,
-            jwt_rt_strategies_1.RtStrategy,
-            role_guard_1.RolesGuard,
+            auth_resolver_1.AuthResolver,
             jwt_1.JwtService,
+            jwt_rt_strategies_1.RtStrategy,
+            jwt_at_strategies_1.AtStrategy,
+            mail_service_1.MailService,
+            google_strategies_1.GoogleStrategy,
+            facebook_stategies_1.FaceBookStrategy,
         ],
     })
 ], AuthModule);

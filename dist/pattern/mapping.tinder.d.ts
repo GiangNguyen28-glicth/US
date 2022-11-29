@@ -1,0 +1,10 @@
+import { Tag } from '../modules/tag/entities/tag.entity';
+import { User } from '../modules/user/entities/user.entities';
+export declare function mappingData(): User[];
+export declare function mappingDataPassion(): Tag[];
+export declare function mappingDataZodiac(): Tag[];
+export declare function mappingDataPersonalityType(): Tag[];
+export declare function mappingDataDietaryPreference(): Tag[];
+export declare function mappingDataPets(): Tag[];
+export declare function mappingDataEducation(): Tag[];
+export declare function mappingDataSmokeQuestion(): Tag[];

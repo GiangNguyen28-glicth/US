@@ -1,18 +1,18 @@
-import { Schema } from 'mongoose';
-declare type IPopulateSelect<T> = (keyof T | `-${Extract<keyof T, string>}`)[];
-declare type IRefOption<T> = {
-    autoPopulate?: true;
-    select?: IPopulateSelect<T>;
+import { Types } from 'mongoose';
+type IPopulateSelect<T> = (keyof T | `-${Extract<keyof T, string>}`)[];
+type IRefOption<T> = {
+    autoPopulate: true;
+    select: IPopulateSelect<T>;
 } | {
     autoPopulate: false;
-    readonly select?: null;
+    readonly select?: false;
 };
-export declare const ref: <T>(Entity: new () => T, option?: IRefOption<T>) => {
-    type: typeof Schema.Types.ObjectId;
+export declare const ref: <T>(Entity: new () => T, option: IRefOption<T>) => {
+    type: typeof Types.ObjectId;
     ref: string;
     default: any;
-    autopopulate: boolean | {
-        select: IPopulateSelect<T>;
+    autoPopulate: boolean | {
+        select: false | IPopulateSelect<T>;
     };
 };
 export {};

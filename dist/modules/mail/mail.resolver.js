@@ -19,15 +19,16 @@ let MailResolver = class MailResolver {
     constructor(mailService) {
         this.mailService = mailService;
     }
-    async confirmMail(token) {
-        return await this.mailService.confirmEmail(token);
+    confirmMail(email, code) {
+        return this.mailService.confirmEmail(email, code);
     }
 };
 __decorate([
     (0, graphql_1.Query)(() => Boolean),
-    __param(0, (0, graphql_1.Args)('token')),
+    __param(0, (0, graphql_1.Args)('email')),
+    __param(1, (0, graphql_1.Args)('code')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
 ], MailResolver.prototype, "confirmMail", null);
 MailResolver = __decorate([

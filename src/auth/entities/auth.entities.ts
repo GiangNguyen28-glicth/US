@@ -1,18 +1,25 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from '../../modules/user/entities/user.entities';
+import { IAuthenticateResponse } from '../interfaces/auth';
 @ObjectType()
 export class IJwtPayload {
   @Field(() => String, { nullable: true })
   _id?: string;
+
+  @Field({ nullable: true })
+  email: string;
 }
 @ObjectType()
-export class JwtPayload {
-  @Field({ nullable: true })
-  accessToken?: string;
-  @Field({ nullable: true })
-  refreshToken?: string;
-  @Field(() => IJwtPayload, { nullable: true })
-  payload?: IJwtPayload;
-  @Field(() => User, { nullable: true })
-  userInfo?: User;
+export class JwtPayload implements IAuthenticateResponse {
+  @Field()
+  accessToken: string;
+
+  @Field()
+  refreshToken: string;
 }
+
+export class RefreshPayload {
+  _id: string;
+  refreshToken: string;
+}
+
+export class RefreshResponse {}

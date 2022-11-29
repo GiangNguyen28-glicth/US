@@ -1,62 +1,122 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GetUser } from '../common/decorators/getuser.decorator';
-import { RtGuard } from '../common/guards/rt.guard';
-import { Constants } from '../constants/constants';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GetUser } from '../common/decorators/getuser.decorators';
+import { GetCurrentRefreshToken } from '../common/decorators/refresh.token.decorators';
+import { AtGuard } from '../common/guard/at.guard';
+import { RtGuard } from '../common/guard/rt.guard';
 import { User } from '../modules/user/entities/user.entities';
-import { UserDocument } from '../modules/user/schema/user.schema';
-import { UserService } from '../modules/user/user.service';
-import { toSlug } from '../utils/string.utils';
 import { AuthService } from './auth.service';
-import {
-  LoginInput,
-  RegisterInput,
-  ResetPasswordInput,
-} from './dto/auth.input';
-import { JwtPayload } from './entities/auth.entities';
-
+import { LoginInput, RegisterInput, ResetPasswordInput } from './dto/auth.dto';
+import { JwtPayload, RefreshPayload } from './entities/auth.entities';
 @Resolver('Auth')
 export class AuthResolver {
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-  ) {}
+  constructor(private authService: AuthService) {}
+
   @Query(() => JwtPayload)
   @UseGuards(RtGuard)
-  async refreshToken(@GetUser() user: User): Promise<JwtPayload> {
-    const userDoc: UserDocument = await this.userService.getOne({
-      _id: user._id,
-    });
-    return this.authService.setJwt(userDoc);
+  refreshToken(
+    @GetCurrentRefreshToken() rfPayload: RefreshPayload,
+  ): Promise<JwtPayload> {
+    try {
+      return this.authService.refreshToken(rfPayload);
+    } catch (error) {
+      throw error;
+    }
   }
-  @Query(() => String)
-  test(@Context('req') request): string {
-    const ip =
-      request.headers['x-forwarded-for'] || request.socket.remoteAddress;
-    console.log(ip);
-    const abc = toSlug(
-      'Áo Ba Lỗ Bé Trai Vàng In Bạn Sư Tử',
-      Constants.LOCALE_COUNTRY_CODE_VN,
-    );
-    console.log(abc);
-    return 'Hello World';
+
+  @Query(() => JwtPayload)
+  async verifyTokenGoogle(@Args('token') token: string): Promise<JwtPayload> {
+    return this.authService.verifyTokenGoogle(token);
   }
-  @Mutation(() => JwtPayload)
-  async login(@Args('input') input: LoginInput): Promise<JwtPayload> {
-    return await this.authService.signIn(input);
+
+  @Query(() => JwtPayload)
+  async verifyTokenFacebook(@Args('token') token: string): Promise<JwtPayload> {
+    return this.authService.verifyTokenFacebook(token);
   }
+
+  @Query(() => Boolean)
+  forgotPassword(@Args('email') email: string): Promise<boolean> {
+    try {
+      return this.authService.forgotPassword(email);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Mutation(() => Boolean)
-  async register(@Args('input') input: RegisterInput): Promise<boolean> {
-    return this.authService.signUp(input);
-  }
-  @Mutation(() => Boolean)
-  async forgotPassword(@Args('email') email: string): Promise<boolean> {
-    return this.authService.forgotPassword(email);
-  }
-  @Mutation(() => Boolean)
-  async resetPassword(
-    @Args('input') input: ResetPasswordInput,
+  resetPassword(
+    @Args('input', { type: () => ResetPasswordInput })
+    input: ResetPasswordInput,
   ): Promise<boolean> {
     return this.authService.resetPassword(input);
+  }
+
+  @Query(() => JwtPayload)
+  signInAsAdmin(
+    @Args('email') email: string,
+    @Args('password') password: string,
+  ): Promise<JwtPayload> {
+    return this.authService.signInAsAdmin(email, password);
+  }
+
+  @Query(() => Boolean)
+  @UseGuards(AtGuard)
+  deleteAccount(@GetUser() user: User): Promise<boolean> {
+    return this.authService.deleteAccount(user);
+  }
+
+  @Mutation(() => Boolean)
+  confirmDeleteAccount(
+    @Args('code', { type: () => Number }) code: number,
+    @Args('email') email: string,
+  ): Promise<boolean> {
+    return this.authService.confirmDeleteAccount(code, email);
+  }
+
+  @Mutation(() => JwtPayload)
+  signIn(
+    @Args('input', { type: () => LoginInput }) input: LoginInput,
+  ): Promise<JwtPayload> {
+    try {
+      return this.authService.signIn(input);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Mutation(() => Boolean)
+  signUp(
+    @Args('input', { type: () => RegisterInput }) input: RegisterInput,
+  ): Promise<boolean> {
+    try {
+      return this.authService.signUp(input);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(AtGuard)
+  changePassword(
+    @GetUser() user: User,
+    @Args('oldPassword') oldPassword: string,
+    @Args('newPassword') newPassword: string,
+    @Args('confirmPassword') confirmPassword: string,
+  ): Promise<boolean> {
+    return this.authService.changePassword(
+      oldPassword,
+      newPassword,
+      confirmPassword,
+      user,
+    );
+  }
+
+  @Query(() => Boolean)
+  resetCache() {
+    try {
+      return this.authService.resetCache();
+    } catch (error) {
+      throw error;
+    }
   }
 }

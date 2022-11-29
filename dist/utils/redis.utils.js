@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkCacheStore = void 0;
-async function checkCacheStore(cacheService, key) {
-    const valueInCache = await cacheService.get(key);
-    if (valueInCache) {
-        return true;
+exports.getValueWithSocketKey = void 0;
+async function getValueWithSocketKey(cacheManager, socketKey) {
+    let socketIds = [];
+    for (let i = 0; i < socketKey.length; i++) {
+        const cacheValue = await cacheManager.get(socketKey[i]);
+        if (cacheValue) {
+            socketIds = socketIds.concat(cacheValue);
+        }
     }
-    return false;
+    return socketIds;
 }
-exports.checkCacheStore = checkCacheStore;
+exports.getValueWithSocketKey = getValueWithSocketKey;
 //# sourceMappingURL=redis.utils.js.map

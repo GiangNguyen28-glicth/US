@@ -1,22 +1,27 @@
 import { Module } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { RolesGuard } from '../common/guards/role.guard';
-import { MailModule } from '../modules/mail/mail.module';
-import { UserModule } from '../modules/user/user.module';
-import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-import { AtStrategy } from './strategies/jwt-at.strategies';
+import { AuthResolver } from './auth.resolver';
+import { JwtService } from '@nestjs/jwt';
 import { RtStrategy } from './strategies/jwt-rt.strategies';
+import { AtStrategy } from './strategies/jwt-at.strategies';
+import { UserModule } from '../modules/user/user.module';
+import { MailService } from '../modules/mail/mail.service';
+import { AuthController } from './auth.controller';
+import { GoogleStrategy } from './strategies/google.strategies';
+import { FaceBookStrategy } from './strategies/facebook.stategies';
 
 @Module({
-  imports: [UserModule, MailModule],
+  imports: [UserModule],
+  controllers: [AuthController],
   providers: [
-    AuthResolver,
     AuthService,
-    AtStrategy,
-    RtStrategy,
-    RolesGuard,
+    AuthResolver,
     JwtService,
+    RtStrategy,
+    AtStrategy,
+    MailService,
+    GoogleStrategy,
+    FaceBookStrategy,
   ],
 })
 export class AuthModule {}

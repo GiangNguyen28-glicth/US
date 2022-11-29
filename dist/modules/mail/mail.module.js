@@ -18,7 +18,6 @@ MailModule = __decorate([
     (0, common_1.Module)({
         imports: [user_module_1.UserModule],
         providers: [mail_resolver_1.MailResolver, mail_service_1.MailService, jwt_1.JwtService],
-        exports: [mail_service_1.MailService],
     })
 ], MailModule);
 exports.MailModule = MailModule;

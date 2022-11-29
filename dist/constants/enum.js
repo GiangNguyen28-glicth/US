@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Permission = exports.FilterStatistics = exports.SortProductEnum = exports.CategoryEnum = exports.RandomCodeEnum = exports.RoleEnum = exports.GenderEnum = void 0;
+exports.TagType = exports.StatusActive = exports.LookingFor = exports.RegisterType = exports.MessageType = exports.SortOption = exports.FilterByDate = exports.RoleEnum = exports.GenderEnum = void 0;
 const graphql_1 = require("@nestjs/graphql");
 var GenderEnum;
 (function (GenderEnum) {
     GenderEnum["MALE"] = "MALE";
     GenderEnum["FEMALE"] = "FEMALE";
-    GenderEnum["LGBT"] = "LGBT";
 })(GenderEnum = exports.GenderEnum || (exports.GenderEnum = {}));
 (0, graphql_1.registerEnumType)(GenderEnum, {
     name: 'GenderEnum',
@@ -19,51 +18,71 @@ var RoleEnum;
 (0, graphql_1.registerEnumType)(RoleEnum, {
     name: 'RoleEnum',
 });
-var RandomCodeEnum;
-(function (RandomCodeEnum) {
-    RandomCodeEnum["LOWER"] = "LOWER";
-    RandomCodeEnum["UPPER"] = "UPPER";
-    RandomCodeEnum["NUMBER"] = "NUMBER";
-})(RandomCodeEnum = exports.RandomCodeEnum || (exports.RandomCodeEnum = {}));
-(0, graphql_1.registerEnumType)(RandomCodeEnum, {
-    name: 'RandomCodeEnum',
+var FilterByDate;
+(function (FilterByDate) {
+    FilterByDate["SEVEN_DAYS_AGO"] = "SEVEN_DAYS_AGO";
+    FilterByDate["THIRTY_DAYS_AGO"] = "THIRTY_DAYS_AGO";
+    FilterByDate["THIS_YEAR"] = "THIS_YEAR";
+    FilterByDate["LAST_YEAR"] = "LAST_YEAR";
+})(FilterByDate = exports.FilterByDate || (exports.FilterByDate = {}));
+(0, graphql_1.registerEnumType)(FilterByDate, {
+    name: 'FilterByDate',
 });
-var CategoryEnum;
-(function (CategoryEnum) {
-    CategoryEnum["HOME"] = "HOME";
-    CategoryEnum["SPORT"] = "SPORT";
-})(CategoryEnum = exports.CategoryEnum || (exports.CategoryEnum = {}));
-(0, graphql_1.registerEnumType)(CategoryEnum, {
-    name: 'CategoryEnum',
+var SortOption;
+(function (SortOption) {
+    SortOption["AZ"] = "AZ";
+    SortOption["ZA"] = "ZA";
+    SortOption["AGE"] = "AGE";
+})(SortOption = exports.SortOption || (exports.SortOption = {}));
+(0, graphql_1.registerEnumType)(SortOption, {
+    name: 'SortOption',
 });
-var SortProductEnum;
-(function (SortProductEnum) {
-    SortProductEnum["LATEST"] = "LATEST";
-    SortProductEnum["BESTSELLER"] = "BESTSELLER";
-    SortProductEnum["DECREASE_PRICE"] = "DECREASE_PRICE";
-    SortProductEnum["INCREASE_PRICE"] = "INCREASE_PRICE";
-    SortProductEnum["AZ"] = "AZ";
-    SortProductEnum["ZA"] = "ZA";
-})(SortProductEnum = exports.SortProductEnum || (exports.SortProductEnum = {}));
-(0, graphql_1.registerEnumType)(SortProductEnum, {
-    name: 'SortProductEnum',
+var MessageType;
+(function (MessageType) {
+    MessageType["IMAGE"] = "Image";
+    MessageType["TEXT"] = "Text";
+})(MessageType = exports.MessageType || (exports.MessageType = {}));
+(0, graphql_1.registerEnumType)(MessageType, {
+    name: 'MessageType',
 });
-var FilterStatistics;
-(function (FilterStatistics) {
-    FilterStatistics["SEVENDAYSAGO"] = "SEVENDAYSAGO";
-    FilterStatistics["THIRTYDAYSAGO"] = "THIRTYDAYSAGO";
-    FilterStatistics["THISYEAR"] = "THISYEAR";
-    FilterStatistics["LASTYEAR"] = "LASTYEAR";
-})(FilterStatistics = exports.FilterStatistics || (exports.FilterStatistics = {}));
-(0, graphql_1.registerEnumType)(FilterStatistics, {
-    name: 'FilterStatistics',
+var RegisterType;
+(function (RegisterType) {
+    RegisterType["GOOGLE"] = "Google";
+    RegisterType["FACEBOOK"] = "Facebook";
+    RegisterType["NORMAL"] = "Normal";
+})(RegisterType = exports.RegisterType || (exports.RegisterType = {}));
+(0, graphql_1.registerEnumType)(RegisterType, {
+    name: 'RegisterType',
 });
-var Permission;
-(function (Permission) {
-    Permission["FULL"] = "FULL";
-    Permission["READ_PRODUCT"] = "READ_PRODUCT";
-})(Permission = exports.Permission || (exports.Permission = {}));
-(0, graphql_1.registerEnumType)(Permission, {
-    name: 'Permission',
+var LookingFor;
+(function (LookingFor) {
+    LookingFor["MEN"] = "Men";
+    LookingFor["WOMEN"] = "Women";
+    LookingFor["ALL"] = "All";
+})(LookingFor = exports.LookingFor || (exports.LookingFor = {}));
+(0, graphql_1.registerEnumType)(LookingFor, {
+    name: 'LookingFor',
+});
+var StatusActive;
+(function (StatusActive) {
+    StatusActive["ONLINE"] = "Online";
+    StatusActive["OFFLINE"] = "Offline";
+})(StatusActive = exports.StatusActive || (exports.StatusActive = {}));
+(0, graphql_1.registerEnumType)(StatusActive, {
+    name: 'StatusActive',
+});
+var TagType;
+(function (TagType) {
+    TagType["PASSIONS"] = "Passions";
+    TagType["LIFE_STYLE"] = "Life style";
+    TagType["EDUCATION"] = "Education";
+    TagType["PETS"] = "Pets";
+    TagType["DIETARY_PREFERENCE"] = "Dietary Preference";
+    TagType["PERSONALITY_TYPE"] = "Personality Type";
+    TagType["ZODIAC"] = "Zodiac";
+    TagType["SMOKE_QUESTION"] = "Smoke question";
+})(TagType = exports.TagType || (exports.TagType = {}));
+(0, graphql_1.registerEnumType)(TagType, {
+    name: 'TagType',
 });
 //# sourceMappingURL=enum.js.map

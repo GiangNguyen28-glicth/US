@@ -1,17 +1,24 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  CACHE_MANAGER,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { User } from '../user/entities/user.entities';
 import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { User } from '../user/entities/user.entities';
-import { verifyEmailTemplate } from './templates/mail.verify';
-import { resetPasswordMailTemplate } from './templates/mail.resetpassword';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
-import { ConfirmMailInput } from './dto/mail.input';
+import { Cache } from 'cache-manager';
+import { Constants } from '../../constants/constants';
+
 @Injectable()
 export class MailService {
   constructor(
-    private jwtservice: JwtService,
+    private jwtService: JwtService,
     private userService: UserService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   transporter(): nodemailer.Transporter<SMTPTransport.SentMessageInfo> {
     return nodemailer.createTransport({
@@ -22,19 +29,21 @@ export class MailService {
       },
     });
   }
-  async sendVerifyMail(
-    user: User,
-    urlConfirm: string,
+  async sendMail(
+    email: string,
+    subject: string,
+    html: string,
   ): Promise<SMTPTransport.SentMessageInfo> {
     return await this.transporter().sendMail({
       from: process.env.MAIL_USERNAME,
-      to: user.email,
-      subject: 'Verify Your Email',
-      html: verifyEmailTemplate(user.username, urlConfirm),
+      to: email,
+      subject: subject,
+      html: html,
     });
   }
+
   async generateToken(email: string): Promise<string> {
-    const token = await this.jwtservice.sign(
+    const token = await this.jwtService.sign(
       { email },
       {
         secret: process.env.JWT_VERIFICATION_EMAIL_TOKEN_SECRET,
@@ -43,54 +52,42 @@ export class MailService {
     );
     return token;
   }
+
   async decodeConfirmationToken(token: string): Promise<string> {
     try {
-      const payload = await this.jwtservice.verify(token, {
+      const payload = await this.jwtService.verify(token, {
         secret: process.env.JWT_VERIFICATION_EMAIL_TOKEN_SECRET,
       });
       if (typeof payload === 'object' && 'email' in payload) {
         return payload.email;
       }
-      throw new HttpException(
-        'Lỗi trong khi xác thực Email',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException("Can't decode this token");
     } catch (error) {
-      if (error?.name === 'TokenExpiredError') {
-        throw new HttpException('Url đã hết hạn', HttpStatus.BAD_GATEWAY);
-      }
-      throw new HttpException(
-        'Không thể xác thực token',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw error;
     }
   }
 
-  async confirmEmail(token: string): Promise<boolean> {
-    const email: string = await this.decodeConfirmationToken(token);
-
-    const user = await this.userService.getOne({ email });
+  async confirmEmail(email: string, code: number): Promise<boolean> {
+    const [user, cacheValue] = await Promise.all([
+      this.userService.getOne({ email }),
+      this.cacheManager.get(`${Constants.VERIFY_ACCOUNT_CODE}_${email}`),
+    ]);
     if (!user) {
-      throw new HttpException(
-        'Token không này không còn sử dụng được',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new UnauthorizedException("This token can't use with email");
     }
-    if (user.isEmailConfirmed) {
-      throw new HttpException('Email đã được xác minh', HttpStatus.BAD_REQUEST);
+    if (user.isConfirmMail) {
+      throw new BadRequestException('Email đã được xác thực');
     }
-    await this.userService.markEmailAsConfirmed(email);
+    if (cacheValue !== code) {
+      throw new BadRequestException('Code hiện tại không còn khả dụng !');
+    }
+    await Promise.all([
+      this.userService.findOneAndUpdate(
+        { email },
+        { $set: { isConfirmMail: true } },
+      ),
+      this.cacheManager.del(`${Constants.VERIFY_ACCOUNT_CODE}_${email}`),
+    ]);
     return true;
-  }
-  async sendResetPasswordMail(
-    randomCode: string,
-    user: User,
-  ): Promise<SMTPTransport.SentMessageInfo> {
-    return await this.transporter().sendMail({
-      from: process.env.EMAIL_USERNAME,
-      to: user.email,
-      subject: 'Reset password',
-      html: resetPasswordMailTemplate(user.username, randomCode),
-    });
   }
 }

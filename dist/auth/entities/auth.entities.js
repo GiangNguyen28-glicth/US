@@ -9,15 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JwtPayload = exports.IJwtPayload = void 0;
+exports.RefreshResponse = exports.RefreshPayload = exports.JwtPayload = exports.IJwtPayload = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const user_entities_1 = require("../../modules/user/entities/user.entities");
 let IJwtPayload = class IJwtPayload {
 };
 __decorate([
     (0, graphql_1.Field)(() => String, { nullable: true }),
     __metadata("design:type", String)
 ], IJwtPayload.prototype, "_id", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], IJwtPayload.prototype, "email", void 0);
 IJwtPayload = __decorate([
     (0, graphql_1.ObjectType)()
 ], IJwtPayload);
@@ -25,23 +28,21 @@ exports.IJwtPayload = IJwtPayload;
 let JwtPayload = class JwtPayload {
 };
 __decorate([
-    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(),
     __metadata("design:type", String)
 ], JwtPayload.prototype, "accessToken", void 0);
 __decorate([
-    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(),
     __metadata("design:type", String)
 ], JwtPayload.prototype, "refreshToken", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => IJwtPayload, { nullable: true }),
-    __metadata("design:type", IJwtPayload)
-], JwtPayload.prototype, "payload", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => user_entities_1.User, { nullable: true }),
-    __metadata("design:type", user_entities_1.User)
-], JwtPayload.prototype, "userInfo", void 0);
 JwtPayload = __decorate([
     (0, graphql_1.ObjectType)()
 ], JwtPayload);
 exports.JwtPayload = JwtPayload;
+class RefreshPayload {
+}
+exports.RefreshPayload = RefreshPayload;
+class RefreshResponse {
+}
+exports.RefreshResponse = RefreshResponse;
 //# sourceMappingURL=auth.entities.js.map

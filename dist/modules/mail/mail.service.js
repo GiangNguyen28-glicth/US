@@ -31,18 +31,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MailService = void 0;
 const common_1 = require("@nestjs/common");
 const nodemailer = __importStar(require("nodemailer"));
-const mail_verify_1 = require("./templates/mail.verify");
-const mail_resetpassword_1 = require("./templates/mail.resetpassword");
 const jwt_1 = require("@nestjs/jwt");
 const user_service_1 = require("../user/user.service");
+const cache_manager_1 = require("cache-manager");
+const constants_1 = require("../../constants/constants");
 let MailService = class MailService {
-    constructor(jwtservice, userService) {
-        this.jwtservice = jwtservice;
+    constructor(jwtService, userService, cacheManager) {
+        this.jwtService = jwtService;
         this.userService = userService;
+        this.cacheManager = cacheManager;
     }
     transporter() {
         return nodemailer.createTransport({
@@ -53,16 +58,16 @@ let MailService = class MailService {
             },
         });
     }
-    async sendVerifyMail(user, urlConfirm) {
+    async sendMail(email, subject, html) {
         return await this.transporter().sendMail({
             from: process.env.MAIL_USERNAME,
-            to: user.email,
-            subject: 'Verify Your Email',
-            html: (0, mail_verify_1.verifyEmailTemplate)(user.username, urlConfirm),
+            to: email,
+            subject: subject,
+            html: html,
         });
     }
     async generateToken(email) {
-        const token = await this.jwtservice.sign({ email }, {
+        const token = await this.jwtService.sign({ email }, {
             secret: process.env.JWT_VERIFICATION_EMAIL_TOKEN_SECRET,
             expiresIn: parseInt(process.env.JWT_VERIFICATION_EXPIRATION_TIME),
         });
@@ -70,46 +75,44 @@ let MailService = class MailService {
     }
     async decodeConfirmationToken(token) {
         try {
-            const payload = await this.jwtservice.verify(token, {
+            const payload = await this.jwtService.verify(token, {
                 secret: process.env.JWT_VERIFICATION_EMAIL_TOKEN_SECRET,
             });
             if (typeof payload === 'object' && 'email' in payload) {
                 return payload.email;
             }
-            throw new common_1.HttpException('Lỗi trong khi xác thực Email', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.BadRequestException("Can't decode this token");
         }
         catch (error) {
-            if ((error === null || error === void 0 ? void 0 : error.name) === 'TokenExpiredError') {
-                throw new common_1.HttpException('Url đã hết hạn', common_1.HttpStatus.BAD_GATEWAY);
-            }
-            throw new common_1.HttpException('Không thể xác thực token', common_1.HttpStatus.BAD_REQUEST);
+            throw error;
         }
     }
-    async confirmEmail(token) {
-        const email = await this.decodeConfirmationToken(token);
-        const user = await this.userService.getOne({ email });
+    async confirmEmail(email, code) {
+        const [user, cacheValue] = await Promise.all([
+            this.userService.getOne({ email }),
+            this.cacheManager.get(`${constants_1.Constants.VERIFY_ACCOUNT_CODE}_${email}`),
+        ]);
         if (!user) {
-            throw new common_1.HttpException('Token không này không còn sử dụng được', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.UnauthorizedException("This token can't use with email");
         }
-        if (user.isEmailConfirmed) {
-            throw new common_1.HttpException('Email đã được xác minh', common_1.HttpStatus.BAD_REQUEST);
+        if (user.isConfirmMail) {
+            throw new common_1.BadRequestException('Email đã được xác thực');
         }
-        await this.userService.markEmailAsConfirmed(email);
+        if (cacheValue !== code) {
+            throw new common_1.BadRequestException('Code hiện tại không còn khả dụng !');
+        }
+        await Promise.all([
+            this.userService.findOneAndUpdate({ email }, { $set: { isConfirmMail: true } }),
+            this.cacheManager.del(`${constants_1.Constants.VERIFY_ACCOUNT_CODE}_${email}`),
+        ]);
         return true;
-    }
-    async sendResetPasswordMail(randomCode, user) {
-        return await this.transporter().sendMail({
-            from: process.env.EMAIL_USERNAME,
-            to: user.email,
-            subject: 'Reset password',
-            html: (0, mail_resetpassword_1.resetPasswordMailTemplate)(user.username, randomCode),
-        });
     }
 };
 MailService = __decorate([
     (0, common_1.Injectable)(),
+    __param(2, (0, common_1.Inject)(common_1.CACHE_MANAGER)),
     __metadata("design:paramtypes", [jwt_1.JwtService,
-        user_service_1.UserService])
+        user_service_1.UserService, typeof (_a = typeof cache_manager_1.Cache !== "undefined" && cache_manager_1.Cache) === "function" ? _a : Object])
 ], MailService);
 exports.MailService = MailService;
 //# sourceMappingURL=mail.service.js.map

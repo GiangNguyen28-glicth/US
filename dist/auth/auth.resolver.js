@@ -15,77 +15,104 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthResolver = void 0;
 const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
-const getuser_decorator_1 = require("../common/decorators/getuser.decorator");
-const rt_guard_1 = require("../common/guards/rt.guard");
-const constants_1 = require("../constants/constants");
+const getuser_decorators_1 = require("../common/decorators/getuser.decorators");
+const refresh_token_decorators_1 = require("../common/decorators/refresh.token.decorators");
+const at_guard_1 = require("../common/guard/at.guard");
+const rt_guard_1 = require("../common/guard/rt.guard");
 const user_entities_1 = require("../modules/user/entities/user.entities");
-const user_service_1 = require("../modules/user/user.service");
-const string_utils_1 = require("../utils/string.utils");
 const auth_service_1 = require("./auth.service");
-const auth_input_1 = require("./dto/auth.input");
+const auth_dto_1 = require("./dto/auth.dto");
 const auth_entities_1 = require("./entities/auth.entities");
 let AuthResolver = class AuthResolver {
-    constructor(authService, userService) {
+    constructor(authService) {
         this.authService = authService;
-        this.userService = userService;
     }
-    async refreshToken(user) {
-        const userDoc = await this.userService.getOne({
-            _id: user._id,
-        });
-        return this.authService.setJwt(userDoc);
+    refreshToken(rfPayload) {
+        try {
+            return this.authService.refreshToken(rfPayload);
+        }
+        catch (error) {
+            throw error;
+        }
     }
-    test(request) {
-        const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
-        console.log(ip);
-        const abc = (0, string_utils_1.toSlug)('Áo Ba Lỗ Bé Trai Vàng In Bạn Sư Tử', constants_1.Constants.LOCALE_COUNTRY_CODE_VN);
-        console.log(abc);
-        return 'Hello World';
+    async verifyTokenGoogle(token) {
+        return this.authService.verifyTokenGoogle(token);
     }
-    async login(input) {
-        return await this.authService.signIn(input);
+    async verifyTokenFacebook(token) {
+        return this.authService.verifyTokenFacebook(token);
     }
-    async register(input) {
-        return this.authService.signUp(input);
+    forgotPassword(email) {
+        try {
+            return this.authService.forgotPassword(email);
+        }
+        catch (error) {
+            throw error;
+        }
     }
-    async forgotPassword(email) {
-        return this.authService.forgotPassword(email);
-    }
-    async resetPassword(input) {
+    resetPassword(input) {
         return this.authService.resetPassword(input);
+    }
+    signInAsAdmin(email, password) {
+        return this.authService.signInAsAdmin(email, password);
+    }
+    deleteAccount(user) {
+        return this.authService.deleteAccount(user);
+    }
+    confirmDeleteAccount(code, email) {
+        return this.authService.confirmDeleteAccount(code, email);
+    }
+    signIn(input) {
+        try {
+            return this.authService.signIn(input);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    signUp(input) {
+        try {
+            return this.authService.signUp(input);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    changePassword(user, oldPassword, newPassword, confirmPassword) {
+        return this.authService.changePassword(oldPassword, newPassword, confirmPassword, user);
+    }
+    resetCache() {
+        try {
+            return this.authService.resetCache();
+        }
+        catch (error) {
+            throw error;
+        }
     }
 };
 __decorate([
     (0, graphql_1.Query)(() => auth_entities_1.JwtPayload),
     (0, common_1.UseGuards)(rt_guard_1.RtGuard),
-    __param(0, (0, getuser_decorator_1.GetUser)()),
+    __param(0, (0, refresh_token_decorators_1.GetCurrentRefreshToken)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_entities_1.User]),
+    __metadata("design:paramtypes", [auth_entities_1.RefreshPayload]),
     __metadata("design:returntype", Promise)
 ], AuthResolver.prototype, "refreshToken", null);
 __decorate([
-    (0, graphql_1.Query)(() => String),
-    __param(0, (0, graphql_1.Context)('req')),
+    (0, graphql_1.Query)(() => auth_entities_1.JwtPayload),
+    __param(0, (0, graphql_1.Args)('token')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", String)
-], AuthResolver.prototype, "test", null);
-__decorate([
-    (0, graphql_1.Mutation)(() => auth_entities_1.JwtPayload),
-    __param(0, (0, graphql_1.Args)('input')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_input_1.LoginInput]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], AuthResolver.prototype, "login", null);
+], AuthResolver.prototype, "verifyTokenGoogle", null);
 __decorate([
-    (0, graphql_1.Mutation)(() => Boolean),
-    __param(0, (0, graphql_1.Args)('input')),
+    (0, graphql_1.Query)(() => auth_entities_1.JwtPayload),
+    __param(0, (0, graphql_1.Args)('token')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_input_1.RegisterInput]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], AuthResolver.prototype, "register", null);
+], AuthResolver.prototype, "verifyTokenFacebook", null);
 __decorate([
-    (0, graphql_1.Mutation)(() => Boolean),
+    (0, graphql_1.Query)(() => Boolean),
     __param(0, (0, graphql_1.Args)('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -93,15 +120,69 @@ __decorate([
 ], AuthResolver.prototype, "forgotPassword", null);
 __decorate([
     (0, graphql_1.Mutation)(() => Boolean),
-    __param(0, (0, graphql_1.Args)('input')),
+    __param(0, (0, graphql_1.Args)('input', { type: () => auth_dto_1.ResetPasswordInput })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [auth_input_1.ResetPasswordInput]),
+    __metadata("design:paramtypes", [auth_dto_1.ResetPasswordInput]),
     __metadata("design:returntype", Promise)
 ], AuthResolver.prototype, "resetPassword", null);
+__decorate([
+    (0, graphql_1.Query)(() => auth_entities_1.JwtPayload),
+    __param(0, (0, graphql_1.Args)('email')),
+    __param(1, (0, graphql_1.Args)('password')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "signInAsAdmin", null);
+__decorate([
+    (0, graphql_1.Query)(() => Boolean),
+    (0, common_1.UseGuards)(at_guard_1.AtGuard),
+    __param(0, (0, getuser_decorators_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entities_1.User]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "deleteAccount", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('code', { type: () => Number })),
+    __param(1, (0, graphql_1.Args)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "confirmDeleteAccount", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => auth_entities_1.JwtPayload),
+    __param(0, (0, graphql_1.Args)('input', { type: () => auth_dto_1.LoginInput })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [auth_dto_1.LoginInput]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "signIn", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('input', { type: () => auth_dto_1.RegisterInput })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [auth_dto_1.RegisterInput]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "signUp", null);
+__decorate([
+    (0, graphql_1.Mutation)(() => Boolean),
+    (0, common_1.UseGuards)(at_guard_1.AtGuard),
+    __param(0, (0, getuser_decorators_1.GetUser)()),
+    __param(1, (0, graphql_1.Args)('oldPassword')),
+    __param(2, (0, graphql_1.Args)('newPassword')),
+    __param(3, (0, graphql_1.Args)('confirmPassword')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entities_1.User, String, String, String]),
+    __metadata("design:returntype", Promise)
+], AuthResolver.prototype, "changePassword", null);
+__decorate([
+    (0, graphql_1.Query)(() => Boolean),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthResolver.prototype, "resetCache", null);
 AuthResolver = __decorate([
     (0, graphql_1.Resolver)('Auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService,
-        user_service_1.UserService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthResolver);
 exports.AuthResolver = AuthResolver;
 //# sourceMappingURL=auth.resolver.js.map
