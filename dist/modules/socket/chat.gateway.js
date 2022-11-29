@@ -85,6 +85,9 @@ let ChatGateway = class ChatGateway {
         });
     }
     async handleConnection(socket, ...args) {
+        console.log('Connection Done');
+    }
+    async verifyFirstConnection(socket) {
         try {
             let socketIds = [];
             if (socket.handshake.query && socket.handshake.query.token) {
@@ -181,6 +184,9 @@ let ChatGateway = class ChatGateway {
             });
         }
     }
+    handleError(error) {
+        console.log(error);
+    }
 };
 __decorate([
     (0, websockets_1.WebSocketServer)(),
@@ -198,6 +204,13 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleConnection", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('verifyFirstConnection'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "verifyFirstConnection", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('sendMessage'),
     (0, common_1.UseGuards)(ws_guard_1.WsGuard),
@@ -242,6 +255,12 @@ __decorate([
     __metadata("design:paramtypes", [user_entities_1.User]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "getAllUserMatchedTabMatched", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('error'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], ChatGateway.prototype, "handleError", null);
 ChatGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ transport: ['websocket'], allowEIO3: true, cors: '*' }),
     __param(0, (0, common_1.Inject)((0, common_1.forwardRef)(() => user_service_1.UserService))),

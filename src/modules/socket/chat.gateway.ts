@@ -97,6 +97,11 @@ export class ChatGateway
   }
 
   async handleConnection(@ConnectedSocket() socket: Socket, ...args: any[]) {
+    console.log('Connection Done');
+  }
+
+  @SubscribeMessage('verifyFirstConnection')
+  async verifyFirstConnection(@ConnectedSocket() socket: Socket) {
     try {
       let socketIds: string[] = [];
       if (socket.handshake.query && socket.handshake.query.token) {
@@ -213,5 +218,10 @@ export class ChatGateway
         this.server.sockets.to(item).emit(event, data);
       });
     }
+  }
+
+  @SubscribeMessage('error')
+  handleError(error) {
+    console.log(error);
   }
 }
