@@ -25,8 +25,8 @@ export class UserHelper {
   ) {}
 
   async buildQueryWithUser(user: User, filter: FilterGetAllUser): Promise<any> {
-    const isApplyAge = user.mySetting.discovery.onlyShowAgeThisRange;
-    const queryFilter: FilterBuilder<User> = new FilterBuilder<User>()
+    const isApplyAge = user.mySetting.discovery.onlyShowAgeThisRange; //2
+    const queryFilter: FilterBuilder<User> = new FilterBuilder<User>() //3
       .setFilterItem('matched', { $in: filter?.matched }, filter?.matched)
       .setFilterItem(
         'statusActive',
@@ -41,6 +41,7 @@ export class UserHelper {
       );
 
     if (isApplyAge) {
+      //4
       queryFilter.setFilterItem(
         'age',
         {
@@ -48,15 +49,16 @@ export class UserHelper {
           $lte: user.mySetting.discovery.maxAge,
         },
         user.mySetting.discovery.minAge,
-      );
+      ); //5
     }
     const [user_ids_notLike, user_ids_liked] = await Promise.all([
-      this.userEmbeddedService.getAllIdsNotLike(user._id.toString()),
-      this.userEmbeddedService.getAllIdsLiked(user._id.toString()),
+      // 6
+      this.userEmbeddedService.getAllIdsNotLike(user._id.toString()), //7
+      this.userEmbeddedService.getAllIdsLiked(user._id.toString()), //8
     ]);
-    user_ids_notLike.push(user._id);
-    const user_ids = user_ids_notLike.concat(user_ids_liked);
-    queryFilter.setFilterItem('_id', { $nin: user_ids }, user._id.toString());
+    user_ids_notLike.push(user._id); //9
+    const user_ids = user_ids_notLike.concat(user_ids_liked); //10
+    queryFilter.setFilterItem('_id', { $nin: user_ids }, user._id.toString()); //11
     return queryFilter.buildQuery()[0];
   }
 

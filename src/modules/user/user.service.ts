@@ -112,24 +112,32 @@ export class UserService {
     user: User,
   ): Promise<UserResult> {
     try {
-      let maxDistance = user.mySetting.discovery.distance * 1000;
+      let maxDistance = user.mySetting.discovery.distance * 1000; //1
       const queryFilter = await this.userHelper.buildQueryWithUser(
         user,
         filter,
-      );
+      ); //12
       if (user.mySetting.discovery.onlyShowDistanceThisRange === false) {
-        maxDistance = Constants.DEFAULT_DISTANCE;
-        this.loggerService.debug(`MaxDistance:${maxDistance}`);
+        //13
+        maxDistance = Constants.DEFAULT_DISTANCE; //14
+        this.loggerService.debug(`MaxDistance:${maxDistance}`); //15
       }
       const [results, totalCount] = await Promise.all([
+        //16 //17
         this.userModel.aggregate([
           {
             $geoNear: {
-              near: { type: 'Point', coordinates: [106.6510748, 10.7715686] },
+              near: {
+                type: 'Point',
+                coordinates: [
+                  user.geoLocation.coordinates[0], //18
+                  user.geoLocation.coordinates[1],
+                ],
+              },
               spherical: true,
               distanceField: 'calcDistance',
               maxDistance: maxDistance,
-              query: queryFilter,
+              query: queryFilter, //19
             },
           },
           {
@@ -145,27 +153,35 @@ export class UserService {
             $sort: { maxDistance: 1 },
           },
           {
-            $skip: (pagination?.page - 1) * pagination?.size || 0,
+            $skip: (pagination?.page - 1) * pagination?.size || 0, //20 21
           },
           {
-            $limit: pagination?.size || 100,
+            $limit: pagination?.size || 100, // 22 23
           },
         ]),
         this.userModel.aggregate([
+          //24
           {
             $geoNear: {
-              near: { type: 'Point', coordinates: [106.6510748, 10.7715686] },
+              near: {
+                type: 'Point',
+                coordinates: [
+                  user.geoLocation.coordinates[0],
+                  user.geoLocation.coordinates[1], //25
+                ],
+              },
               spherical: true,
               distanceField: 'calcDistance',
               maxDistance: maxDistance,
-              query: queryFilter,
+              query: queryFilter, //26
             },
           },
         ]),
       ]);
-      return { results, totalCount: totalCount.length };
+      return { results, totalCount: totalCount.length }; //27
     } catch (error) {
-      throw error;
+      // 28
+      throw error; //29
     }
   }
 
@@ -268,20 +284,24 @@ export class UserService {
     feature: string,
   ): Promise<boolean> {
     try {
-      let updateQuery = {};
+      //1
+      let updateQuery = {}; //2
       if (feature === Constants.CHANGE_SETTING) {
-        updateQuery[feature] = input;
+        //3
+        updateQuery[feature] = input; //4
       } else {
-        updateQuery = { ...input };
+        updateQuery = { ...input }; //5
       }
       const newUser = await this.userModel.findOneAndUpdate(
+        //6
         { _id: user._id },
         { $set: updateQuery },
         { new: true },
       );
-      return (await newUser.save()) ? true : false;
+      return (await newUser.save()) ? true : false; //7 //8 //9
     } catch (error) {
-      throw error;
+      //10
+      throw error; //11
     }
   }
 
